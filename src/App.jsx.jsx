@@ -1,14 +1,244 @@
 import { useState, useMemo, useRef } from "react";
 
-const MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+const MONTHS_EN = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+const MONTHS_ZH = ["1月","2月","3月","4月","5月","6月","7月","8月","9月","10月","11月","12月"];
 const CURRENT_YEAR = new Date().getFullYear();
 const EARN_CATEGORIES = ["Salary","Freelance","Investments","Bonus","Side Hustle","Gifts","Other"];
 const EXP_CATEGORIES = ["Food","Transport","Housing","Entertainment","Utilities","Healthcare","Shopping","Education","Other"];
 const MAX_UNDO = 30;
 
+const T = {
+  en: {
+    months: MONTHS_EN,
+    moneyTracker: "Money Tracker",
+    fullYear: "Full Year",
+    currentBalance: "Current Balance",
+    edit: "edit",
+    set: "Set",
+    totalEarnings: "Total Earnings",
+    totalExpenses: "Total Expenses",
+    net: "Net",
+    savedForGoals: "Saved for Goals",
+    froggyBankLabel: "Froggy Bank",
+    available: "Available",
+    enterYear: "Enter Year",
+    selectMonth: "Select Month",
+    all: "All",
+    viewingAllMonths: "Viewing all months. Entries are automatically sorted into the correct month based on the date you select.",
+    monthlyBudget: "Monthly Budget",
+    setBudget: "Set Budget",
+    hide: "Hide",
+    budgetLabel: "Label (e.g. Weekly groceries)",
+    budgetLimit: "Budget limit ($)",
+    setBtn: "+ Set",
+    label: "Label",
+    category: "Category",
+    budgetLimitCol: "Budget Limit ($)",
+    spent: "Spent ($)",
+    status: "Status",
+    noBudgets: "No budgets set yet — use the form above to set your first monthly budget limit",
+    of: "of",
+    spentWord: "spent",
+    over: "over",
+    remaining: "remaining",
+    ofBudgetLimit: "of budget limit",
+    locked: "Locked",
+    unlockToEdit: "Unlock to edit",
+    clickToEdit: "Click to edit",
+    total: "TOTAL",
+    onTrack: "ON TRACK",
+    overBudget: "OVER BUDGET",
+    unlockResume: "Unlock — resume tracking new expenses",
+    lockStop: "Lock — stop tracking new expenses",
+    earningsBreakdown: "Earnings Breakdown",
+    expensesBreakdown: "Expenses Breakdown",
+    goals: "Goals",
+    addGoal: "+ Add Goal",
+    cancel: "Cancel",
+    goalName: "Goal name (e.g. Tesla Model 3)",
+    targetPrice: "Target price ($)",
+    chooseIcon: "Choose an icon",
+    pickIcon: "Pick Icon",
+    typeEmoji: "Type Emoji",
+    uploadPhoto: "Upload Photo",
+    emojiPlaceholder: "Type or paste any emoji (e.g. 🎯 🏖️ 👟)",
+    emojiHint: "Windows: Win + . | Mac: Ctrl + Cmd + Space → opens emoji keyboard",
+    clickBrowse: "Click to browse or drag & drop",
+    fileTypes: "JPG, PNG, WEBP — any image from your device",
+    removePhoto: "Remove photo",
+    autoMatched: "Auto-matched:",
+    aiPicked: "AI picked:",
+    preview: "Preview:",
+    notRight: "not right? pick below",
+    aiPickIcon: "Ask AI to pick an icon",
+    findingIcon: "Finding icon...",
+    addGoalBtn: "Add Goal",
+    noGoals: "No goals yet — add something you're saving for!",
+    saved: "saved of",
+    goalReached: "GOAL REACHED!",
+    fullyFunded: "Fully funded!",
+    toGo: "to go",
+    amount: "$ amount",
+    add: "+ Add",
+    take: "− Take",
+    useFromFroggy: "Use from Froggy Bank",
+    froggyBankTitle: "Froggy Bank",
+    froggyDesc: "Collects leftover dollars from locked budgets",
+    savedFrom: "Saved from",
+    lockBudgetHint: "Lock a budget with remaining money to start saving",
+    setBudgetFirst: "Set a monthly budget first, then lock it when done",
+    earnings: "Earnings",
+    expenses: "Expenses",
+    allMonths: "All Months",
+    earningLabel: "Label (e.g. Salary)",
+    expenseLabel: "Label (e.g. Rent)",
+    amountDollar: "Amount ($)",
+    date: "Date",
+    source: "Source",
+    item: "Item",
+    noEarnings: "No earnings added yet",
+    noExpenses: "No expenses added yet",
+    undo: "Undo",
+    undid: "Undid",
+    addEarningAction: "Add earning",
+    addExpenseAction: "Add expense",
+    removeEarningAction: "Remove earning",
+    removeExpenseAction: "Remove expense",
+    addBudgetAction: "Add budget",
+    removeBudgetAction: "Remove budget",
+    toggleLockAction: "Toggle budget lock",
+    editBudgetAction: "Edit budget",
+    addGoalAction: "Add goal",
+    removeGoalAction: "Remove goal",
+    fundGoalAction: "Fund goal",
+    withdrawGoalAction: "Withdraw from goal",
+    froggyTransferAction: "Transfer from Froggy Bank",
+    adjust: "− Adjust",
+    confirm: "Confirm",
+    budgetReached: "Budget reached",
+  },
+  zh: {
+    months: MONTHS_ZH,
+    moneyTracker: "资金追踪器",
+    fullYear: "全年",
+    currentBalance: "当前余额",
+    edit: "编辑",
+    set: "确定",
+    totalEarnings: "总收入",
+    totalExpenses: "总支出",
+    net: "净额",
+    savedForGoals: "目标储蓄",
+    froggyBankLabel: "青蛙银行",
+    available: "可用余额",
+    enterYear: "输入年份",
+    selectMonth: "选择月份",
+    all: "全部",
+    viewingAllMonths: "正在查看全年数据。新条目将根据所选日期自动归入对应月份。",
+    monthlyBudget: "月度预算",
+    setBudget: "设置预算",
+    hide: "隐藏",
+    budgetLabel: "标签（如：每周买菜）",
+    budgetLimit: "预算上限（$）",
+    setBtn: "+ 设置",
+    label: "标签",
+    category: "类别",
+    budgetLimitCol: "预算上限（$）",
+    spent: "已花费（$）",
+    status: "状态",
+    noBudgets: "暂无预算 — 使用上方表单设置您的第一个月度预算",
+    of: "/",
+    spentWord: "已花费",
+    over: "超出",
+    remaining: "剩余",
+    ofBudgetLimit: "预算上限",
+    locked: "已锁定",
+    unlockToEdit: "解锁后可编辑",
+    clickToEdit: "点击编辑",
+    total: "合计",
+    onTrack: "正常",
+    overBudget: "超出预算",
+    unlockResume: "解锁 — 恢复追踪新支出",
+    lockStop: "锁定 — 停止追踪新支出",
+    earningsBreakdown: "收入分布",
+    expensesBreakdown: "支出分布",
+    goals: "目标",
+    addGoal: "+ 添加目标",
+    cancel: "取消",
+    goalName: "目标名称（如：特斯拉 Model 3）",
+    targetPrice: "目标金额（$）",
+    chooseIcon: "选择图标",
+    pickIcon: "选择图标",
+    typeEmoji: "输入表情",
+    uploadPhoto: "上传图片",
+    emojiPlaceholder: "输入或粘贴表情符号（如：🎯 🏖️ 👟）",
+    emojiHint: "Windows: Win + . | Mac: Ctrl + Cmd + Space → 打开表情键盘",
+    clickBrowse: "点击浏览或拖放文件",
+    fileTypes: "JPG、PNG、WEBP — 设备上的任何图片",
+    removePhoto: "移除图片",
+    autoMatched: "自动匹配：",
+    aiPicked: "AI 选择：",
+    preview: "预览：",
+    notRight: "不对？在下方选择",
+    aiPickIcon: "让 AI 选择图标",
+    findingIcon: "正在寻找图标...",
+    addGoalBtn: "添加目标",
+    noGoals: "暂无目标 — 添加您想存钱购买的物品！",
+    saved: "已存",
+    goalReached: "目标达成！",
+    fullyFunded: "已全额储蓄！",
+    toGo: "还差",
+    amount: "$ 金额",
+    add: "+ 添加",
+    take: "− 取出",
+    useFromFroggy: "从青蛙银行转入",
+    froggyBankTitle: "青蛙银行",
+    froggyDesc: "收集锁定预算的剩余资金",
+    savedFrom: "来源",
+    lockBudgetHint: "锁定有剩余的预算即可开始存钱",
+    setBudgetFirst: "先设置月度预算，完成后锁定即可",
+    earnings: "收入",
+    expenses: "支出",
+    allMonths: "全部月份",
+    earningLabel: "标签（如：工资）",
+    expenseLabel: "标签（如：房租）",
+    amountDollar: "金额（$）",
+    date: "日期",
+    source: "来源",
+    item: "项目",
+    noEarnings: "暂无收入记录",
+    noExpenses: "暂无支出记录",
+    undo: "撤销",
+    undid: "已撤销",
+    addEarningAction: "添加收入",
+    addExpenseAction: "添加支出",
+    removeEarningAction: "删除收入",
+    removeExpenseAction: "删除支出",
+    addBudgetAction: "添加预算",
+    removeBudgetAction: "删除预算",
+    toggleLockAction: "切换预算锁定",
+    editBudgetAction: "编辑预算",
+    addGoalAction: "添加目标",
+    removeGoalAction: "删除目标",
+    fundGoalAction: "为目标存款",
+    withdrawGoalAction: "从目标取款",
+    froggyTransferAction: "从青蛙银行转入",
+    adjust: "− 调整",
+    confirm: "确认",
+    budgetReached: "已达上限",
+  },
+  earnCat: {
+    en: { Salary: "Salary", Freelance: "Freelance", Investments: "Investments", Bonus: "Bonus", "Side Hustle": "Side Hustle", Gifts: "Gifts", Other: "Other" },
+    zh: { Salary: "工资", Freelance: "自由职业", Investments: "投资", Bonus: "奖金", "Side Hustle": "副业", Gifts: "礼物", Other: "其他" },
+  },
+  expCat: {
+    en: { Food: "Food", Transport: "Transport", Housing: "Housing", Entertainment: "Entertainment", Utilities: "Utilities", Healthcare: "Healthcare", Shopping: "Shopping", Education: "Education", Other: "Other" },
+    zh: { Food: "餐饮", Transport: "交通", Housing: "住房", Entertainment: "娱乐", Utilities: "水电", Healthcare: "医疗", Shopping: "购物", Education: "教育", Other: "其他" },
+  },
+};
+
 const defaultYearData = () => {
   const d = {};
-  MONTHS.forEach((_, i) => { d[i] = { earnings: [], expenses: [] }; });
+  MONTHS_EN.forEach((_, i) => { d[i] = { earnings: [], expenses: [] }; });
   return d;
 };
 let nextId = 1;
@@ -176,7 +406,7 @@ const ExpIcons = {
 };
 
 // ─── SCENE COMPONENT ───
-function FinancialScene({ type, data, categories, Icons }) {
+function FinancialScene({ type, data, categories, Icons, t, catNames }) {
   const total = data.reduce((s, e) => s + e.amount, 0);
   const catData = {};
   categories.forEach(c => { catData[c] = 0; });
@@ -219,10 +449,10 @@ function FinancialScene({ type, data, categories, Icons }) {
       `}</style>
       <div style={{ padding: "12px 16px 0", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
         <h3 style={{ margin: 0, fontSize: 15, fontWeight: 700, color: isE ? "#34d399" : "#f87171" }}>
-          {isE ? "↗ Earnings" : "↘ Expenses"} Breakdown
+          {isE ? "↗ " + t.earningsBreakdown : "↘ " + t.expensesBreakdown}
         </h3>
         <span style={{ fontSize: 13, color: "#64748b", fontFamily: "'Space Mono', monospace" }}>
-          Total: ${fmt(total)}
+          {t.total}: ${fmt(total)}
         </span>
       </div>
 
@@ -288,7 +518,7 @@ function FinancialScene({ type, data, categories, Icons }) {
                 fill={cat.active ? (isE ? "#6ee7b7" : "#c7d2fe") : "#3f3f5c"}
                 fontSize="9" fontWeight={cat.active ? "600" : "400"}
                 style={{ transition: "fill 0.5s ease" }}>
-                {cat.name}
+                {catNames[cat.name] || cat.name}
               </text>
 
               {/* Percentage */}
@@ -317,6 +547,12 @@ function FinancialScene({ type, data, categories, Icons }) {
 
 // ─── MAIN APP ───
 export default function ExpenseTracker() {
+  const [lang, setLang] = useState("en");
+  const t = T[lang];
+  const MONTHS = t.months;
+  const eCat = T.earnCat[lang];
+  const xCat = T.expCat[lang];
+
   const [startingBalance, setStartingBalance] = useState("");
   const [editingBalance, setEditingBalance] = useState(true);
   const [selectedYear, setSelectedYear] = useState(CURRENT_YEAR);
@@ -344,13 +580,13 @@ export default function ExpenseTracker() {
 
   const addBudget = () => {
     if (!budgetAmount) return;
-    saveSnapshot("Add budget");
+    saveSnapshot(t.addBudgetAction);
     setBudgetEntries(prev => [...prev, { id: nextId++, label: budgetLabel || `Budget ${prev.length + 1}`, category: budgetCategory, amount: parseFloat(budgetAmount) || 0, locked: false, lockedSpent: 0 }]);
     setBudgetAmount(""); setBudgetLabel("");
   };
-  const removeBudget = (id) => { saveSnapshot("Remove budget"); setBudgetEntries(prev => prev.filter(b => b.id !== id)); };
+  const removeBudget = (id) => { saveSnapshot(t.removeBudgetAction); setBudgetEntries(prev => prev.filter(b => b.id !== id)); };
   const toggleLockBudget = (id) => {
-    saveSnapshot("Toggle budget lock");
+    saveSnapshot(t.toggleLockAction);
     setBudgetEntries(prev => prev.map(b => {
       if (b.id !== id) return b;
       if (!b.locked) {
@@ -364,7 +600,7 @@ export default function ExpenseTracker() {
     }));
   };
   const saveEditBudget = (id) => {
-    saveSnapshot("Edit budget");
+    saveSnapshot(t.editBudgetAction);
     setBudgetEntries(prev => prev.map(b => b.id === id ? { ...b, amount: parseFloat(editingBudgetAmount) || 0 } : b));
     setEditingBudgetId(null); setEditingBudgetAmount("");
   };
@@ -519,17 +755,17 @@ export default function ExpenseTracker() {
 
   const addGoal = () => {
     if (!goalName || !goalValue) return;
-    saveSnapshot("Add goal");
+    saveSnapshot(t.addGoalAction);
     setGoals(prev => [...prev, { id: nextId++, name: goalName, value: parseFloat(goalValue) || 0, image: goalImage || "", imageType: goalImageType, saved: 0 }]);
     setGoalName(""); setGoalValue(""); setGoalImage(""); setGoalImageType("preset"); setAutoMatched(false); setAiSource(""); setShowGoalForm(false);
   };
-  const removeGoal = (id) => { saveSnapshot("Remove goal"); setGoals(prev => prev.filter(g => g.id !== id)); };
+  const removeGoal = (id) => { saveSnapshot(t.removeGoalAction); setGoals(prev => prev.filter(g => g.id !== id)); };
   const [goalInputs, setGoalInputs] = useState({});
 
   const addToGoal = (id) => {
     const amount = parseFloat(goalInputs[id]) || 0;
     if (amount <= 0) return;
-    saveSnapshot("Fund goal");
+    saveSnapshot(t.fundGoalAction);
     const available = currentBalance - totalAllocated;
     const toAdd = Math.min(amount, available);
     if (toAdd <= 0) return;
@@ -540,7 +776,7 @@ export default function ExpenseTracker() {
   const transferFromFroggy = (id) => {
     const amount = parseFloat(goalInputs[id]) || 0;
     if (amount <= 0 || froggyBank <= 0) return;
-    saveSnapshot("Transfer from Froggy Bank");
+    saveSnapshot(t.froggyTransferAction);
     const goal = goals.find(g => g.id === id);
     if (!goal) return;
     const spaceInGoal = goal.value - goal.saved;
@@ -554,7 +790,7 @@ export default function ExpenseTracker() {
   const withdrawFromGoal = (id) => {
     const amount = parseFloat(goalInputs[id]) || 0;
     if (amount <= 0) return;
-    saveSnapshot("Withdraw from goal");
+    saveSnapshot(t.withdrawGoalAction);
     setGoals(prev => prev.map(g => g.id === id ? { ...g, saved: Math.max(0, g.saved - amount) } : g));
     setGoalInputs(prev => ({ ...prev, [id]: "" }));
   };
@@ -572,7 +808,7 @@ export default function ExpenseTracker() {
   const currentBalance = useMemo(() => {
     const start = parseFloat(startingBalance) || 0;
     let totalEarn = 0, totalExp = 0;
-    MONTHS.forEach((_, i) => { yearData[i].earnings.forEach(e => { totalEarn += e.amount; }); yearData[i].expenses.forEach(e => { totalExp += e.amount; }); });
+    MONTHS_EN.forEach((_, i) => { yearData[i].earnings.forEach(e => { totalEarn += e.amount; }); yearData[i].expenses.forEach(e => { totalExp += e.amount; }); });
     return start + totalEarn - totalExp;
   }, [startingBalance, yearData]);
 
@@ -592,7 +828,7 @@ export default function ExpenseTracker() {
   const currentTableData = useMemo(() => {
     if (tableMonth !== null) return yearData[tableMonth];
     const combined = { earnings: [], expenses: [] };
-    MONTHS.forEach((_, i) => {
+    MONTHS_EN.forEach((_, i) => {
       yearData[i].earnings.forEach(e => combined.earnings.push({ ...e, month: MONTHS[i] }));
       yearData[i].expenses.forEach(e => combined.expenses.push({ ...e, month: MONTHS[i] }));
     });
@@ -628,14 +864,14 @@ export default function ExpenseTracker() {
     setGoals(last.goals);
     setFroggyWithdrawn(last.froggyWithdrawn);
     setUndoStack(prev => prev.slice(0, -1));
-    setUndoMessage(`Undid: ${last.label}`);
+    setUndoMessage(`${t.undid}: ${last.label}`);
     if (undoTimerRef.current) clearTimeout(undoTimerRef.current);
     undoTimerRef.current = setTimeout(() => setUndoMessage(""), 2500);
   };
 
   const addEarning = () => {
     if (!earnAmount) return;
-    saveSnapshot("Add earning");
+    saveSnapshot(t.addEarningAction);
     const dateObj = new Date(earnDate + "T00:00:00");
     const targetMonth = dateObj.getMonth();
     const targetYear = dateObj.getFullYear();
@@ -650,7 +886,7 @@ export default function ExpenseTracker() {
 
   const addExpense = () => {
     if (!expAmount) return;
-    saveSnapshot("Add expense");
+    saveSnapshot(t.addExpenseAction);
     const amt = parseFloat(expAmount) || 0;
     const dateObj = new Date(expDate + "T00:00:00");
     const targetMonth = dateObj.getMonth();
@@ -665,19 +901,19 @@ export default function ExpenseTracker() {
   };
 
   const removeEarning = (id) => {
-    saveSnapshot("Remove earning");
+    saveSnapshot(t.removeEarningAction);
     setAllYearData(prev => {
       const yd = { ...(prev[selectedYear] || defaultYearData()) };
-      MONTHS.forEach((_, i) => { if (yd[i].earnings.some(e => e.id === id)) yd[i] = { ...yd[i], earnings: yd[i].earnings.filter(e => e.id !== id) }; });
+      MONTHS_EN.forEach((_, i) => { if (yd[i].earnings.some(e => e.id === id)) yd[i] = { ...yd[i], earnings: yd[i].earnings.filter(e => e.id !== id) }; });
       return { ...prev, [selectedYear]: yd };
     });
   };
 
   const removeExpense = (id) => {
-    saveSnapshot("Remove expense");
+    saveSnapshot(t.removeExpenseAction);
     setAllYearData(prev => {
       const yd = { ...(prev[selectedYear] || defaultYearData()) };
-      MONTHS.forEach((_, i) => { if (yd[i].expenses.some(e => e.id === id)) yd[i] = { ...yd[i], expenses: yd[i].expenses.filter(e => e.id !== id) }; });
+      MONTHS_EN.forEach((_, i) => { if (yd[i].expenses.some(e => e.id === id)) yd[i] = { ...yd[i], expenses: yd[i].expenses.filter(e => e.id !== id) }; });
       return { ...prev, [selectedYear]: yd };
     });
   };
@@ -729,39 +965,48 @@ export default function ExpenseTracker() {
           <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
             <div style={{ width: 40, height: 40, borderRadius: 10, background: "linear-gradient(135deg, #38bdf8, #818cf8)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 20, fontWeight: 700, color: "#0f172a" }}>$</div>
             <div>
-              <h1 style={{ margin: 0, fontSize: 22, fontWeight: 700, fontFamily: "'Space Mono', monospace", letterSpacing: "-0.5px" }}>Money Tracker</h1>
-              <p style={{ margin: 0, fontSize: 12, color: "#64748b" }}>{selectedYear} · {isAll ? "Full Year" : MONTHS[selectedMonth]}</p>
+              <h1 style={{ margin: 0, fontSize: 22, fontWeight: 700, fontFamily: "'Space Mono', monospace", letterSpacing: "-0.5px" }}>{t.moneyTracker}</h1>
+              <p style={{ margin: 0, fontSize: 12, color: "#64748b" }}>{selectedYear} · {isAll ? t.fullYear : MONTHS[selectedMonth]}</p>
             </div>
           </div>
-          {undoStack.length > 0 && (
-            <button onClick={undo} style={{
-              padding: "8px 16px", borderRadius: 8,
-              border: "none", cursor: "pointer",
-              background: "linear-gradient(135deg, #334155, #475569)",
-              color: "#e2e8f0", fontSize: 13, fontWeight: 700,
-              display: "flex", alignItems: "center", gap: 6,
-              boxShadow: "0 2px 10px rgba(0,0,0,0.3)",
+          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            <button onClick={() => setLang(lang === "en" ? "zh" : "en")} style={{
+              padding: "8px 14px", borderRadius: 8, border: "none", cursor: "pointer",
+              background: "linear-gradient(135deg, #f59e0b, #ef4444)", color: "#fff",
+              fontSize: 12, fontWeight: 700,
             }}>
-              <span style={{ fontSize: 14 }}>↩</span> Undo
-              <span style={{
-                padding: "1px 6px", borderRadius: 5, background: "rgba(255,255,255,0.15)",
-                fontSize: 11, fontFamily: "'Space Mono', monospace",
-              }}>{undoStack.length}</span>
+              {lang === "en" ? "中文" : "EN"}
             </button>
-          )}
+            {undoStack.length > 0 && (
+              <button onClick={undo} style={{
+                padding: "8px 16px", borderRadius: 8,
+                border: "none", cursor: "pointer",
+                background: "linear-gradient(135deg, #334155, #475569)",
+                color: "#e2e8f0", fontSize: 13, fontWeight: 700,
+                display: "flex", alignItems: "center", gap: 6,
+                boxShadow: "0 2px 10px rgba(0,0,0,0.3)",
+              }}>
+                <span style={{ fontSize: 14 }}>↩</span> {t.undo}
+                <span style={{
+                  padding: "1px 6px", borderRadius: 5, background: "rgba(255,255,255,0.15)",
+                  fontSize: 11, fontFamily: "'Space Mono', monospace",
+                }}>{undoStack.length}</span>
+              </button>
+            )}
+          </div>
         </div>
 
         {/* Balance */}
         <div style={{ marginTop: 20, marginBottom: 20, padding: "28px 24px", background: "linear-gradient(135deg, #1e293b 0%, #0f172a 100%)", borderRadius: 16, border: `1px solid ${currentBalance >= 0 ? "rgba(52,211,153,0.3)" : "rgba(248,113,113,0.3)"}`, textAlign: "center" }}>
           <div style={{ fontSize: 11, color: "#94a3b8", textTransform: "uppercase", letterSpacing: 2, marginBottom: 8 }}>
-            Current Balance {!editingBalance && <span style={{ fontSize: 10, color: "#64748b", cursor: "pointer", marginLeft: 6 }} onClick={() => setEditingBalance(true)}>✎ edit</span>}
+            {t.currentBalance} {!editingBalance && <span style={{ fontSize: 10, color: "#64748b", cursor: "pointer", marginLeft: 6 }} onClick={() => setEditingBalance(true)}>✎ {t.edit}</span>}
           </div>
           {editingBalance ? (
             <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 10 }}>
               <span style={{ fontSize: 42, fontWeight: 700, fontFamily: "'Space Mono', monospace", color: balanceColor }}>$</span>
               <input type="number" placeholder="0.00" autoFocus value={startingBalance} onChange={e => setStartingBalance(e.target.value)} onKeyDown={e => { if (e.key === "Enter") setEditingBalance(false); }}
                 style={{ width: 260, padding: "6px 12px", borderRadius: 10, border: "2px solid rgba(56,189,248,0.4)", background: "rgba(15,23,42,0.8)", color: balanceColor, fontSize: 38, fontWeight: 700, fontFamily: "'Space Mono', monospace", textAlign: "center" }} />
-              <button onClick={() => setEditingBalance(false)} style={{ padding: "8px 16px", borderRadius: 8, border: "none", cursor: "pointer", background: "linear-gradient(135deg, #38bdf8, #818cf8)", color: "#0f172a", fontSize: 13, fontWeight: 700 }}>Set</button>
+              <button onClick={() => setEditingBalance(false)} style={{ padding: "8px 16px", borderRadius: 8, border: "none", cursor: "pointer", background: "linear-gradient(135deg, #38bdf8, #818cf8)", color: "#0f172a", fontSize: 13, fontWeight: 700 }}>{t.set}</button>
             </div>
           ) : (
             <div onClick={() => setEditingBalance(true)} style={{ fontSize: 42, fontWeight: 700, fontFamily: "'Space Mono', monospace", color: balanceColor, lineHeight: 1.1, cursor: "pointer" }}
@@ -771,17 +1016,17 @@ export default function ExpenseTracker() {
           )}
           <div style={{ display: "flex", justifyContent: "center", gap: 24, marginTop: 14, flexWrap: "wrap" }}>
             <div style={{ textAlign: "center" }}>
-              <div style={{ fontSize: 10, color: "#64748b", textTransform: "uppercase", letterSpacing: 1 }}>Total Earnings</div>
+              <div style={{ fontSize: 10, color: "#64748b", textTransform: "uppercase", letterSpacing: 1 }}>{t.totalEarnings}</div>
               <div style={{ fontSize: 16, fontWeight: 600, fontFamily: "'Space Mono', monospace", color: "#34d399", marginTop: 2 }}>+${fmt(totals.earnings)}</div>
             </div>
             <div style={{ width: 1, background: "#334155" }}></div>
             <div style={{ textAlign: "center" }}>
-              <div style={{ fontSize: 10, color: "#64748b", textTransform: "uppercase", letterSpacing: 1 }}>Total Expenses</div>
+              <div style={{ fontSize: 10, color: "#64748b", textTransform: "uppercase", letterSpacing: 1 }}>{t.totalExpenses}</div>
               <div style={{ fontSize: 16, fontWeight: 600, fontFamily: "'Space Mono', monospace", color: "#f87171", marginTop: 2 }}>-${fmt(totals.expenses)}</div>
             </div>
             <div style={{ width: 1, background: "#334155" }}></div>
             <div style={{ textAlign: "center" }}>
-              <div style={{ fontSize: 10, color: "#64748b", textTransform: "uppercase", letterSpacing: 1 }}>Net</div>
+              <div style={{ fontSize: 10, color: "#64748b", textTransform: "uppercase", letterSpacing: 1 }}>{t.net}</div>
               <div style={{ fontSize: 16, fontWeight: 600, fontFamily: "'Space Mono', monospace", color: totals.earnings - totals.expenses >= 0 ? "#34d399" : "#f87171", marginTop: 2 }}>
                 {totals.earnings - totals.expenses >= 0 ? "+" : "-"}${fmt(Math.abs(totals.earnings - totals.expenses))}
               </div>
@@ -790,19 +1035,19 @@ export default function ExpenseTracker() {
           {totalAllocated > 0 && (
             <div style={{ display: "flex", justifyContent: "center", gap: 24, marginTop: 12, paddingTop: 12, borderTop: "1px solid #334155" }}>
               <div style={{ textAlign: "center" }}>
-                <div style={{ fontSize: 10, color: "#64748b", textTransform: "uppercase", letterSpacing: 1 }}>Saved for Goals</div>
+                <div style={{ fontSize: 10, color: "#64748b", textTransform: "uppercase", letterSpacing: 1 }}>{t.savedForGoals}</div>
                 <div style={{ fontSize: 16, fontWeight: 600, fontFamily: "'Space Mono', monospace", color: "#fbbf24", marginTop: 2 }}>${fmt(goals.reduce((s, g) => s + g.saved, 0))}</div>
               </div>
               <div style={{ width: 1, background: "#334155" }}></div>
               {froggyBank > 0 && <>
                 <div style={{ textAlign: "center" }}>
-                  <div style={{ fontSize: 10, color: "#64748b", textTransform: "uppercase", letterSpacing: 1 }}>Froggy Bank</div>
+                  <div style={{ fontSize: 10, color: "#64748b", textTransform: "uppercase", letterSpacing: 1 }}>{t.froggyBankLabel}</div>
                   <div style={{ fontSize: 16, fontWeight: 600, fontFamily: "'Space Mono', monospace", color: "#6ee7b7", marginTop: 2 }}>${fmt(froggyBank)}</div>
                 </div>
                 <div style={{ width: 1, background: "#334155" }}></div>
               </>}
               <div style={{ textAlign: "center" }}>
-                <div style={{ fontSize: 10, color: "#64748b", textTransform: "uppercase", letterSpacing: 1 }}>Available</div>
+                <div style={{ fontSize: 10, color: "#64748b", textTransform: "uppercase", letterSpacing: 1 }}>{t.available}</div>
                 <div style={{ fontSize: 16, fontWeight: 600, fontFamily: "'Space Mono', monospace", color: availableBalance >= 0 ? "#38bdf8" : "#f87171", marginTop: 2 }}>${fmt(availableBalance)}</div>
               </div>
             </div>
@@ -812,14 +1057,14 @@ export default function ExpenseTracker() {
         {/* Controls */}
         <div style={{ display: "flex", flexDirection: "column", gap: 14, marginBottom: 24, padding: 16, background: "#1e293b", borderRadius: 12, border: "1px solid #334155" }}>
           <div>
-            <label style={{ fontSize: 11, color: "#94a3b8", textTransform: "uppercase", letterSpacing: 1, display: "block", marginBottom: 6 }}>Enter Year</label>
+            <label style={{ fontSize: 11, color: "#94a3b8", textTransform: "uppercase", letterSpacing: 1, display: "block", marginBottom: 6 }}>{t.enterYear}</label>
             <input type="number" placeholder="e.g. 2026" value={selectedYear} onChange={e => handleYearChange(e.target.value)}
               style={{ width: 160, padding: "10px 12px", borderRadius: 8, border: "1px solid #334155", background: "#0f172a", color: "#e2e8f0", fontSize: 15, fontFamily: "'Space Mono', monospace" }} />
           </div>
           <div>
-            <label style={{ fontSize: 11, color: "#94a3b8", textTransform: "uppercase", letterSpacing: 1, display: "block", marginBottom: 6 }}>Select Month</label>
+            <label style={{ fontSize: 11, color: "#94a3b8", textTransform: "uppercase", letterSpacing: 1, display: "block", marginBottom: 6 }}>{t.selectMonth}</label>
             <div style={{ display: "flex", flexWrap: "wrap", gap: 4 }}>
-              <button onClick={() => setSelectedMonth("all")} style={{ padding: "7px 14px", borderRadius: 6, border: "none", cursor: "pointer", fontSize: 12, fontWeight: isAll ? 700 : 500, background: isAll ? "linear-gradient(135deg, #fbbf24, #f59e0b)" : "#334155", color: isAll ? "#0f172a" : "#94a3b8" }}>All</button>
+              <button onClick={() => setSelectedMonth("all")} style={{ padding: "7px 14px", borderRadius: 6, border: "none", cursor: "pointer", fontSize: 12, fontWeight: isAll ? 700 : 500, background: isAll ? "linear-gradient(135deg, #fbbf24, #f59e0b)" : "#334155", color: isAll ? "#0f172a" : "#94a3b8" }}>{t.all}</button>
               {MONTHS.map((m, i) => (
                 <button key={m} onClick={() => setSelectedMonth(i)} style={{ padding: "7px 10px", borderRadius: 6, border: "none", cursor: "pointer", fontSize: 12, fontWeight: selectedMonth === i ? 700 : 500, background: selectedMonth === i ? "linear-gradient(135deg, #38bdf8, #818cf8)" : "#334155", color: selectedMonth === i ? "#0f172a" : "#94a3b8" }}>{m}</button>
               ))}
@@ -829,7 +1074,7 @@ export default function ExpenseTracker() {
 
         {isAll && (
           <div style={{ padding: "10px 14px", borderRadius: 8, marginBottom: 16, background: "rgba(251,191,36,0.1)", border: "1px solid rgba(251,191,36,0.3)", fontSize: 12, color: "#fbbf24" }}>
-            📌 Viewing all months. Entries are automatically sorted into the correct month based on the date you select.
+            📌 {t.viewingAllMonths}
           </div>
         )}
 
@@ -842,19 +1087,19 @@ export default function ExpenseTracker() {
 
           {/* Input row */}
           <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 14 }}>
-            <input placeholder="Label (e.g. Weekly groceries)" value={budgetLabel} onChange={e => setBudgetLabel(e.target.value)}
+            <input placeholder={t.budgetLabel} value={budgetLabel} onChange={e => setBudgetLabel(e.target.value)}
               style={{ flex: "1 1 160px", padding: "9px 12px", borderRadius: 8, border: "1px solid #334155", background: "#0f172a", color: "#e2e8f0", fontSize: 13 }} />
             <select value={budgetCategory} onChange={e => setBudgetCategory(e.target.value)}
               style={{ flex: "1 1 130px", padding: "9px 12px", borderRadius: 8, border: "1px solid #334155", background: "#0f172a", color: "#e2e8f0", fontSize: 13 }}>
-              {EXP_CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
+              {EXP_CATEGORIES.map(c => <option key={c} value={c}>{xCat[c] || c}</option>)}
             </select>
-            <input type="number" placeholder="Budget limit ($)" value={budgetAmount} onChange={e => setBudgetAmount(e.target.value)}
+            <input type="number" placeholder={t.budgetLimit} value={budgetAmount} onChange={e => setBudgetAmount(e.target.value)}
               onKeyDown={e => { if (e.key === "Enter") addBudget(); }}
               style={{ flex: "1 1 140px", padding: "9px 12px", borderRadius: 8, border: "1px solid #334155", background: "#0f172a", color: "#e2e8f0", fontSize: 13, fontFamily: "'Space Mono', monospace" }} />
             <button onClick={addBudget} style={{
               padding: "9px 18px", borderRadius: 8, border: "none", cursor: "pointer",
               background: "linear-gradient(135deg, #c084fc, #a855f7)", color: "#0f172a", fontSize: 13, fontWeight: 700, whiteSpace: "nowrap",
-            }}>+ Set</button>
+            }}>{t.setBtn}</button>
           </div>
 
           {/* Budget table */}
@@ -862,14 +1107,14 @@ export default function ExpenseTracker() {
             <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
               <thead>
                 <tr style={{ borderBottom: "2px solid #334155" }}>
-                  {["Label", "Category", "Budget Limit ($)", "Spent ($)", "Status", ""].map((h, idx) => (
+                  {[t.label, t.category, t.budgetLimitCol, t.spent, t.status, ""].map((h, idx) => (
                     <th key={idx} style={{ padding: "8px 10px", textAlign: "left", color: "#64748b", fontSize: 11, textTransform: "uppercase", letterSpacing: 1 }}>{h}</th>
                   ))}
                 </tr>
               </thead>
               <tbody>
                 {budgetEntries.length === 0 ? (
-                  <tr><td colSpan={6} style={{ padding: 20, textAlign: "center", color: "#475569", fontStyle: "italic" }}>No budgets set yet — use the form above to set your first monthly budget limit</td></tr>
+                  <tr><td colSpan={6} style={{ padding: 20, textAlign: "center", color: "#475569", fontStyle: "italic" }}>{t.noBudgets}</td></tr>
                 ) : budgetEntries.map((b, i) => {
                   const liveSpent = spendingByCategory[b.category] || 0;
                   const spent = b.locked ? b.lockedSpent : liveSpent;
@@ -886,7 +1131,7 @@ export default function ExpenseTracker() {
                         {b.locked && <span style={{ marginLeft: 6, fontSize: 10 }}>🔒</span>}
                       </td>
                       <td style={{ padding: "8px 10px" }}>
-                        <span style={{ padding: "2px 8px", borderRadius: 4, fontSize: 11, fontWeight: 600, background: "rgba(192,132,252,0.15)", color: "#d8b4fe" }}>{b.category}</span>
+                        <span style={{ padding: "2px 8px", borderRadius: 4, fontSize: 11, fontWeight: 600, background: "rgba(192,132,252,0.15)", color: "#d8b4fe" }}>{xCat[b.category] || b.category}</span>
                       </td>
                       <td style={{ padding: "8px 10px", fontFamily: "'Space Mono', monospace" }}>
                         {isEditing && !b.locked ? (
@@ -900,7 +1145,7 @@ export default function ExpenseTracker() {
                         ) : (
                           <span onClick={() => { if (!b.locked) { setEditingBudgetId(b.id); setEditingBudgetAmount(String(b.amount)); } }}
                             style={{ cursor: b.locked ? "default" : "pointer", color: "#c084fc", borderBottom: b.locked ? "none" : "1px dashed #7c3aed" }}
-                            title={b.locked ? "Unlock to edit" : "Click to edit"}>
+                            title={b.locked ? t.unlockToEdit : t.clickToEdit}>
                             ${fmt(b.amount)}
                           </span>
                         )}
@@ -910,9 +1155,9 @@ export default function ExpenseTracker() {
                       </td>
                       <td style={{ padding: "8px 10px", minWidth: 180 }}>
                         <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 3 }}>
-                          <span style={{ fontSize: 9, color: "#64748b" }}>${fmt(spent)} of ${fmt(b.amount)} spent</span>
+                          <span style={{ fontSize: 9, color: "#64748b" }}>${fmt(spent)} {t.of} ${fmt(b.amount)} {t.spentWord}</span>
                           <span style={{ fontSize: 9, color: isOver ? "#f87171" : "#34d399" }}>
-                            {isOver ? `$${fmt(Math.abs(remaining))} over` : `$${fmt(remaining)} remaining`}
+                            {isOver ? `${t.over} $${fmt(Math.abs(remaining))}` : `${t.remaining} $${fmt(remaining)}`}
                           </span>
                         </div>
                         <div style={{ width: "100%", height: 6, borderRadius: 3, background: "#0f172a", overflow: "hidden", marginBottom: 4 }}>
@@ -923,15 +1168,15 @@ export default function ExpenseTracker() {
                         </div>
                         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                           <span style={{ fontSize: 9, color: isOver ? "#f87171" : "#475569" }}>
-                            {spentPct.toFixed(0)}% of budget limit
+                            {spentPct.toFixed(0)}% {t.ofBudgetLimit}
                           </span>
-                          {b.locked && <span style={{ fontSize: 9, color: "#fbbf24", fontWeight: 600 }}>Locked</span>}
+                          {b.locked && <span style={{ fontSize: 9, color: "#fbbf24", fontWeight: 600 }}>{t.locked}</span>}
                         </div>
                       </td>
                       <td style={{ padding: "8px 10px" }}>
                         <div style={{ display: "flex", gap: 4, alignItems: "center" }}>
                           <button onClick={() => toggleLockBudget(b.id)}
-                            title={b.locked ? "Unlock — resume tracking new expenses" : "Lock — stop tracking new expenses"}
+                            title={b.locked ? t.unlockResume : t.lockStop}
                             style={{ background: "none", border: "none", color: b.locked ? "#fbbf24" : "#64748b", cursor: "pointer", fontSize: 14 }}>
                             {b.locked ? "🔒" : "🔓"}
                           </button>
@@ -943,7 +1188,7 @@ export default function ExpenseTracker() {
                 })}
                 {budgetEntries.length > 0 && (
                   <tr style={{ borderTop: "2px solid #334155", fontWeight: 700 }}>
-                    <td style={{ padding: "10px 10px" }}>TOTAL</td>
+                    <td style={{ padding: "10px 10px" }}>{t.total}</td>
                     <td></td>
                     <td style={{ padding: "10px 10px", fontFamily: "'Space Mono', monospace", color: "#c084fc" }}>${fmt(totalBudget)}</td>
                     <td style={{ padding: "10px 10px", fontFamily: "'Space Mono', monospace", color: totalSpentInMonth > totalBudget ? "#f87171" : "#94a3b8" }}>${fmt(totalSpentInMonth)}</td>
@@ -953,7 +1198,7 @@ export default function ExpenseTracker() {
                         background: totalSpentInMonth > totalBudget ? "rgba(239,68,68,0.15)" : "rgba(52,211,153,0.15)",
                         color: totalSpentInMonth > totalBudget ? "#f87171" : "#34d399",
                       }}>
-                        {totalSpentInMonth > totalBudget ? "OVER BUDGET" : "ON TRACK"}
+                        {totalSpentInMonth > totalBudget ? t.overBudget : t.onTrack}
                       </span>
                     </td>
                     <td></td>
@@ -965,8 +1210,8 @@ export default function ExpenseTracker() {
         </div>
 
         {/* Visual Scenes */}
-        <FinancialScene type="earning" data={currentTableData.earnings} categories={EARN_CATEGORIES} Icons={EarnIcons} />
-        <FinancialScene type="expense" data={currentTableData.expenses} categories={EXP_CATEGORIES} Icons={ExpIcons} />
+        <FinancialScene type="earning" data={currentTableData.earnings} categories={EARN_CATEGORIES} Icons={EarnIcons} t={t} catNames={eCat} />
+        <FinancialScene type="expense" data={currentTableData.expenses} categories={EXP_CATEGORIES} Icons={ExpIcons} t={t} catNames={xCat} />
 
         {/* ─── GOALS & FROGGY BANK ─── */}
         <div style={{ display: "grid", gridTemplateColumns: "1fr 300px", gap: 16, marginBottom: 20, alignItems: "start" }}>
@@ -975,13 +1220,13 @@ export default function ExpenseTracker() {
         <div style={{ padding: 20, borderRadius: 14, background: "#1e293b", border: "1px solid #334155" }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
             <h3 style={{ margin: 0, fontSize: 17, fontWeight: 700, color: "#fbbf24", display: "flex", alignItems: "center", gap: 8 }}>
-              <span style={{ fontSize: 20 }}>★</span> Goals
+              <span style={{ fontSize: 20 }}>★</span> {t.goals}
             </h3>
             <button onClick={() => setShowGoalForm(!showGoalForm)} style={{
               padding: "7px 16px", borderRadius: 8, border: "none", cursor: "pointer",
               background: showGoalForm ? "#334155" : "linear-gradient(135deg, #fbbf24, #f59e0b)",
               color: showGoalForm ? "#94a3b8" : "#0f172a", fontSize: 13, fontWeight: 700,
-            }}>{showGoalForm ? "Cancel" : "+ Add Goal"}</button>
+            }}>{showGoalForm ? t.cancel : t.addGoal}</button>
           </div>
 
           {/* Add Goal Form */}
@@ -990,20 +1235,20 @@ export default function ExpenseTracker() {
               padding: 16, borderRadius: 10, background: "#0f172a", border: "1px solid #334155", marginBottom: 16,
             }}>
               <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 12 }}>
-                <input placeholder="Goal name (e.g. Tesla Model 3)" value={goalName} onChange={e => handleGoalNameChange(e.target.value)}
+                <input placeholder={t.goalName} value={goalName} onChange={e => handleGoalNameChange(e.target.value)}
                   style={{ flex: "1 1 200px", padding: "10px 12px", borderRadius: 8, border: "1px solid #334155", background: "#1e293b", color: "#e2e8f0", fontSize: 13 }} />
-                <input type="number" placeholder="Target price ($)" value={goalValue} onChange={e => setGoalValue(e.target.value)}
+                <input type="number" placeholder={t.targetPrice} value={goalValue} onChange={e => setGoalValue(e.target.value)}
                   style={{ flex: "1 1 140px", padding: "10px 12px", borderRadius: 8, border: "1px solid #334155", background: "#1e293b", color: "#e2e8f0", fontSize: 13, fontFamily: "'Space Mono', monospace" }} />
               </div>
 
               {/* Image picker tabs */}
               <div style={{ marginBottom: 10 }}>
-                <label style={{ fontSize: 11, color: "#94a3b8", textTransform: "uppercase", letterSpacing: 1, display: "block", marginBottom: 8 }}>Choose an icon</label>
+                <label style={{ fontSize: 11, color: "#94a3b8", textTransform: "uppercase", letterSpacing: 1, display: "block", marginBottom: 8 }}>{t.chooseIcon}</label>
                 <div style={{ display: "flex", gap: 4, marginBottom: 10 }}>
                   {[
-                    { key: "preset", label: "Pick Icon" },
-                    { key: "emoji", label: "Type Emoji" },
-                    { key: "upload", label: "Upload Photo" },
+                    { key: "preset", label: t.pickIcon },
+                    { key: "emoji", label: t.typeEmoji },
+                    { key: "upload", label: t.uploadPhoto },
                   ].map(tab => (
                     <button key={tab.key} onClick={() => { setGoalImageType(tab.key); setGoalImage(""); setAutoMatched(false); setAiSource(""); }}
                       style={{
@@ -1036,10 +1281,10 @@ export default function ExpenseTracker() {
                 {/* Emoji input */}
                 {goalImageType === "emoji" && (
                   <div>
-                    <input placeholder="Type or paste any emoji (e.g. 🎯 🏖️ 👟)" value={goalImage} onChange={e => { setGoalImage(e.target.value); setAutoMatched(false); setAiSource(""); }}
+                    <input placeholder={t.emojiPlaceholder} value={goalImage} onChange={e => { setGoalImage(e.target.value); setAutoMatched(false); setAiSource(""); }}
                       style={{ width: "100%", padding: "10px 12px", borderRadius: 8, border: "1px solid #334155", background: "#1e293b", color: "#e2e8f0", fontSize: 20, textAlign: "center" }} />
                     <p style={{ margin: "6px 0 0", fontSize: 11, color: "#64748b" }}>
-                      Windows: Win + . &nbsp;|&nbsp; Mac: Ctrl + Cmd + Space &nbsp;→&nbsp; opens emoji keyboard
+                      {t.emojiHint}
                     </p>
                   </div>
                 )}
@@ -1071,8 +1316,8 @@ export default function ExpenseTracker() {
                       ) : (
                         <>
                           <span style={{ fontSize: 32, marginBottom: 8 }}>📁</span>
-                          <span style={{ fontSize: 13, color: "#94a3b8", fontWeight: 600 }}>Click to browse or drag & drop</span>
-                          <span style={{ fontSize: 11, color: "#475569", marginTop: 4 }}>JPG, PNG, WEBP — any image from your device</span>
+                          <span style={{ fontSize: 13, color: "#94a3b8", fontWeight: 600 }}>{t.clickBrowse}</span>
+                          <span style={{ fontSize: 11, color: "#475569", marginTop: 4 }}>{t.fileTypes}</span>
                         </>
                       )}
                       <input type="file" accept="image/*"
@@ -1108,7 +1353,7 @@ export default function ExpenseTracker() {
                   {goalImage && (
                     <>
                       <span style={{ fontSize: 11, color: autoMatched ? "#fbbf24" : "#64748b" }}>
-                        {autoMatched ? (aiSource === "ai" ? "✨ AI picked:" : "Auto-matched:") : "Preview:"}
+                        {autoMatched ? (aiSource === "ai" ? "✨ AI picked:" : t.autoMatched) : "Preview:"}
                       </span>
                       {goalImageType === "url" || goalImageType === "upload" ? (
                         <img src={goalImage} alt="preview" style={{ width: 36, height: 36, borderRadius: 6, objectFit: "cover", border: "1px solid #334155" }} />
@@ -1131,14 +1376,14 @@ export default function ExpenseTracker() {
                         color: "#a5b4fc", fontSize: 12, fontWeight: 600, cursor: "pointer",
                         display: "flex", alignItems: "center", gap: 6,
                       }}>
-                      ✨ Ask AI to pick an icon
+                      ✨ {t.aiPickIcon}
                     </button>
                   )}
                 </div>
                 <button onClick={addGoal} style={{
                   padding: "10px 24px", borderRadius: 8, border: "none", cursor: "pointer",
                   background: "linear-gradient(135deg, #fbbf24, #f59e0b)", color: "#0f172a", fontSize: 13, fontWeight: 700, whiteSpace: "nowrap",
-                }}>Add Goal</button>
+                }}>{t.addGoalBtn}</button>
               </div>
             </div>
           )}
@@ -1146,7 +1391,7 @@ export default function ExpenseTracker() {
           {/* Goal Cards */}
           {goals.length === 0 && !showGoalForm && (
             <p style={{ textAlign: "center", color: "#475569", fontStyle: "italic", fontSize: 13, padding: "20px 0" }}>
-              No goals yet — add something you're saving for!
+              {t.noGoals}
             </p>
           )}
 
@@ -1193,7 +1438,7 @@ export default function ExpenseTracker() {
                         padding: "4px 10px", borderRadius: 6,
                         background: "rgba(52,211,153,0.9)", color: "#0f172a",
                         fontSize: 11, fontWeight: 700, letterSpacing: 0.5,
-                      }}>GOAL REACHED!</div>
+                      }}>{t.goalReached}</div>
                     )}
                     <button onClick={() => removeGoal(goal.id)} style={{
                       position: "absolute", top: 8, left: 8,
@@ -1240,7 +1485,7 @@ export default function ExpenseTracker() {
                         {progress.toFixed(1)}%
                       </span>
                       <span style={{ color: isComplete ? "#34d399" : "#64748b" }}>
-                        {isComplete ? "Goal reached!" : `$${fmt(remaining)} to go`}
+                        {isComplete ? t.goalReached : `${t.toGo} $${fmt(remaining)}`}
                       </span>
                     </div>
 
@@ -1248,7 +1493,7 @@ export default function ExpenseTracker() {
                     {!isComplete && (
                       <div>
                         <div style={{ display: "flex", gap: 6 }}>
-                          <input type="number" placeholder="$ amount" value={inputVal}
+                          <input type="number" placeholder={t.amount} value={inputVal}
                             onChange={e => setGoalInputs(prev => ({ ...prev, [goal.id]: e.target.value }))}
                             onKeyDown={e => { if (e.key === "Enter") addToGoal(goal.id); }}
                             style={{
@@ -1259,13 +1504,13 @@ export default function ExpenseTracker() {
                             padding: "7px 12px", borderRadius: 6, border: "none", cursor: "pointer",
                             background: "linear-gradient(135deg, #34d399, #22d3ee)", color: "#0f172a",
                             fontSize: 11, fontWeight: 700, whiteSpace: "nowrap",
-                          }}>+ Add</button>
+                          }}>{t.add}</button>
                           {goal.saved > 0 && (
                             <button onClick={() => withdrawFromGoal(goal.id)} style={{
                               padding: "7px 12px", borderRadius: 6, border: "1px solid #334155",
                               background: "transparent", color: "#94a3b8", cursor: "pointer",
                               fontSize: 11, fontWeight: 600, whiteSpace: "nowrap",
-                            }}>− Take</button>
+                            }}>{t.take}</button>
                           )}
                         </div>
                         {froggyBank > 0 && (
@@ -1275,7 +1520,7 @@ export default function ExpenseTracker() {
                             background: "rgba(6,78,59,0.3)", color: "#6ee7b7",
                             fontSize: 11, fontWeight: 600, display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
                           }}>
-                            🐸 Use from Froggy Bank <span style={{ fontFamily: "'Space Mono', monospace", fontSize: 10, color: "#34d399" }}>(${fmt(froggyBank)})</span>
+                            🐸 {t.useFromFroggy} <span style={{ fontFamily: "'Space Mono', monospace", fontSize: 10, color: "#34d399" }}>(${fmt(froggyBank)})</span>
                           </button>
                         )}
                       </div>
@@ -1286,7 +1531,7 @@ export default function ExpenseTracker() {
                         background: "rgba(52,211,153,0.1)", border: "1px solid rgba(52,211,153,0.2)",
                         fontSize: 12, color: "#34d399", fontWeight: 600,
                       }}>
-                        🎉 Fully funded!
+                        🎉 {t.fullyFunded}
                       </div>
                     )}
                   </div>
@@ -1333,10 +1578,10 @@ export default function ExpenseTracker() {
           </svg>
 
           <h3 style={{ margin: "0 0 6px", fontSize: 17, fontWeight: 700, color: froggyBank > 0 ? "#6ee7b7" : "#64748b" }}>
-            🐸 Froggy Bank
+            🐸 {t.froggyBankTitle}
           </h3>
           <p style={{ margin: "0 0 14px", fontSize: 11, color: "#475569", lineHeight: 1.4 }}>
-            Collects leftover dollars from locked budgets
+            {t.froggyDesc}
           </p>
 
           <div style={{
@@ -1350,7 +1595,7 @@ export default function ExpenseTracker() {
 
           {budgetEntries.filter(b => b.locked && b.amount - b.lockedSpent > 0).length > 0 && (
             <div style={{ textAlign: "left", borderTop: "1px solid #334155", paddingTop: 12 }}>
-              <div style={{ fontSize: 10, color: "#64748b", textTransform: "uppercase", letterSpacing: 1, marginBottom: 8 }}>Saved from</div>
+              <div style={{ fontSize: 10, color: "#64748b", textTransform: "uppercase", letterSpacing: 1, marginBottom: 8 }}>{t.savedFrom}</div>
               {budgetEntries.filter(b => b.locked && b.amount - b.lockedSpent > 0).map(b => (
                 <div key={b.id} style={{ display: "flex", justifyContent: "space-between", marginBottom: 6 }}>
                   <span style={{ fontSize: 11, color: "#94a3b8" }}>{b.label}</span>
@@ -1362,7 +1607,7 @@ export default function ExpenseTracker() {
 
           {froggyBank === 0 && (
             <p style={{ margin: 0, fontSize: 10, color: "#475569", fontStyle: "italic" }}>
-              {budgetEntries.length > 0 ? "Lock a budget with remaining money to start saving" : "Set a monthly budget first, then lock it when done"}
+              {budgetEntries.length > 0 ? t.lockBudgetHint : t.setBudgetFirst}
             </p>
           )}
         </div>
@@ -1372,39 +1617,39 @@ export default function ExpenseTracker() {
         {/* Earnings Table */}
         <div style={{ padding: 16, borderRadius: 12, background: "#1e293b", border: "1px solid #334155", marginBottom: 16 }}>
           <h3 style={{ margin: "0 0 14px", fontSize: 15, fontWeight: 700, color: "#34d399", display: "flex", alignItems: "center", gap: 8 }}>
-            <span style={{ fontSize: 18 }}>↗</span> Earnings — {isAll ? `${selectedYear} (All Months)` : `${MONTHS[selectedMonth]} ${selectedYear}`}
+            <span style={{ fontSize: 18 }}>↗</span> {t.earnings} — {isAll ? `${selectedYear} (${t.allMonths})` : `${MONTHS[selectedMonth]} ${selectedYear}`}
           </h3>
           <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 14 }}>
-            <input placeholder="Label (e.g. Salary)" value={earnLabel} onChange={e => setEarnLabel(e.target.value)} style={{ flex: "1 1 140px", padding: "9px 12px", borderRadius: 8, border: "1px solid #334155", background: "#0f172a", color: "#e2e8f0", fontSize: 13 }} />
+            <input placeholder={t.earningLabel} value={earnLabel} onChange={e => setEarnLabel(e.target.value)} style={{ flex: "1 1 140px", padding: "9px 12px", borderRadius: 8, border: "1px solid #334155", background: "#0f172a", color: "#e2e8f0", fontSize: 13 }} />
             <select value={earnCategory} onChange={e => setEarnCategory(e.target.value)} style={{ flex: "1 1 120px", padding: "9px 12px", borderRadius: 8, border: "1px solid #334155", background: "#0f172a", color: "#e2e8f0", fontSize: 13 }}>
-              {EARN_CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
+              {EARN_CATEGORIES.map(c => <option key={c} value={c}>{eCat[c] || c}</option>)}
             </select>
-            <input type="number" placeholder="Amount ($)" value={earnAmount} onChange={e => setEarnAmount(e.target.value)} style={{ flex: "1 1 120px", padding: "9px 12px", borderRadius: 8, border: "1px solid #334155", background: "#0f172a", color: "#e2e8f0", fontSize: 13, fontFamily: "'Space Mono', monospace" }} />
+            <input type="number" placeholder={t.amountDollar} value={earnAmount} onChange={e => setEarnAmount(e.target.value)} style={{ flex: "1 1 120px", padding: "9px 12px", borderRadius: 8, border: "1px solid #334155", background: "#0f172a", color: "#e2e8f0", fontSize: 13, fontFamily: "'Space Mono', monospace" }} />
             <input type="date" value={earnDate} max={todayStr} onChange={e => setEarnDate(e.target.value)} style={{ flex: "1 1 130px", padding: "9px 12px", borderRadius: 8, border: "1px solid #334155", background: "#0f172a", color: "#e2e8f0", fontSize: 13, fontFamily: "'Space Mono', monospace" }} />
-            <button onClick={addEarning} style={{ padding: "9px 18px", borderRadius: 8, border: "none", cursor: "pointer", background: "linear-gradient(135deg, #34d399, #22d3ee)", color: "#0f172a", fontSize: 13, fontWeight: 700, whiteSpace: "nowrap" }}>+ Add</button>
+            <button onClick={addEarning} style={{ padding: "9px 18px", borderRadius: 8, border: "none", cursor: "pointer", background: "linear-gradient(135deg, #34d399, #22d3ee)", color: "#0f172a", fontSize: 13, fontWeight: 700, whiteSpace: "nowrap" }}>{t.add}</button>
           </div>
           <div style={{ overflowX: "auto" }}>
             <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
               <thead><tr style={{ borderBottom: "2px solid #334155" }}>
-                {["Date", "Source", "Category", "Amount ($)", ""].map((h, idx) => (
+                {[t.date, t.source, t.category, t.amountDollar, ""].map((h, idx) => (
                   <th key={idx} style={{ padding: "8px 10px", textAlign: "left", color: "#64748b", fontSize: 11, textTransform: "uppercase", letterSpacing: 1 }}>{h}</th>
                 ))}
               </tr></thead>
               <tbody>
                 {currentTableData.earnings.length === 0 ? (
-                  <tr><td colSpan={5} style={{ padding: 20, textAlign: "center", color: "#475569", fontStyle: "italic" }}>No earnings added yet</td></tr>
+                  <tr><td colSpan={5} style={{ padding: 20, textAlign: "center", color: "#475569", fontStyle: "italic" }}>{t.noEarnings}</td></tr>
                 ) : currentTableData.earnings.map((e, i) => (
                   <tr key={e.id} style={{ borderBottom: "1px solid #1e293b", background: i % 2 === 0 ? "transparent" : "rgba(51,65,85,0.3)" }}>
                     <td style={{ padding: "8px 10px", fontFamily: "'Space Mono', monospace", fontSize: 12, color: "#94a3b8" }}>{e.date || "—"}</td>
                     <td style={{ padding: "8px 10px", fontWeight: 500 }}>{e.label}</td>
-                    <td style={{ padding: "8px 10px" }}><span style={{ padding: "2px 8px", borderRadius: 4, fontSize: 11, fontWeight: 600, background: "rgba(52,211,153,0.15)", color: "#6ee7b7" }}>{e.category}</span></td>
+                    <td style={{ padding: "8px 10px" }}><span style={{ padding: "2px 8px", borderRadius: 4, fontSize: 11, fontWeight: 600, background: "rgba(52,211,153,0.15)", color: "#6ee7b7" }}>{xCat[e.category] || eCat[e.category] || e.category}</span></td>
                     <td style={{ padding: "8px 10px", fontFamily: "'Space Mono', monospace", color: "#34d399" }}>+${fmt(e.amount)}</td>
                     <td style={{ padding: "8px 10px" }}><button onClick={() => removeEarning(e.id)} style={{ background: "none", border: "none", color: "#64748b", cursor: "pointer", fontSize: 16 }}>×</button></td>
                   </tr>
                 ))}
                 {currentTableData.earnings.length > 0 && (
                   <tr style={{ borderTop: "2px solid #334155", fontWeight: 700 }}>
-                    <td></td><td style={{ padding: "10px 10px" }}>TOTAL</td><td></td>
+                    <td></td><td style={{ padding: "10px 10px" }}>{t.total}</td><td></td>
                     <td style={{ padding: "10px 10px", fontFamily: "'Space Mono', monospace", color: "#34d399" }}>+${fmt(totals.earnings)}</td><td></td>
                   </tr>
                 )}
@@ -1416,45 +1661,49 @@ export default function ExpenseTracker() {
         {/* Expenses Table */}
         <div style={{ padding: 16, borderRadius: 12, background: "#1e293b", border: "1px solid #334155", marginBottom: 24 }}>
           <h3 style={{ margin: "0 0 14px", fontSize: 15, fontWeight: 700, color: "#f87171", display: "flex", alignItems: "center", gap: 8 }}>
-            <span style={{ fontSize: 18 }}>↘</span> Expenses — {isAll ? `${selectedYear} (All Months)` : `${MONTHS[selectedMonth]} ${selectedYear}`}
+            <span style={{ fontSize: 18 }}>↘</span> {t.expenses} — {isAll ? `${selectedYear} (${t.allMonths})` : `${MONTHS[selectedMonth]} ${selectedYear}`}
           </h3>
           <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 14 }}>
-            <input placeholder="Label (e.g. Rent)" value={expLabel} onChange={e => setExpLabel(e.target.value)} style={{ flex: "1 1 140px", padding: "9px 12px", borderRadius: 8, border: "1px solid #334155", background: "#0f172a", color: "#e2e8f0", fontSize: 13 }} />
+            <input placeholder={t.expenseLabel} value={expLabel} onChange={e => setExpLabel(e.target.value)} style={{ flex: "1 1 140px", padding: "9px 12px", borderRadius: 8, border: "1px solid #334155", background: "#0f172a", color: "#e2e8f0", fontSize: 13 }} />
             <select value={expCategory} onChange={e => setExpCategory(e.target.value)} style={{ flex: "1 1 120px", padding: "9px 12px", borderRadius: 8, border: "1px solid #334155", background: "#0f172a", color: "#e2e8f0", fontSize: 13 }}>
-              {EXP_CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
+              {EXP_CATEGORIES.map(c => <option key={c} value={c}>{xCat[c] || c}</option>)}
             </select>
-            <input type="number" placeholder="Amount ($)" value={expAmount} onChange={e => setExpAmount(e.target.value)} style={{ flex: "1 1 120px", padding: "9px 12px", borderRadius: 8, border: "1px solid #334155", background: "#0f172a", color: "#e2e8f0", fontSize: 13, fontFamily: "'Space Mono', monospace" }} />
+            <input type="number" placeholder={t.amountDollar} value={expAmount} onChange={e => setExpAmount(e.target.value)} style={{ flex: "1 1 120px", padding: "9px 12px", borderRadius: 8, border: "1px solid #334155", background: "#0f172a", color: "#e2e8f0", fontSize: 13, fontFamily: "'Space Mono', monospace" }} />
             <input type="date" value={expDate} max={todayStr} onChange={e => setExpDate(e.target.value)} style={{ flex: "1 1 130px", padding: "9px 12px", borderRadius: 8, border: "1px solid #334155", background: "#0f172a", color: "#e2e8f0", fontSize: 13, fontFamily: "'Space Mono', monospace" }} />
             <button onClick={addExpense} style={{ padding: "9px 18px", borderRadius: 8, border: "none", cursor: "pointer", background: "linear-gradient(135deg, #f87171, #fb923c)", color: "#0f172a", fontSize: 13, fontWeight: 700, whiteSpace: "nowrap" }}>+ Add</button>
           </div>
           <div style={{ overflowX: "auto" }}>
             <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
               <thead><tr style={{ borderBottom: "2px solid #334155" }}>
-                {["Date", "Item", "Category", "Amount ($)", ""].map((h, idx) => (
+                {[t.date, t.item, t.category, t.amountDollar, ""].map((h, idx) => (
                   <th key={idx} style={{ padding: "8px 10px", textAlign: "left", color: "#64748b", fontSize: 11, textTransform: "uppercase", letterSpacing: 1 }}>{h}</th>
                 ))}
               </tr></thead>
               <tbody>
                 {currentTableData.expenses.length === 0 ? (
-                  <tr><td colSpan={5} style={{ padding: 20, textAlign: "center", color: "#475569", fontStyle: "italic" }}>No expenses added yet</td></tr>
+                  <tr><td colSpan={5} style={{ padding: 20, textAlign: "center", color: "#475569", fontStyle: "italic" }}>{t.noExpenses}</td></tr>
                 ) : currentTableData.expenses.map((e, i) => (
                   <tr key={e.id} style={{ borderBottom: "1px solid #1e293b", background: i % 2 === 0 ? "transparent" : "rgba(51,65,85,0.3)" }}>
                     <td style={{ padding: "8px 10px", fontFamily: "'Space Mono', monospace", fontSize: 12, color: "#94a3b8" }}>{e.date || "—"}</td>
                     <td style={{ padding: "8px 10px", fontWeight: 500 }}>{e.label}</td>
-                    <td style={{ padding: "8px 10px" }}><span style={{ padding: "2px 8px", borderRadius: 4, fontSize: 11, fontWeight: 600, background: "rgba(129,140,248,0.15)", color: "#a5b4fc" }}>{e.category}</span></td>
+                    <td style={{ padding: "8px 10px" }}><span style={{ padding: "2px 8px", borderRadius: 4, fontSize: 11, fontWeight: 600, background: "rgba(129,140,248,0.15)", color: "#a5b4fc" }}>{xCat[e.category] || eCat[e.category] || e.category}</span></td>
                     <td style={{ padding: "8px 10px", fontFamily: "'Space Mono', monospace", color: "#f87171" }}>-${fmt(e.amount)}</td>
                     <td style={{ padding: "8px 10px" }}><button onClick={() => removeExpense(e.id)} style={{ background: "none", border: "none", color: "#64748b", cursor: "pointer", fontSize: 16 }}>×</button></td>
                   </tr>
                 ))}
                 {currentTableData.expenses.length > 0 && (
                   <tr style={{ borderTop: "2px solid #334155", fontWeight: 700 }}>
-                    <td></td><td style={{ padding: "10px 10px" }}>TOTAL</td><td></td>
+                    <td></td><td style={{ padding: "10px 10px" }}>{t.total}</td><td></td>
                     <td style={{ padding: "10px 10px", fontFamily: "'Space Mono', monospace", color: "#f87171" }}>-${fmt(totals.expenses)}</td><td></td>
                   </tr>
                 )}
               </tbody>
             </table>
           </div>
+        </div>
+
+        <div style={{ textAlign: "center", fontSize: 10, color: "#334155", paddingTop: 8, paddingBottom: 16 }}>
+          © 2026 1XD233 · Sakuhin · MIT License
         </div>
 
         {/* Undo toast */}
