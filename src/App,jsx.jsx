@@ -946,7 +946,7 @@ export default function ExpenseTracker() {
   const balanceColor = currentBalance >= 0 ? "#34d399" : "#f87171";
 
   return (
-    <div style={{ minHeight: "100vh", fontFamily: "'DM Sans', 'Segoe UI', sans-serif", background: "linear-gradient(145deg, #0f172a 0%, #1e293b 50%, #0f172a 100%)", color: "#e2e8f0", padding: "24px 16px" }}>
+    <div style={{ minHeight: "100vh", fontFamily: "'DM Sans', 'Segoe UI', sans-serif", background: "linear-gradient(145deg, #0f172a 0%, #1e293b 50%, #0f172a 100%)", color: "#e2e8f0", padding: "24px 16px", overflowX: "hidden" }}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap');
         * { box-sizing: border-box; }
@@ -957,6 +957,10 @@ export default function ExpenseTracker() {
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
+        @media (max-width: 600px) {
+          .mobile-stack { flex-direction: column !important; }
+          .mobile-full { flex: 1 1 100% !important; max-width: 100% !important; min-width: 0 !important; }
+        }
       `}</style>
 
       <div style={{ maxWidth: 1100, margin: "0 auto" }}>
@@ -1002,14 +1006,14 @@ export default function ExpenseTracker() {
             {t.currentBalance} {!editingBalance && <span style={{ fontSize: 10, color: "#64748b", cursor: "pointer", marginLeft: 6 }} onClick={() => setEditingBalance(true)}>✎ {t.edit}</span>}
           </div>
           {editingBalance ? (
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 10 }}>
-              <span style={{ fontSize: 42, fontWeight: 700, fontFamily: "'Space Mono', monospace", color: balanceColor }}>$</span>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 10, flexWrap: "wrap" }}>
+              <span style={{ fontSize: 32, fontWeight: 700, fontFamily: "'Space Mono', monospace", color: balanceColor }}>$</span>
               <input type="number" placeholder="0.00" autoFocus value={startingBalance} onChange={e => setStartingBalance(e.target.value)} onKeyDown={e => { if (e.key === "Enter") setEditingBalance(false); }}
-                style={{ width: 260, padding: "6px 12px", borderRadius: 10, border: "2px solid rgba(56,189,248,0.4)", background: "rgba(15,23,42,0.8)", color: balanceColor, fontSize: 38, fontWeight: 700, fontFamily: "'Space Mono', monospace", textAlign: "center" }} />
+                style={{ flex: 1, maxWidth: 260, padding: "6px 12px", borderRadius: 10, border: "2px solid rgba(56,189,248,0.4)", background: "rgba(15,23,42,0.8)", color: balanceColor, fontSize: 28, fontWeight: 700, fontFamily: "'Space Mono', monospace", textAlign: "center" }} />
               <button onClick={() => setEditingBalance(false)} style={{ padding: "8px 16px", borderRadius: 8, border: "none", cursor: "pointer", background: "linear-gradient(135deg, #38bdf8, #818cf8)", color: "#0f172a", fontSize: 13, fontWeight: 700 }}>{t.set}</button>
             </div>
           ) : (
-            <div onClick={() => setEditingBalance(true)} style={{ fontSize: 42, fontWeight: 700, fontFamily: "'Space Mono', monospace", color: balanceColor, lineHeight: 1.1, cursor: "pointer" }}
+            <div onClick={() => setEditingBalance(true)} style={{ fontSize: 32, fontWeight: 700, fontFamily: "'Space Mono', monospace", color: balanceColor, lineHeight: 1.1, cursor: "pointer", wordBreak: "break-all" }}
               onMouseEnter={e => e.currentTarget.style.opacity = "0.7"} onMouseLeave={e => e.currentTarget.style.opacity = "1"}>
               {currentBalance < 0 ? "-" : ""}${fmt(Math.abs(currentBalance))}
             </div>
@@ -1033,7 +1037,7 @@ export default function ExpenseTracker() {
             </div>
           </div>
           {totalAllocated > 0 && (
-            <div style={{ display: "flex", justifyContent: "center", gap: 24, marginTop: 12, paddingTop: 12, borderTop: "1px solid #334155" }}>
+            <div style={{ display: "flex", justifyContent: "center", gap: 24, marginTop: 12, paddingTop: 12, borderTop: "1px solid #334155", flexWrap: "wrap" }}>
               <div style={{ textAlign: "center" }}>
                 <div style={{ fontSize: 10, color: "#64748b", textTransform: "uppercase", letterSpacing: 1 }}>{t.savedForGoals}</div>
                 <div style={{ fontSize: 16, fontWeight: 600, fontFamily: "'Space Mono', monospace", color: "#fbbf24", marginTop: 2 }}>${fmt(goals.reduce((s, g) => s + g.saved, 0))}</div>
@@ -1214,10 +1218,10 @@ export default function ExpenseTracker() {
         <FinancialScene type="expense" data={currentTableData.expenses} categories={EXP_CATEGORIES} Icons={ExpIcons} t={t} catNames={xCat} />
 
         {/* ─── GOALS & FROGGY BANK ─── */}
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 300px", gap: 16, marginBottom: 20, alignItems: "start" }}>
+        <div className="mobile-stack" style={{ display: "flex", flexWrap: "wrap", gap: 16, marginBottom: 20, alignItems: "start" }}>
 
         {/* ─── GOALS SECTION ─── */}
-        <div style={{ padding: 20, borderRadius: 14, background: "#1e293b", border: "1px solid #334155" }}>
+        <div className="mobile-full" style={{ padding: 20, borderRadius: 14, background: "#1e293b", border: "1px solid #334155", flex: "1 1 400px", minWidth: 0 }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
             <h3 style={{ margin: 0, fontSize: 17, fontWeight: 700, color: "#fbbf24", display: "flex", alignItems: "center", gap: 8 }}>
               <span style={{ fontSize: 20 }}>★</span> {t.goals}
@@ -1542,12 +1546,13 @@ export default function ExpenseTracker() {
         </div>
 
         {/* ─── FROGGY BANK ─── */}
-        <div style={{
+        <div className="mobile-full" style={{
           padding: 20, borderRadius: 14,
           background: "linear-gradient(180deg, #1e293b 0%, #0f2918 100%)",
           border: `1px solid ${froggyBank > 0 ? "rgba(110,231,183,0.3)" : "#334155"}`,
           textAlign: "center",
           transition: "border-color 0.5s ease",
+          flex: "0 1 280px",
         }}>
           <svg viewBox="0 0 120 100" style={{ width: 110, margin: "0 auto 12px", display: "block" }}>
             <defs>
