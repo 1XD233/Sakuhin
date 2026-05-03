@@ -547,17 +547,61 @@ function FinancialScene({ type, data, categories, Icons, t, catNames }) {
 
 // ─── MAIN APP ───
 export default function ExpenseTracker() {
-  const [lang, setLang] = useState("en");
+  // Load saved data
+  const loadData = (key, fallback) => {
+    try {
+      const saved = localStorage.getItem("sakuhin_" + key);
+      return saved ? JSON.parse(saved) : fallback;
+    } catch { return fallback; }
+  };
+
+  const [lang, setLang] = useState(() => loadData("lang", "en"));
   const t = T[lang];
   const MONTHS = t.months;
   const eCat = T.earnCat[lang];
   const xCat = T.expCat[lang];
 
-  const [startingBalance, setStartingBalance] = useState("");
-  const [editingBalance, setEditingBalance] = useState(true);
+  const [startingBalance, setStartingBalance] = useState(() => loadData("balance", ""));
+  const [editingBalance, setEditingBalance] = useState(() => !loadData("balance", ""));
   const [selectedYear, setSelectedYear] = useState(CURRENT_YEAR);
   const [selectedMonth, setSelectedMonth] = useState("all");
-  const [allYearData, setAllYearData] = useState(() => ({ [CURRENT_YEAR]: defaultYearData() }));
+  const [allYearData, setAllYearData] = useState(() => loadData("yearData", { [CURRENT_YEAR]: defaultYearData() }));
+
+  // Auto-save whenever data changes
+  const saveData = (key, value) => {
+    try { localStorage.setItem("sakuhin_" + key, JSON.stringify(value)); } catch {}
+  };
+
+  const updateBalance = (val) => { setStartingBalance(val); saveData("balance", val); };
+  const updateYearData = (updater) => {
+    setAllYearData(prev => {
+      const next = typeof updater === "function" ? updater(prev) : updater;
+      saveData("yearData", next);
+      return next;
+    });
+  };
+  const updateBudgets = (updater) => {
+    setBudgetEntries(prev => {
+      const next = typeof updater === "function" ? updater(prev) : updater;
+      saveData("budgets", next);
+      return next;
+    });
+  };
+  const updateGoals = (updater) => {
+    setGoals(prev => {
+      const next = typeof updater === "function" ? updater(prev) : updater;
+      saveData("goals", next);
+      return next;
+    });
+  };
+  const updateFroggy = (updater) => {
+    setFroggyWithdrawn(prev => {
+      const next = typeof updater === "function" ? updater(prev) : updater;
+      saveData("froggy", next);
+      return next;
+    });
+  };
+  const updateLang = (val) => { setLang(val); saveData("lang", val); };
 
   const [earnAmount, setEarnAmount] = useState("");
   const [earnLabel, setEarnLabel] = useState("");
@@ -571,7 +615,7 @@ export default function ExpenseTracker() {
   const [expDate, setExpDate] = useState(todayStr);
 
   // Budgets
-  const [budgetEntries, setBudgetEntries] = useState([]);
+  const [budgetEntries, setBudgetEntries] = useState(() => loadData("budgets", []));
   const [budgetLabel, setBudgetLabel] = useState("");
   const [budgetCategory, setBudgetCategory] = useState(EXP_CATEGORIES[0]);
   const [budgetAmount, setBudgetAmount] = useState("");
@@ -581,13 +625,13 @@ export default function ExpenseTracker() {
   const addBudget = () => {
     if (!budgetAmount) return;
     saveSnapshot(t.addBudgetAction);
-    setBudgetEntries(prev => [...prev, { id: nextId++, label: budgetLabel || `Budget ${prev.length + 1}`, category: budgetCategory, amount: parseFloat(budgetAmount) || 0, locked: false, lockedSpent: 0 }]);
+    updateBudgets(prev => [...prev, { id: nextId++, label: budgetLabel || `Budget ${prev.length + 1}`, category: budgetCategory, amount: parseFloat(budgetAmount) || 0, locked: false, lockedSpent: 0 }]);
     setBudgetAmount(""); setBudgetLabel("");
   };
-  const removeBudget = (id) => { saveSnapshot(t.removeBudgetAction); setBudgetEntries(prev => prev.filter(b => b.id !== id)); };
+  const removeBudget = (id) => { saveSnapshot(t.removeBudgetAction); updateBudgets(prev => prev.filter(b => b.id !== id)); };
   const toggleLockBudget = (id) => {
     saveSnapshot(t.toggleLockAction);
-    setBudgetEntries(prev => prev.map(b => {
+    updateBudgets(prev => prev.map(b => {
       if (b.id !== id) return b;
       if (!b.locked) {
         // Locking — snapshot current spent amount
@@ -601,12 +645,12 @@ export default function ExpenseTracker() {
   };
   const saveEditBudget = (id) => {
     saveSnapshot(t.editBudgetAction);
-    setBudgetEntries(prev => prev.map(b => b.id === id ? { ...b, amount: parseFloat(editingBudgetAmount) || 0 } : b));
+    updateBudgets(prev => prev.map(b => b.id === id ? { ...b, amount: parseFloat(editingBudgetAmount) || 0 } : b));
     setEditingBudgetId(null); setEditingBudgetAmount("");
   };
 
   // Goals
-  const [goals, setGoals] = useState([]);
+  const [goals, setGoals] = useState(() => loadData("goals", []));
   const [goalName, setGoalName] = useState("");
   const [goalValue, setGoalValue] = useState("");
   const [goalImage, setGoalImage] = useState("");
@@ -756,10 +800,10 @@ export default function ExpenseTracker() {
   const addGoal = () => {
     if (!goalName || !goalValue) return;
     saveSnapshot(t.addGoalAction);
-    setGoals(prev => [...prev, { id: nextId++, name: goalName, value: parseFloat(goalValue) || 0, image: goalImage || "", imageType: goalImageType, saved: 0 }]);
+    updateGoals(prev => [...prev, { id: nextId++, name: goalName, value: parseFloat(goalValue) || 0, image: goalImage || "", imageType: goalImageType, saved: 0 }]);
     setGoalName(""); setGoalValue(""); setGoalImage(""); setGoalImageType("preset"); setAutoMatched(false); setAiSource(""); setShowGoalForm(false);
   };
-  const removeGoal = (id) => { saveSnapshot(t.removeGoalAction); setGoals(prev => prev.filter(g => g.id !== id)); };
+  const removeGoal = (id) => { saveSnapshot(t.removeGoalAction); updateGoals(prev => prev.filter(g => g.id !== id)); };
   const [goalInputs, setGoalInputs] = useState({});
 
   const addToGoal = (id) => {
@@ -769,7 +813,7 @@ export default function ExpenseTracker() {
     const available = currentBalance - totalAllocated;
     const toAdd = Math.min(amount, available);
     if (toAdd <= 0) return;
-    setGoals(prev => prev.map(g => g.id === id ? { ...g, saved: Math.min(g.value, g.saved + toAdd) } : g));
+    updateGoals(prev => prev.map(g => g.id === id ? { ...g, saved: Math.min(g.value, g.saved + toAdd) } : g));
     setGoalInputs(prev => ({ ...prev, [id]: "" }));
   };
 
@@ -782,8 +826,8 @@ export default function ExpenseTracker() {
     const spaceInGoal = goal.value - goal.saved;
     const toTransfer = Math.min(amount, froggyBank, spaceInGoal);
     if (toTransfer <= 0) return;
-    setGoals(prev => prev.map(g => g.id === id ? { ...g, saved: g.saved + toTransfer } : g));
-    setFroggyWithdrawn(prev => prev + toTransfer);
+    updateGoals(prev => prev.map(g => g.id === id ? { ...g, saved: g.saved + toTransfer } : g));
+    updateFroggy(prev => prev + toTransfer);
     setGoalInputs(prev => ({ ...prev, [id]: "" }));
   };
 
@@ -791,13 +835,13 @@ export default function ExpenseTracker() {
     const amount = parseFloat(goalInputs[id]) || 0;
     if (amount <= 0) return;
     saveSnapshot(t.withdrawGoalAction);
-    setGoals(prev => prev.map(g => g.id === id ? { ...g, saved: Math.max(0, g.saved - amount) } : g));
+    updateGoals(prev => prev.map(g => g.id === id ? { ...g, saved: Math.max(0, g.saved - amount) } : g));
     setGoalInputs(prev => ({ ...prev, [id]: "" }));
   };
 
   const handleYearChange = (val) => {
     const num = parseInt(val);
-    if (!isNaN(num) && num > 0) { setSelectedYear(num); setAllYearData(prev => prev[num] ? prev : { ...prev, [num]: defaultYearData() }); }
+    if (!isNaN(num) && num > 0) { setSelectedYear(num); updateYearData(prev => prev[num] ? prev : { ...prev, [num]: defaultYearData() }); }
     else if (val === "") setSelectedYear("");
   };
 
@@ -812,7 +856,7 @@ export default function ExpenseTracker() {
     return start + totalEarn - totalExp;
   }, [startingBalance, yearData]);
 
-  const [froggyWithdrawn, setFroggyWithdrawn] = useState(0);
+  const [froggyWithdrawn, setFroggyWithdrawn] = useState(() => loadData("froggy", 0));
 
   const froggyBankRaw = useMemo(() => {
     return budgetEntries.reduce((s, b) => {
@@ -863,6 +907,11 @@ export default function ExpenseTracker() {
     setBudgetEntries(last.budgetEntries);
     setGoals(last.goals);
     setFroggyWithdrawn(last.froggyWithdrawn);
+    saveData("balance", last.startingBalance);
+    saveData("yearData", last.allYearData);
+    saveData("budgets", last.budgetEntries);
+    saveData("goals", last.goals);
+    saveData("froggy", last.froggyWithdrawn);
     setUndoStack(prev => prev.slice(0, -1));
     setUndoMessage(`${t.undid}: ${last.label}`);
     if (undoTimerRef.current) clearTimeout(undoTimerRef.current);
@@ -875,7 +924,7 @@ export default function ExpenseTracker() {
     const dateObj = new Date(earnDate + "T00:00:00");
     const targetMonth = dateObj.getMonth();
     const targetYear = dateObj.getFullYear();
-    setAllYearData(prev => {
+    updateYearData(prev => {
       const yd = { ...(prev[targetYear] || defaultYearData()) };
       yd[targetMonth] = { ...yd[targetMonth], earnings: [...yd[targetMonth].earnings, { id: nextId++, label: earnLabel || `Earning ${yd[targetMonth].earnings.length + 1}`, amount: parseFloat(earnAmount) || 0, category: earnCategory, date: earnDate }] };
       return { ...prev, [targetYear]: yd };
@@ -891,7 +940,7 @@ export default function ExpenseTracker() {
     const dateObj = new Date(expDate + "T00:00:00");
     const targetMonth = dateObj.getMonth();
     const targetYear = dateObj.getFullYear();
-    setAllYearData(prev => {
+    updateYearData(prev => {
       const yd = { ...(prev[targetYear] || defaultYearData()) };
       yd[targetMonth] = { ...yd[targetMonth], expenses: [...yd[targetMonth].expenses, { id: nextId++, label: expLabel || `Expense ${yd[targetMonth].expenses.length + 1}`, amount: amt, category: expCategory, date: expDate }] };
       return { ...prev, [targetYear]: yd };
@@ -902,7 +951,7 @@ export default function ExpenseTracker() {
 
   const removeEarning = (id) => {
     saveSnapshot(t.removeEarningAction);
-    setAllYearData(prev => {
+    updateYearData(prev => {
       const yd = { ...(prev[selectedYear] || defaultYearData()) };
       MONTHS_EN.forEach((_, i) => { if (yd[i].earnings.some(e => e.id === id)) yd[i] = { ...yd[i], earnings: yd[i].earnings.filter(e => e.id !== id) }; });
       return { ...prev, [selectedYear]: yd };
@@ -911,7 +960,7 @@ export default function ExpenseTracker() {
 
   const removeExpense = (id) => {
     saveSnapshot(t.removeExpenseAction);
-    setAllYearData(prev => {
+    updateYearData(prev => {
       const yd = { ...(prev[selectedYear] || defaultYearData()) };
       MONTHS_EN.forEach((_, i) => { if (yd[i].expenses.some(e => e.id === id)) yd[i] = { ...yd[i], expenses: yd[i].expenses.filter(e => e.id !== id) }; });
       return { ...prev, [selectedYear]: yd };
@@ -976,7 +1025,7 @@ export default function ExpenseTracker() {
             </div>
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-            <button onClick={() => setLang(lang === "en" ? "zh" : "en")} style={{
+            <button onClick={() => updateLang(lang === "en" ? "zh" : "en")} style={{
               padding: "8px 14px", borderRadius: 8, border: "none", cursor: "pointer",
               background: "linear-gradient(135deg, #f59e0b, #ef4444)", color: "#fff",
               fontSize: 12, fontWeight: 700,
@@ -1010,7 +1059,7 @@ export default function ExpenseTracker() {
           {editingBalance ? (
             <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 10, flexWrap: "wrap" }}>
               <span style={{ fontSize: 32, fontWeight: 700, fontFamily: "'Space Mono', monospace", color: balanceColor }}>$</span>
-              <input type="number" placeholder="0.00" autoFocus value={startingBalance} onChange={e => setStartingBalance(e.target.value)} onKeyDown={e => { if (e.key === "Enter") setEditingBalance(false); }}
+              <input type="number" placeholder="0.00" autoFocus value={startingBalance} onChange={e => updateBalance(e.target.value)} onKeyDown={e => { if (e.key === "Enter") setEditingBalance(false); }}
                 style={{ flex: 1, maxWidth: 260, padding: "6px 12px", borderRadius: 10, border: "2px solid rgba(56,189,248,0.4)", background: "rgba(15,23,42,0.8)", color: balanceColor, fontSize: 28, fontWeight: 700, fontFamily: "'Space Mono', monospace", textAlign: "center" }} />
               <button onClick={() => setEditingBalance(false)} style={{ padding: "8px 16px", borderRadius: 8, border: "none", cursor: "pointer", background: "linear-gradient(135deg, #38bdf8, #818cf8)", color: "#0f172a", fontSize: 13, fontWeight: 700 }}>{t.set}</button>
             </div>
