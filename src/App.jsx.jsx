@@ -949,9 +949,11 @@ export default function ExpenseTracker() {
     <div style={{ minHeight: "100vh", fontFamily: "'DM Sans', 'Segoe UI', sans-serif", background: "linear-gradient(145deg, #0f172a 0%, #1e293b 50%, #0f172a 100%)", color: "#e2e8f0", padding: "24px 16px", overflowX: "hidden" }}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap');
-        * { box-sizing: border-box; }
-        input, select { outline: none; }
+        * { box-sizing: border-box; max-width: 100%; }
+        html, body, #root { overflow-x: hidden; width: 100%; }
+        input, select { outline: none; max-width: 100%; }
         input:focus, select:focus { border-color: #38bdf8 !important; box-shadow: 0 0 0 2px rgba(56,189,248,0.25); }
+        table { table-layout: auto; word-break: break-word; }
         @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
         @keyframes fadeInUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         ::-webkit-scrollbar { width: 6px; }
@@ -959,11 +961,11 @@ export default function ExpenseTracker() {
         ::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
         @media (max-width: 600px) {
           .mobile-stack { flex-direction: column !important; }
-          .mobile-full { flex: 1 1 100% !important; max-width: 100% !important; min-width: 0 !important; }
+          .mobile-full { flex: 1 1 100% !important; max-width: 100% !important; min-width: 0 !important; width: 100% !important; }
         }
       `}</style>
 
-      <div style={{ maxWidth: 1100, margin: "0 auto" }}>
+      <div style={{ maxWidth: 1100, margin: "0 auto", width: "100%", minWidth: 0 }}>
         {/* Header */}
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
@@ -1063,7 +1065,7 @@ export default function ExpenseTracker() {
           <div>
             <label style={{ fontSize: 11, color: "#94a3b8", textTransform: "uppercase", letterSpacing: 1, display: "block", marginBottom: 6 }}>{t.enterYear}</label>
             <input type="number" placeholder="e.g. 2026" value={selectedYear} onChange={e => handleYearChange(e.target.value)}
-              style={{ width: 160, padding: "10px 12px", borderRadius: 8, border: "1px solid #334155", background: "#0f172a", color: "#e2e8f0", fontSize: 15, fontFamily: "'Space Mono', monospace" }} />
+              style={{ width: "100%", maxWidth: 160, padding: "10px 12px", borderRadius: 8, border: "1px solid #334155", background: "#0f172a", color: "#e2e8f0", fontSize: 15, fontFamily: "'Space Mono', monospace" }} />
           </div>
           <div>
             <label style={{ fontSize: 11, color: "#94a3b8", textTransform: "uppercase", letterSpacing: 1, display: "block", marginBottom: 6 }}>{t.selectMonth}</label>
@@ -1157,7 +1159,7 @@ export default function ExpenseTracker() {
                       <td style={{ padding: "8px 10px", fontFamily: "'Space Mono', monospace", color: isOver ? "#f87171" : "#94a3b8" }}>
                         ${fmt(spent)}
                       </td>
-                      <td style={{ padding: "8px 10px", minWidth: 180 }}>
+                      <td style={{ padding: "8px 10px" }}>
                         <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 3 }}>
                           <span style={{ fontSize: 9, color: "#64748b" }}>${fmt(spent)} {t.of} ${fmt(b.amount)} {t.spentWord}</span>
                           <span style={{ fontSize: 9, color: isOver ? "#f87171" : "#34d399" }}>
@@ -1399,7 +1401,7 @@ export default function ExpenseTracker() {
             </p>
           )}
 
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: 14 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(min(280px, 100%), 1fr))", gap: 14 }}>
             {goals.map(goal => {
               const progress = goal.value > 0 ? Math.min(100, (goal.saved / goal.value) * 100) : 0;
               const isComplete = goal.saved >= goal.value;
