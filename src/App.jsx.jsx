@@ -3,14 +3,14 @@ import { useState, useMemo, useRef } from "react";
 const MONTHS_EN = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
 const MONTHS_ZH = ["1月","2月","3月","4月","5月","6月","7月","8月","9月","10月","11月","12月"];
 const CURRENT_YEAR = new Date().getFullYear();
-const EARN_CATEGORIES = ["Salary","Freelance","Investments","Bonus","Side Hustle","Gifts","Other"];
-const EXP_CATEGORIES = ["Food","Transport","Housing","Entertainment","Utilities","Healthcare","Shopping","Education","Other"];
+const EARN_CATEGORIES = ["Salary","Freelance","Investments","Bonus","Side Hustle","Gifts","Adjustment","Other"];
+const EXP_CATEGORIES = ["Food","Transport","Housing","Entertainment","Utilities","Healthcare","Shopping","Education","Adjustment","Other"];
 const MAX_UNDO = 30;
 
 const T = {
   en: {
     months: MONTHS_EN,
-    moneyTracker: "Money Tracker",
+    moneyTracker: "Sakuhin",
     fullYear: "Full Year",
     currentBalance: "Current Balance",
     edit: "edit",
@@ -85,6 +85,33 @@ const T = {
     froggyBankTitle: "Froggy Bank",
     froggyDesc: "Collects leftover dollars from locked budgets",
     savedFrom: "Saved from",
+    savedHistory: "Saved History",
+    viewHistory: "View History",
+    hideHistory: "Hide",
+    noHistory: "No records for this period",
+    historyIn: "IN",
+    historyOut: "OUT",
+    startingBalance: "Starting Balance",
+    onboardTitle: "Welcome to Sakuhin",
+    onboardStep1: "What's your current balance right now?",
+    onboardStep1Hint: "This becomes your starting point. All future earnings and expenses will be tracked from here.",
+    onboardStep2: "Want to add past records?",
+    onboardStep2Hint: "If you add past earnings or expenses, your displayed balance will adjust automatically. You can always add a Balance Correction later if the numbers drift.",
+    onboardStart: "Start Tracking",
+    onboardSkip: "Skip, I'll add records later",
+    balanceCorrection: "Balance Correction",
+    addCorrection: "+ Correction",
+    correctionHint: "Adjust if your calculated balance doesn't match reality",
+    calculatedBalance: "Calculated Balance",
+    iKnowStarting: "I know my starting balance",
+    iKnowCurrent: "I only know my current balance",
+    currentBalanceNow: "What's your balance right now?",
+    currentBalanceHint: "Enter what's in your account today. After you add your past records, we'll calculate what your starting balance was.",
+    addRecordsFirst: "Add your past earnings and expenses below, then confirm.",
+    confirmRecords: "Confirm & Calculate",
+    calculatedStarting: "Your calculated starting balance",
+    looksGood: "Looks good — start tracking!",
+    goBack: "Go back",
     lockBudgetHint: "Lock a budget with remaining money to start saving",
     setBudgetFirst: "Set a monthly budget first, then lock it when done",
     earnings: "Earnings",
@@ -116,10 +143,18 @@ const T = {
     adjust: "− Adjust",
     confirm: "Confirm",
     budgetReached: "Budget reached",
+    fromBalance: "From Balance",
+    fromFroggy: "From Froggy Bank",
+    toBalance: "To Balance",
+    toFroggy: "To Froggy Bank",
+    addFunds: "Add Funds",
+    withdraw: "Withdraw",
+    thisMonth: "This Month Only",
+    allMonthsScope: "All Months",
   },
   zh: {
     months: MONTHS_ZH,
-    moneyTracker: "资金追踪器",
+    moneyTracker: "Sakuhin",
     fullYear: "全年",
     currentBalance: "当前余额",
     edit: "编辑",
@@ -194,6 +229,33 @@ const T = {
     froggyBankTitle: "青蛙银行",
     froggyDesc: "收集锁定预算的剩余资金",
     savedFrom: "来源",
+    savedHistory: "存储记录",
+    viewHistory: "查看记录",
+    hideHistory: "隐藏",
+    noHistory: "该时段无记录",
+    historyIn: "存入",
+    historyOut: "支出",
+    startingBalance: "初始余额",
+    onboardTitle: "欢迎使用 Sakuhin",
+    onboardStep1: "您现在的余额是多少？",
+    onboardStep1Hint: "这将成为您的起始点。所有未来的收入和支出都将从这里开始追踪。",
+    onboardStep2: "要添加过去的记录吗？",
+    onboardStep2Hint: "如果添加过去的收入或支出，显示的余额会自动调整。您可以随时添加余额校正来修正差异。",
+    onboardStart: "开始追踪",
+    onboardSkip: "跳过，稍后再添加",
+    balanceCorrection: "余额校正",
+    addCorrection: "+ 校正",
+    correctionHint: "当计算余额与实际不符时进行调整",
+    calculatedBalance: "计算余额",
+    iKnowStarting: "我知道初始余额",
+    iKnowCurrent: "我只知道当前余额",
+    currentBalanceNow: "您现在的余额是多少？",
+    currentBalanceHint: "输入您账户中现在的金额。添加过去的记录后，我们会自动计算您的初始余额。",
+    addRecordsFirst: "在下方添加您过去的收入和支出记录，然后确认。",
+    confirmRecords: "确认并计算",
+    calculatedStarting: "您的计算初始余额",
+    looksGood: "没问题 — 开始追踪！",
+    goBack: "返回",
     lockBudgetHint: "锁定有剩余的预算即可开始存钱",
     setBudgetFirst: "先设置月度预算，完成后锁定即可",
     earnings: "收入",
@@ -225,14 +287,22 @@ const T = {
     adjust: "− 调整",
     confirm: "确认",
     budgetReached: "已达上限",
+    fromBalance: "从余额",
+    fromFroggy: "从青蛙银行",
+    toBalance: "到余额",
+    toFroggy: "到青蛙银行",
+    addFunds: "存入",
+    withdraw: "取出",
+    thisMonth: "仅本月",
+    allMonthsScope: "所有月份",
   },
   earnCat: {
-    en: { Salary: "Salary", Freelance: "Freelance", Investments: "Investments", Bonus: "Bonus", "Side Hustle": "Side Hustle", Gifts: "Gifts", Other: "Other" },
-    zh: { Salary: "工资", Freelance: "自由职业", Investments: "投资", Bonus: "奖金", "Side Hustle": "副业", Gifts: "礼物", Other: "其他" },
+    en: { Salary: "Salary", Freelance: "Freelance", Investments: "Investments", Bonus: "Bonus", "Side Hustle": "Side Hustle", Gifts: "Gifts", Adjustment: "Adjustment", Other: "Other" },
+    zh: { Salary: "工资", Freelance: "自由职业", Investments: "投资", Bonus: "奖金", "Side Hustle": "副业", Gifts: "礼物", Adjustment: "校正", Other: "其他" },
   },
   expCat: {
-    en: { Food: "Food", Transport: "Transport", Housing: "Housing", Entertainment: "Entertainment", Utilities: "Utilities", Healthcare: "Healthcare", Shopping: "Shopping", Education: "Education", Other: "Other" },
-    zh: { Food: "餐饮", Transport: "交通", Housing: "住房", Entertainment: "娱乐", Utilities: "水电", Healthcare: "医疗", Shopping: "购物", Education: "教育", Other: "其他" },
+    en: { Food: "Food", Transport: "Transport", Housing: "Housing", Entertainment: "Entertainment", Utilities: "Utilities", Healthcare: "Healthcare", Shopping: "Shopping", Education: "Education", Adjustment: "Adjustment", Other: "Other" },
+    zh: { Food: "餐饮", Transport: "交通", Housing: "住房", Entertainment: "娱乐", Utilities: "水电", Healthcare: "医疗", Shopping: "购物", Education: "教育", Adjustment: "校正", Other: "其他" },
   },
 };
 
@@ -562,7 +632,11 @@ export default function ExpenseTracker() {
   const xCat = T.expCat[lang];
 
   const [startingBalance, setStartingBalance] = useState(() => loadData("balance", ""));
-  const [editingBalance, setEditingBalance] = useState(() => !loadData("balance", ""));
+  const [onboarded, setOnboarded] = useState(() => loadData("onboarded", false));
+  const [editingBalance, setEditingBalance] = useState(false);
+  const [onboardMode, setOnboardMode] = useState(null); // null, "starting", "current"
+  const [onboardCurrentBal, setOnboardCurrentBal] = useState("");
+  const [onboardStep, setOnboardStep] = useState(1);
   const [selectedYear, setSelectedYear] = useState(CURRENT_YEAR);
   const [selectedMonth, setSelectedMonth] = useState("all");
   const [allYearData, setAllYearData] = useState(() => loadData("yearData", { [CURRENT_YEAR]: defaultYearData() }));
@@ -595,13 +669,74 @@ export default function ExpenseTracker() {
     });
   };
   const updateFroggy = (updater) => {
-    setFroggyWithdrawn(prev => {
+    setFroggyBalance(prev => {
       const next = typeof updater === "function" ? updater(prev) : updater;
       saveData("froggy", next);
       return next;
     });
   };
+  const addFroggyLog = (label, category, amount, month, year) => {
+    setFroggyHistory(prev => {
+      const next = [...prev, { id: nextId++, label, category, amount, month, year, timestamp: Date.now() }];
+      saveData("froggyHistory", next);
+      return next;
+    });
+  };
   const updateLang = (val) => { setLang(val); saveData("lang", val); };
+
+  const [correctionAmount, setCorrectionAmount] = useState("");
+  const [correctionNote, setCorrectionNote] = useState("");
+
+  const completeOnboarding = () => {
+    saveData("balance", startingBalance);
+    saveData("onboarded", true);
+    setOnboarded(true);
+  };
+
+  const completeOnboardingReverse = () => {
+    // Starting Balance = Current Balance - Total Earnings + Total Expenses
+    const current = parseFloat(onboardCurrentBal) || 0;
+    let totalEarn = 0, totalExp = 0;
+    Object.values(allYearData).forEach(yd => {
+      MONTHS_EN.forEach((_, i) => {
+        if (yd[i]) {
+          yd[i].earnings.forEach(e => { totalEarn += e.amount; });
+          yd[i].expenses.forEach(e => { totalExp += e.amount; });
+        }
+      });
+    });
+    const calculated = current - totalEarn + totalExp;
+    setStartingBalance(String(calculated));
+    saveData("balance", String(calculated));
+    saveData("onboarded", true);
+    setOnboarded(true);
+  };
+
+  const addCorrection = () => {
+    const amt = parseFloat(correctionAmount);
+    if (!amt || amt === 0) return;
+    saveSnapshot(lang === "zh" ? "余额校正" : "Balance correction");
+    const todayStr = new Date().toISOString().split("T")[0];
+    const dateObj = new Date(todayStr + "T00:00:00");
+    const targetMonth = dateObj.getMonth();
+    const targetYear = dateObj.getFullYear();
+    const label = correctionNote || t.balanceCorrection;
+
+    if (amt > 0) {
+      updateYearData(prev => {
+        const yd = { ...(prev[targetYear] || defaultYearData()) };
+        yd[targetMonth] = { ...yd[targetMonth], earnings: [...yd[targetMonth].earnings, { id: nextId++, label, amount: amt, category: "Adjustment", date: todayStr }] };
+        return { ...prev, [targetYear]: yd };
+      });
+    } else {
+      updateYearData(prev => {
+        const yd = { ...(prev[targetYear] || defaultYearData()) };
+        yd[targetMonth] = { ...yd[targetMonth], expenses: [...yd[targetMonth].expenses, { id: nextId++, label, amount: Math.abs(amt), category: "Adjustment", date: todayStr }] };
+        return { ...prev, [targetYear]: yd };
+      });
+    }
+    setCorrectionAmount(""); setCorrectionNote("");
+  };
 
   const [earnAmount, setEarnAmount] = useState("");
   const [earnLabel, setEarnLabel] = useState("");
@@ -619,29 +754,138 @@ export default function ExpenseTracker() {
   const [budgetLabel, setBudgetLabel] = useState("");
   const [budgetCategory, setBudgetCategory] = useState(EXP_CATEGORIES[0]);
   const [budgetAmount, setBudgetAmount] = useState("");
+  const [budgetScope, setBudgetScope] = useState("current"); // "current" or "all"
   const [editingBudgetId, setEditingBudgetId] = useState(null);
   const [editingBudgetAmount, setEditingBudgetAmount] = useState("");
 
   const addBudget = () => {
     if (!budgetAmount) return;
     saveSnapshot(t.addBudgetAction);
-    updateBudgets(prev => [...prev, { id: nextId++, label: budgetLabel || `Budget ${prev.length + 1}`, category: budgetCategory, amount: parseFloat(budgetAmount) || 0, locked: false, lockedSpent: 0 }]);
+    const targetMonth = budgetScope === "all" ? "all" : budgetMonth;
+    updateBudgets(prev => [...prev, {
+      id: nextId++, label: budgetLabel || `Budget ${prev.length + 1}`,
+      category: budgetCategory, amount: parseFloat(budgetAmount) || 0,
+      scope: targetMonth, scopeYear: selectedYear,
+      // For single-month: simple lock state
+      locked: false, lockedSpent: 0,
+      // For all-months: per-month lock state + start/exclude
+      monthState: {}, // { 0: { locked: true, lockedSpent: 50 }, ... }
+      startMonth: budgetMonth, // only show from this month onwards
+      excludedMonths: [], // months removed by user
+    }]);
     setBudgetAmount(""); setBudgetLabel("");
   };
-  const removeBudget = (id) => { saveSnapshot(t.removeBudgetAction); updateBudgets(prev => prev.filter(b => b.id !== id)); };
-  const toggleLockBudget = (id) => {
-    saveSnapshot(t.toggleLockAction);
+  const removeBudget = (id) => {
+    saveSnapshot(t.removeBudgetAction);
+    const entry = budgetEntries.find(b => b.id === id);
+    if (entry) {
+      if (entry.scope === "all") {
+        const ms = entry.monthState || {};
+        Object.entries(ms).forEach(([m, state]) => {
+          if (state.locked) {
+            const saved = Math.max(0, entry.amount - state.lockedSpent);
+            if (saved > 0) {
+              updateFroggy(prev => Math.max(0, prev - saved));
+              addFroggyLog(entry.label, entry.category, -saved, parseInt(m), entry.scopeYear || selectedYear);
+            }
+          }
+        });
+      } else if (entry.locked) {
+        const contribution = Math.max(0, entry.amount - entry.lockedSpent);
+        if (contribution > 0) {
+          updateFroggy(prev => Math.max(0, prev - contribution));
+          addFroggyLog(entry.label, entry.category, -contribution, entry.scope !== undefined ? entry.scope : budgetMonth, entry.scopeYear || selectedYear);
+        }
+      }
+    }
+    updateBudgets(prev => prev.filter(b => b.id !== id));
+  };
+
+  const excludeBudgetFromMonth = (id, month) => {
+    saveSnapshot(t.removeBudgetAction);
+    const entry = budgetEntries.find(b => b.id === id);
+    if (entry) {
+      const ms = entry.monthState || {};
+      const monthLock = ms[month] || { locked: false, lockedSpent: 0 };
+      if (monthLock.locked) {
+        const contribution = Math.max(0, entry.amount - monthLock.lockedSpent);
+        if (contribution > 0) {
+          updateFroggy(prev => Math.max(0, prev - contribution));
+          addFroggyLog(entry.label, entry.category, -contribution, month, entry.scopeYear || selectedYear);
+        }
+      }
+    }
     updateBudgets(prev => prev.map(b => {
       if (b.id !== id) return b;
-      if (!b.locked) {
-        // Locking — snapshot current spent amount
-        const spent = spendingByCategory[b.category] || 0;
-        return { ...b, locked: true, lockedSpent: spent };
-      } else {
-        // Unlocking — clear snapshot, go back to live tracking
-        return { ...b, locked: false, lockedSpent: 0 };
-      }
+      const excluded = b.excludedMonths || [];
+      const newMs = { ...(b.monthState || {}) };
+      delete newMs[month];
+      return { ...b, excludedMonths: [...excluded, month], monthState: newMs };
     }));
+  };
+
+  const toggleLockBudget = (id) => {
+    saveSnapshot(t.toggleLockAction);
+    const entry = budgetEntries.find(b => b.id === id);
+    if (!entry) return;
+
+    if (entry.scope === "all") {
+      // Per-month lock for all-months budgets
+      const ms = entry.monthState || {};
+      const currentState = ms[budgetMonth] || { locked: false, lockedSpent: 0 };
+
+      if (currentState.locked) {
+        // Unlocking this month
+        const contribution = Math.max(0, entry.amount - currentState.lockedSpent);
+        if (contribution > 0) {
+          updateFroggy(prev => Math.max(0, prev - contribution));
+          addFroggyLog(entry.label, entry.category, -contribution, budgetMonth, selectedYear);
+        }
+        updateBudgets(prev => prev.map(b => {
+          if (b.id !== id) return b;
+          const newMs = { ...(b.monthState || {}), [budgetMonth]: { locked: false, lockedSpent: 0 } };
+          return { ...b, monthState: newMs };
+        }));
+      } else {
+        // Locking this month
+        const spent = spendingByCategory[entry.category] || 0;
+        const leftover = Math.max(0, entry.amount - spent);
+        if (leftover > 0) {
+          updateFroggy(prev => prev + leftover);
+          addFroggyLog(entry.label, entry.category, leftover, budgetMonth, selectedYear);
+        }
+        updateBudgets(prev => prev.map(b => {
+          if (b.id !== id) return b;
+          const newMs = { ...(b.monthState || {}), [budgetMonth]: { locked: true, lockedSpent: spent } };
+          return { ...b, monthState: newMs };
+        }));
+      }
+    } else {
+      // Simple lock for single-month budgets
+      if (entry.locked) {
+        const contribution = Math.max(0, entry.amount - entry.lockedSpent);
+        if (contribution > 0) {
+          updateFroggy(prev => Math.max(0, prev - contribution));
+          addFroggyLog(entry.label, entry.category, -contribution, entry.scope !== undefined ? entry.scope : budgetMonth, selectedYear);
+        }
+      } else {
+        const spent = spendingByCategory[entry.category] || 0;
+        const leftover = Math.max(0, entry.amount - spent);
+        if (leftover > 0) {
+          updateFroggy(prev => prev + leftover);
+          addFroggyLog(entry.label, entry.category, leftover, entry.scope !== undefined ? entry.scope : budgetMonth, selectedYear);
+        }
+      }
+      updateBudgets(prev => prev.map(b => {
+        if (b.id !== id) return b;
+        if (!b.locked) {
+          const spent = spendingByCategory[b.category] || 0;
+          return { ...b, locked: true, lockedSpent: spent };
+        } else {
+          return { ...b, locked: false, lockedSpent: 0 };
+        }
+      }));
+    }
   };
   const saveEditBudget = (id) => {
     saveSnapshot(t.editBudgetAction);
@@ -804,39 +1048,71 @@ export default function ExpenseTracker() {
     setGoalName(""); setGoalValue(""); setGoalImage(""); setGoalImageType("preset"); setAutoMatched(false); setAiSource(""); setShowGoalForm(false);
   };
   const removeGoal = (id) => { saveSnapshot(t.removeGoalAction); updateGoals(prev => prev.filter(g => g.id !== id)); };
-  const [goalInputs, setGoalInputs] = useState({});
 
-  const addToGoal = (id) => {
-    const amount = parseFloat(goalInputs[id]) || 0;
-    if (amount <= 0) return;
-    saveSnapshot(t.fundGoalAction);
-    const available = currentBalance - totalAllocated;
-    const toAdd = Math.min(amount, available);
-    if (toAdd <= 0) return;
-    updateGoals(prev => prev.map(g => g.id === id ? { ...g, saved: Math.min(g.value, g.saved + toAdd) } : g));
-    setGoalInputs(prev => ({ ...prev, [id]: "" }));
+  const [goalFundSource, setGoalFundSource] = useState({});
+  const [goalWithdrawDest, setGoalWithdrawDest] = useState({});
+  const [goalAddInputs, setGoalAddInputs] = useState({});
+  const [goalTakeInputs, setGoalTakeInputs] = useState({});
+
+  const getAddValidation = (goal) => {
+    const amount = parseFloat(goalAddInputs[goal.id]) || 0;
+    const source = goalFundSource[goal.id] || "balance";
+    const spaceInGoal = goal.value - goal.saved;
+    if (amount <= 0) return { valid: false, msg: "" };
+    if (amount > spaceInGoal) return { valid: false, msg: lang === "zh" ? `目标只需 $${fmt(spaceInGoal)}` : `Goal only needs $${fmt(spaceInGoal)}` };
+    if (source === "balance" && amount > availableBalance) return { valid: false, msg: lang === "zh" ? `可用余额不足 (仅有 $${fmt(availableBalance)})` : `Not enough in Available Balance ($${fmt(availableBalance)} left)` };
+    if (source === "froggy" && amount > froggyBank) return { valid: false, msg: lang === "zh" ? `青蛙银行余额不足 🐸 (仅有 $${fmt(froggyBank)})` : `Froggy Bank doesn't have enough 🐸 ($${fmt(froggyBank)} left)` };
+    return { valid: true, msg: "" };
   };
 
-  const transferFromFroggy = (id) => {
-    const amount = parseFloat(goalInputs[id]) || 0;
-    if (amount <= 0 || froggyBank <= 0) return;
-    saveSnapshot(t.froggyTransferAction);
+  const getTakeValidation = (goal) => {
+    const amount = parseFloat(goalTakeInputs[goal.id]) || 0;
+    if (amount <= 0) return { valid: false, msg: "" };
+    if (amount > goal.saved) return { valid: false, msg: lang === "zh" ? `目标中只有 $${fmt(goal.saved)}` : `Only $${fmt(goal.saved)} saved in this goal` };
+    return { valid: true, msg: "" };
+  };
+
+  const addToGoal = (id) => {
     const goal = goals.find(g => g.id === id);
     if (!goal) return;
+    const v = getAddValidation(goal);
+    if (!v.valid) return;
+    const amount = parseFloat(goalAddInputs[id]) || 0;
+    const source = goalFundSource[id] || "balance";
     const spaceInGoal = goal.value - goal.saved;
-    const toTransfer = Math.min(amount, froggyBank, spaceInGoal);
-    if (toTransfer <= 0) return;
-    updateGoals(prev => prev.map(g => g.id === id ? { ...g, saved: g.saved + toTransfer } : g));
-    updateFroggy(prev => prev + toTransfer);
-    setGoalInputs(prev => ({ ...prev, [id]: "" }));
+
+    if (source === "balance") {
+      saveSnapshot(t.fundGoalAction);
+      const toAdd = Math.min(amount, availableBalance, spaceInGoal);
+      if (toAdd <= 0) return;
+      updateGoals(prev => prev.map(g => g.id === id ? { ...g, saved: g.saved + toAdd } : g));
+    } else {
+      saveSnapshot(t.froggyTransferAction);
+      const toAdd = Math.min(amount, froggyBank, spaceInGoal);
+      if (toAdd <= 0) return;
+      updateGoals(prev => prev.map(g => g.id === id ? { ...g, saved: g.saved + toAdd } : g));
+      updateFroggy(prev => Math.max(0, prev - toAdd));
+      addFroggyLog(goal.name, "Goal", -toAdd, budgetMonth, selectedYear);
+    }
+    setGoalAddInputs(prev => ({ ...prev, [id]: "" }));
   };
 
   const withdrawFromGoal = (id) => {
-    const amount = parseFloat(goalInputs[id]) || 0;
-    if (amount <= 0) return;
+    const goal = goals.find(g => g.id === id);
+    if (!goal) return;
+    const v = getTakeValidation(goal);
+    if (!v.valid) return;
+    const amount = parseFloat(goalTakeInputs[id]) || 0;
+    const dest = goalWithdrawDest[id] || "balance";
+    const toTake = Math.min(amount, goal.saved);
+    if (toTake <= 0) return;
     saveSnapshot(t.withdrawGoalAction);
-    updateGoals(prev => prev.map(g => g.id === id ? { ...g, saved: Math.max(0, g.saved - amount) } : g));
-    setGoalInputs(prev => ({ ...prev, [id]: "" }));
+    updateGoals(prev => prev.map(g => g.id === id ? { ...g, saved: Math.max(0, g.saved - toTake) } : g));
+    if (dest === "froggy") {
+      updateFroggy(prev => prev + toTake);
+      addFroggyLog(goal.name, "Goal", toTake, budgetMonth, selectedYear);
+    }
+    setGoalTakeInputs(prev => ({ ...prev, [id]: "" }));
   };
 
   const handleYearChange = (val) => {
@@ -852,19 +1128,25 @@ export default function ExpenseTracker() {
   const currentBalance = useMemo(() => {
     const start = parseFloat(startingBalance) || 0;
     let totalEarn = 0, totalExp = 0;
-    MONTHS_EN.forEach((_, i) => { yearData[i].earnings.forEach(e => { totalEarn += e.amount; }); yearData[i].expenses.forEach(e => { totalExp += e.amount; }); });
+    // Sum across ALL years, not just the selected year
+    Object.values(allYearData).forEach(yd => {
+      MONTHS_EN.forEach((_, i) => {
+        if (yd[i]) {
+          yd[i].earnings.forEach(e => { totalEarn += e.amount; });
+          yd[i].expenses.forEach(e => { totalExp += e.amount; });
+        }
+      });
+    });
     return start + totalEarn - totalExp;
-  }, [startingBalance, yearData]);
+  }, [startingBalance, allYearData]);
 
-  const [froggyWithdrawn, setFroggyWithdrawn] = useState(() => loadData("froggy", 0));
+  const [froggyBalance, setFroggyBalance] = useState(() => loadData("froggy", 0));
+  const [froggyHistory, setFroggyHistory] = useState(() => loadData("froggyHistory", []));
+  const [froggyHistoryMonth, setFroggyHistoryMonth] = useState(new Date().getMonth());
+  const [froggyHistoryYear, setFroggyHistoryYear] = useState(CURRENT_YEAR);
+  const [showFroggyHistory, setShowFroggyHistory] = useState(false);
 
-  const froggyBankRaw = useMemo(() => {
-    return budgetEntries.reduce((s, b) => {
-      if (b.locked) return s + Math.max(0, b.amount - b.lockedSpent);
-      return s;
-    }, 0);
-  }, [budgetEntries]);
-  const froggyBank = Math.max(0, froggyBankRaw - froggyWithdrawn);
+  const froggyBank = Math.max(0, froggyBalance);
 
   const totalAllocated = useMemo(() => goals.reduce((s, g) => s + g.saved, 0) + froggyBank, [goals, froggyBank]);
   const availableBalance = currentBalance - totalAllocated;
@@ -883,6 +1165,20 @@ export default function ExpenseTracker() {
   const [undoStack, setUndoStack] = useState([]);
   const [undoMessage, setUndoMessage] = useState("");
   const undoTimerRef = useRef(null);
+  const [showResetConfirm, setShowResetConfirm] = useState(false);
+
+  const resetAll = () => {
+    setStartingBalance(""); setEditingBalance(false); setOnboarded(false);
+    setAllYearData({ [CURRENT_YEAR]: defaultYearData() });
+    setBudgetEntries([]); setGoals([]); setFroggyBalance(0); setFroggyHistory([]);
+    setUndoStack([]);
+    saveData("balance", ""); saveData("onboarded", false); saveData("yearData", { [CURRENT_YEAR]: defaultYearData() });
+    saveData("budgets", []); saveData("goals", []); saveData("froggy", 0); saveData("froggyHistory", []);
+    setShowResetConfirm(false);
+    setUndoMessage(lang === "zh" ? "已重置所有数据" : "All data has been reset");
+    if (undoTimerRef.current) clearTimeout(undoTimerRef.current);
+    undoTimerRef.current = setTimeout(() => setUndoMessage(""), 2500);
+  };
 
   const saveSnapshot = (label) => {
     setUndoStack(prev => {
@@ -892,7 +1188,8 @@ export default function ExpenseTracker() {
         allYearData: JSON.parse(JSON.stringify(allYearData)),
         budgetEntries: JSON.parse(JSON.stringify(budgetEntries)),
         goals: JSON.parse(JSON.stringify(goals)),
-        froggyWithdrawn,
+        froggyBalance,
+        froggyHistory: JSON.parse(JSON.stringify(froggyHistory)),
       };
       const next = [...prev, snapshot];
       return next.length > MAX_UNDO ? next.slice(next.length - MAX_UNDO) : next;
@@ -906,12 +1203,14 @@ export default function ExpenseTracker() {
     setAllYearData(last.allYearData);
     setBudgetEntries(last.budgetEntries);
     setGoals(last.goals);
-    setFroggyWithdrawn(last.froggyWithdrawn);
+    setFroggyBalance(last.froggyBalance);
+    setFroggyHistory(last.froggyHistory || []);
     saveData("balance", last.startingBalance);
     saveData("yearData", last.allYearData);
     saveData("budgets", last.budgetEntries);
     saveData("goals", last.goals);
-    saveData("froggy", last.froggyWithdrawn);
+    saveData("froggy", last.froggyBalance);
+    saveData("froggyHistory", last.froggyHistory || []);
     setUndoStack(prev => prev.slice(0, -1));
     setUndoMessage(`${t.undid}: ${last.label}`);
     if (undoTimerRef.current) clearTimeout(undoTimerRef.current);
@@ -988,8 +1287,21 @@ export default function ExpenseTracker() {
     });
     return spending;
   }, [budgetMonthData, budgetEntries]);
-  const totalBudget = budgetEntries.reduce((s, b) => s + b.amount, 0);
-  const totalSpentInMonth = budgetEntries.reduce((s, b) => s + (spendingByCategory[b.category] || 0), 0);
+  const visibleBudgets = budgetEntries.filter(b => {
+    const yearMatch = b.scopeYear === undefined || b.scopeYear === selectedYear;
+    if (!yearMatch) return false;
+    if (b.scope === "all") {
+      // Only show from startMonth onwards, and not in excluded months
+      const start = b.startMonth !== undefined ? b.startMonth : 0;
+      if (budgetMonth < start) return false;
+      const excluded = b.excludedMonths || [];
+      if (excluded.includes(budgetMonth)) return false;
+      return true;
+    }
+    return b.scope === budgetMonth || b.scope === undefined;
+  });
+  const totalBudget = visibleBudgets.reduce((s, b) => s + b.amount, 0);
+  const totalSpentInMonth = visibleBudgets.reduce((s, b) => s + (spendingByCategory[b.category] || 0), 0);
 
   const fmt = (n) => n.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   const balanceColor = currentBalance >= 0 ? "#34d399" : "#f87171";
@@ -1002,7 +1314,9 @@ export default function ExpenseTracker() {
         html, body, #root { overflow-x: hidden; width: 100%; }
         input, select { outline: none; max-width: 100%; }
         input:focus, select:focus { border-color: #38bdf8 !important; box-shadow: 0 0 0 2px rgba(56,189,248,0.25); }
-        table { table-layout: auto; word-break: break-word; }
+        table { table-layout: auto; word-break: break-word; border-collapse: collapse; }
+        td, th { vertical-align: middle; line-height: 1.4; }
+        td span { vertical-align: middle; display: inline-block; }
         @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
         @keyframes fadeInUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         ::-webkit-scrollbar { width: 6px; }
@@ -1014,6 +1328,153 @@ export default function ExpenseTracker() {
         }
       `}</style>
 
+      {/* ─── ONBOARDING ─── */}
+      {!onboarded ? (
+        <div style={{ maxWidth: 520, margin: "0 auto", padding: "40px 0" }}>
+          <div style={{ textAlign: "center", marginBottom: 32 }}>
+            <div style={{ width: 56, height: 56, borderRadius: 14, background: "linear-gradient(135deg, #38bdf8, #818cf8)", display: "inline-flex", alignItems: "center", justifyContent: "center", fontSize: 28, fontWeight: 700, color: "#0f172a", marginBottom: 14 }}>$</div>
+            <h1 style={{ margin: "0 0 6px", fontSize: 24, fontWeight: 700, fontFamily: "'Space Mono', monospace" }}>{t.onboardTitle}</h1>
+            <button onClick={() => updateLang(lang === "en" ? "zh" : "en")} style={{
+              padding: "4px 12px", borderRadius: 6, border: "none", cursor: "pointer",
+              background: "linear-gradient(135deg, #f59e0b, #ef4444)", color: "#fff",
+              fontSize: 11, fontWeight: 700, marginTop: 8,
+            }}>{lang === "en" ? "中文" : "EN"}</button>
+          </div>
+
+          {/* Mode selector */}
+          {!onboardMode && (
+            <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+              <button onClick={() => setOnboardMode("starting")} style={{
+                padding: 20, borderRadius: 14, border: "2px solid #334155", cursor: "pointer",
+                background: "#1e293b", textAlign: "left",
+              }}>
+                <div style={{ fontSize: 15, fontWeight: 600, color: "#e2e8f0", marginBottom: 4 }}>💰 {t.iKnowStarting}</div>
+                <div style={{ fontSize: 12, color: "#94a3b8" }}>{t.onboardStep1Hint}</div>
+              </button>
+              <button onClick={() => setOnboardMode("current")} style={{
+                padding: 20, borderRadius: 14, border: "2px solid #334155", cursor: "pointer",
+                background: "#1e293b", textAlign: "left",
+              }}>
+                <div style={{ fontSize: 15, fontWeight: 600, color: "#e2e8f0", marginBottom: 4 }}>📱 {t.iKnowCurrent}</div>
+                <div style={{ fontSize: 12, color: "#94a3b8" }}>{t.currentBalanceHint}</div>
+              </button>
+            </div>
+          )}
+
+          {/* PATH A: I know my starting balance */}
+          {onboardMode === "starting" && (
+            <div>
+              <button onClick={() => setOnboardMode(null)} style={{ background: "none", border: "none", color: "#64748b", cursor: "pointer", fontSize: 12, marginBottom: 12, padding: 0 }}>← {t.goBack}</button>
+              <div style={{ padding: 20, borderRadius: 14, background: "#1e293b", border: "1px solid #334155", marginBottom: 16 }}>
+                <div style={{ fontSize: 15, fontWeight: 600, marginBottom: 12 }}>{t.onboardStep1}</div>
+                <p style={{ margin: "0 0 12px", fontSize: 12, color: "#94a3b8", lineHeight: 1.5 }}>{t.onboardStep1Hint}</p>
+                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                  <span style={{ fontSize: 24, fontWeight: 700, color: "#38bdf8" }}>$</span>
+                  <input type="number" placeholder="0.00" value={startingBalance} onChange={e => setStartingBalance(e.target.value)}
+                    style={{ flex: 1, padding: "12px 14px", borderRadius: 10, border: "2px solid rgba(56,189,248,0.4)", background: "#0f172a", color: "#e2e8f0", fontSize: 22, fontWeight: 700, fontFamily: "'Space Mono', monospace", textAlign: "center" }} />
+                </div>
+              </div>
+              <div style={{ padding: 20, borderRadius: 14, background: "#1e293b", border: "1px solid #334155", marginBottom: 24 }}>
+                <div style={{ fontSize: 15, fontWeight: 600, marginBottom: 8 }}>{t.onboardStep2}</div>
+                <p style={{ margin: 0, fontSize: 12, color: "#94a3b8", lineHeight: 1.5 }}>{t.onboardStep2Hint}</p>
+              </div>
+              {startingBalance && (
+                <div style={{ padding: 16, borderRadius: 10, background: "rgba(52,211,153,0.08)", border: "1px solid rgba(52,211,153,0.2)", textAlign: "center", marginBottom: 20 }}>
+                  <div style={{ fontSize: 11, color: "#64748b", textTransform: "uppercase", letterSpacing: 1, marginBottom: 6 }}>{t.startingBalance}</div>
+                  <div style={{ fontSize: 28, fontWeight: 700, fontFamily: "'Space Mono', monospace", color: "#34d399" }}>${fmt(parseFloat(startingBalance) || 0)}</div>
+                </div>
+              )}
+              <button onClick={completeOnboarding} disabled={!startingBalance}
+                style={{ width: "100%", padding: "14px 0", borderRadius: 10, border: "none", cursor: startingBalance ? "pointer" : "default", background: startingBalance ? "linear-gradient(135deg, #38bdf8, #818cf8)" : "#334155", color: startingBalance ? "#0f172a" : "#64748b", fontSize: 15, fontWeight: 700, opacity: startingBalance ? 1 : 0.6 }}>
+                {t.onboardStart}
+              </button>
+            </div>
+          )}
+
+          {/* PATH B: I only know my current balance */}
+          {onboardMode === "current" && (
+            <div>
+              <button onClick={() => { setOnboardMode(null); setOnboardStep(1); }} style={{ background: "none", border: "none", color: "#64748b", cursor: "pointer", fontSize: 12, marginBottom: 12, padding: 0 }}>← {t.goBack}</button>
+
+              {onboardStep === 1 && (
+                <div>
+                  <div style={{ padding: 20, borderRadius: 14, background: "#1e293b", border: "1px solid #334155", marginBottom: 16 }}>
+                    <div style={{ fontSize: 15, fontWeight: 600, marginBottom: 12 }}>{t.currentBalanceNow}</div>
+                    <p style={{ margin: "0 0 12px", fontSize: 12, color: "#94a3b8", lineHeight: 1.5 }}>{t.currentBalanceHint}</p>
+                    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                      <span style={{ fontSize: 24, fontWeight: 700, color: "#34d399" }}>$</span>
+                      <input type="number" placeholder="0.00" value={onboardCurrentBal} onChange={e => setOnboardCurrentBal(e.target.value)}
+                        style={{ flex: 1, padding: "12px 14px", borderRadius: 10, border: "2px solid rgba(52,211,153,0.4)", background: "#0f172a", color: "#e2e8f0", fontSize: 22, fontWeight: 700, fontFamily: "'Space Mono', monospace", textAlign: "center" }} />
+                    </div>
+                  </div>
+                  <button onClick={() => setOnboardStep(2)} disabled={!onboardCurrentBal}
+                    style={{ width: "100%", padding: "14px 0", borderRadius: 10, border: "none", cursor: onboardCurrentBal ? "pointer" : "default", background: onboardCurrentBal ? "linear-gradient(135deg, #34d399, #6ee7b7)" : "#334155", color: onboardCurrentBal ? "#0f172a" : "#64748b", fontSize: 15, fontWeight: 700, opacity: onboardCurrentBal ? 1 : 0.6 }}>
+                    {lang === "zh" ? "下一步 →" : "Next →"}
+                  </button>
+                </div>
+              )}
+
+              {onboardStep === 2 && (() => {
+                let tE = 0, tX = 0;
+                Object.values(allYearData).forEach(yd => { MONTHS_EN.forEach((_, i) => { if (yd[i]) { yd[i].earnings.forEach(e => { tE += e.amount; }); yd[i].expenses.forEach(e => { tX += e.amount; }); } }); });
+                const calculatedStart = (parseFloat(onboardCurrentBal) || 0) - tE + tX;
+                return (
+                  <div>
+                    <div style={{ padding: 20, borderRadius: 14, background: "#1e293b", border: "1px solid #334155", marginBottom: 16 }}>
+                      <div style={{ fontSize: 15, fontWeight: 600, marginBottom: 12 }}>{t.addRecordsFirst}</div>
+                      <div style={{ marginBottom: 12 }}>
+                        <div style={{ fontSize: 11, color: "#34d399", fontWeight: 600, marginBottom: 6 }}>↗ {t.earnings}</div>
+                        <div style={{ display: "flex", gap: 4, flexWrap: "wrap" }}>
+                          <input type="text" placeholder={t.earningLabel} value={earnLabel} onChange={e => setEarnLabel(e.target.value)} style={{ flex: "1 1 80px", padding: "7px 8px", borderRadius: 6, border: "1px solid #334155", background: "#0f172a", color: "#e2e8f0", fontSize: 11 }} />
+                          <select value={earnCategory} onChange={e => setEarnCategory(e.target.value)} style={{ padding: "7px 4px", borderRadius: 6, border: "1px solid #334155", background: "#0f172a", color: "#e2e8f0", fontSize: 11 }}>
+                            {EARN_CATEGORIES.map(c => <option key={c} value={c}>{eCat[c] || c}</option>)}
+                          </select>
+                          <input type="number" placeholder="$" value={earnAmount} onChange={e => setEarnAmount(e.target.value)} style={{ width: 55, padding: "7px 6px", borderRadius: 6, border: "1px solid #334155", background: "#0f172a", color: "#e2e8f0", fontSize: 11, fontFamily: "'Space Mono', monospace" }} />
+                          <input type="date" value={earnDate} onChange={e => setEarnDate(e.target.value)} style={{ padding: "7px 4px", borderRadius: 6, border: "1px solid #334155", background: "#0f172a", color: "#e2e8f0", fontSize: 10 }} />
+                          <button onClick={addEarning} style={{ padding: "7px 10px", borderRadius: 6, border: "none", background: "#34d399", color: "#0f172a", fontSize: 11, fontWeight: 700, cursor: "pointer" }}>+</button>
+                        </div>
+                        {tE > 0 && <div style={{ fontSize: 10, color: "#34d399", marginTop: 4 }}>{t.totalEarnings}: +${fmt(tE)}</div>}
+                      </div>
+                      <div>
+                        <div style={{ fontSize: 11, color: "#f87171", fontWeight: 600, marginBottom: 6 }}>↘ {t.expenses}</div>
+                        <div style={{ display: "flex", gap: 4, flexWrap: "wrap" }}>
+                          <input type="text" placeholder={t.expenseLabel} value={expLabel} onChange={e => setExpLabel(e.target.value)} style={{ flex: "1 1 80px", padding: "7px 8px", borderRadius: 6, border: "1px solid #334155", background: "#0f172a", color: "#e2e8f0", fontSize: 11 }} />
+                          <select value={expCategory} onChange={e => setExpCategory(e.target.value)} style={{ padding: "7px 4px", borderRadius: 6, border: "1px solid #334155", background: "#0f172a", color: "#e2e8f0", fontSize: 11 }}>
+                            {EXP_CATEGORIES.map(c => <option key={c} value={c}>{xCat[c] || c}</option>)}
+                          </select>
+                          <input type="number" placeholder="$" value={expAmount} onChange={e => setExpAmount(e.target.value)} style={{ width: 55, padding: "7px 6px", borderRadius: 6, border: "1px solid #334155", background: "#0f172a", color: "#e2e8f0", fontSize: 11, fontFamily: "'Space Mono', monospace" }} />
+                          <input type="date" value={expDate} onChange={e => setExpDate(e.target.value)} style={{ padding: "7px 4px", borderRadius: 6, border: "1px solid #334155", background: "#0f172a", color: "#e2e8f0", fontSize: 10 }} />
+                          <button onClick={addExpense} style={{ padding: "7px 10px", borderRadius: 6, border: "none", background: "#f87171", color: "#0f172a", fontSize: 11, fontWeight: 700, cursor: "pointer" }}>+</button>
+                        </div>
+                        {tX > 0 && <div style={{ fontSize: 10, color: "#f87171", marginTop: 4 }}>{t.totalExpenses}: -${fmt(tX)}</div>}
+                      </div>
+                    </div>
+
+                    <div style={{ padding: 16, borderRadius: 10, background: "rgba(56,189,248,0.08)", border: "1px solid rgba(56,189,248,0.2)", textAlign: "center", marginBottom: 12 }}>
+                      <div style={{ fontSize: 10, color: "#64748b", marginBottom: 4 }}>{t.currentBalanceNow}: ${fmt(parseFloat(onboardCurrentBal) || 0)}</div>
+                      {(tE > 0 || tX > 0) && (
+                        <div style={{ fontSize: 10, color: "#475569", marginBottom: 8 }}>
+                          {tE > 0 && <span> − {t.earnings} ${fmt(tE)}</span>}
+                          {tX > 0 && <span> + {t.expenses} ${fmt(tX)}</span>}
+                        </div>
+                      )}
+                      <div style={{ fontSize: 11, color: "#94a3b8", textTransform: "uppercase", letterSpacing: 1, marginBottom: 4 }}>{t.calculatedStarting}</div>
+                      <div style={{ fontSize: 28, fontWeight: 700, fontFamily: "'Space Mono', monospace", color: "#38bdf8" }}>${fmt(calculatedStart)}</div>
+                    </div>
+
+                    <button onClick={completeOnboardingReverse} style={{ width: "100%", padding: "14px 0", borderRadius: 10, border: "none", cursor: "pointer", background: "linear-gradient(135deg, #38bdf8, #818cf8)", color: "#0f172a", fontSize: 15, fontWeight: 700 }}>
+                      {t.looksGood}
+                    </button>
+                    <button onClick={() => setOnboardStep(1)} style={{ width: "100%", padding: "10px 0", borderRadius: 8, border: "none", cursor: "pointer", background: "transparent", color: "#64748b", fontSize: 12, marginTop: 6 }}>
+                      ← {t.goBack}
+                    </button>
+                  </div>
+                );
+              })()}
+            </div>
+          )}
+        </div>
+      ) : (
       <div style={{ maxWidth: 1100, margin: "0 auto", width: "100%", minWidth: 0 }}>
         {/* Header */}
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8 }}>
@@ -1021,10 +1482,16 @@ export default function ExpenseTracker() {
             <div style={{ width: 40, height: 40, borderRadius: 10, background: "linear-gradient(135deg, #38bdf8, #818cf8)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 20, fontWeight: 700, color: "#0f172a" }}>$</div>
             <div>
               <h1 style={{ margin: 0, fontSize: 22, fontWeight: 700, fontFamily: "'Space Mono', monospace", letterSpacing: "-0.5px" }}>{t.moneyTracker}</h1>
-              <p style={{ margin: 0, fontSize: 12, color: "#64748b" }}>{selectedYear} · {isAll ? t.fullYear : MONTHS[selectedMonth]}</p>
+              <p style={{ margin: 0, fontSize: 10, color: "#64748b" }}>{lang === "zh" ? "个人财务追踪" : "Personal Finance Tracker"} · {selectedYear} · {isAll ? t.fullYear : MONTHS[selectedMonth]}</p>
             </div>
           </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 6, flexWrap: "wrap" }}>
+            <button onClick={() => setShowResetConfirm(true)} style={{
+              padding: "8px 12px", borderRadius: 8, border: "none", cursor: "pointer",
+              background: "#334155", color: "#94a3b8", fontSize: 11, fontWeight: 600,
+            }}>
+              {lang === "zh" ? "重置" : "Reset"}
+            </button>
             <button onClick={() => updateLang(lang === "en" ? "zh" : "en")} style={{
               padding: "8px 14px", borderRadius: 8, border: "none", cursor: "pointer",
               background: "linear-gradient(135deg, #f59e0b, #ef4444)", color: "#fff",
@@ -1051,25 +1518,59 @@ export default function ExpenseTracker() {
           </div>
         </div>
 
+        {/* Reset confirmation */}
+        {showResetConfirm && (
+          <div style={{
+            padding: 16, borderRadius: 12, marginTop: 12, marginBottom: 8,
+            background: "rgba(239,68,68,0.08)", border: "1px solid rgba(239,68,68,0.3)",
+            textAlign: "center",
+          }}>
+            <p style={{ margin: "0 0 10px", fontSize: 14, fontWeight: 600, color: "#fca5a5" }}>
+              {lang === "zh" ? "确定要重置所有数据吗？此操作无法撤销。" : "Reset all data? This cannot be undone."}
+            </p>
+            <div style={{ display: "flex", gap: 8, justifyContent: "center" }}>
+              <button onClick={resetAll} style={{
+                padding: "8px 20px", borderRadius: 8, border: "none", cursor: "pointer",
+                background: "linear-gradient(135deg, #ef4444, #dc2626)", color: "#fff",
+                fontSize: 13, fontWeight: 700,
+              }}>
+                {lang === "zh" ? "确认重置" : "Yes, Reset All"}
+              </button>
+              <button onClick={() => setShowResetConfirm(false)} style={{
+                padding: "8px 20px", borderRadius: 8, border: "1px solid #475569", cursor: "pointer",
+                background: "transparent", color: "#94a3b8", fontSize: 13, fontWeight: 600,
+              }}>
+                {lang === "zh" ? "取消" : "Cancel"}
+              </button>
+            </div>
+          </div>
+        )}
+
         {/* Balance */}
         <div style={{ marginTop: 20, marginBottom: 20, padding: "28px 24px", background: "linear-gradient(135deg, #1e293b 0%, #0f172a 100%)", borderRadius: 16, border: `1px solid ${currentBalance >= 0 ? "rgba(52,211,153,0.3)" : "rgba(248,113,113,0.3)"}`, textAlign: "center" }}>
           <div style={{ fontSize: 11, color: "#94a3b8", textTransform: "uppercase", letterSpacing: 2, marginBottom: 8 }}>
-            {t.currentBalance} {!editingBalance && <span style={{ fontSize: 10, color: "#64748b", cursor: "pointer", marginLeft: 6 }} onClick={() => setEditingBalance(true)}>✎ {t.edit}</span>}
+            {t.calculatedBalance}
           </div>
-          {editingBalance ? (
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 10, flexWrap: "wrap" }}>
-              <span style={{ fontSize: 32, fontWeight: 700, fontFamily: "'Space Mono', monospace", color: balanceColor }}>$</span>
+          <div style={{ fontSize: 32, fontWeight: 700, fontFamily: "'Space Mono', monospace", color: balanceColor, lineHeight: 1.1, wordBreak: "break-all", marginBottom: 6 }}>
+            {currentBalance < 0 ? "-" : ""}${fmt(Math.abs(currentBalance))}
+          </div>
+
+          {/* Starting balance reference */}
+          <div style={{ fontSize: 10, color: "#475569", marginBottom: 14 }}>
+            {t.startingBalance}: ${fmt(parseFloat(startingBalance) || 0)}
+            <span style={{ fontSize: 10, color: "#64748b", cursor: "pointer", marginLeft: 6 }} onClick={() => setEditingBalance(!editingBalance)}>✎ {t.edit}</span>
+          </div>
+          {editingBalance && (
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8, flexWrap: "wrap", marginBottom: 14, padding: "10px 0", borderTop: "1px solid #334155", borderBottom: "1px solid #334155" }}>
+              <span style={{ fontSize: 11, color: "#94a3b8" }}>{t.startingBalance}:</span>
+              <span style={{ fontSize: 18, fontWeight: 700, color: "#38bdf8" }}>$</span>
               <input type="number" placeholder="0.00" autoFocus value={startingBalance} onChange={e => updateBalance(e.target.value)} onKeyDown={e => { if (e.key === "Enter") setEditingBalance(false); }}
-                style={{ flex: 1, maxWidth: 260, padding: "6px 12px", borderRadius: 10, border: "2px solid rgba(56,189,248,0.4)", background: "rgba(15,23,42,0.8)", color: balanceColor, fontSize: 28, fontWeight: 700, fontFamily: "'Space Mono', monospace", textAlign: "center" }} />
-              <button onClick={() => setEditingBalance(false)} style={{ padding: "8px 16px", borderRadius: 8, border: "none", cursor: "pointer", background: "linear-gradient(135deg, #38bdf8, #818cf8)", color: "#0f172a", fontSize: 13, fontWeight: 700 }}>{t.set}</button>
-            </div>
-          ) : (
-            <div onClick={() => setEditingBalance(true)} style={{ fontSize: 32, fontWeight: 700, fontFamily: "'Space Mono', monospace", color: balanceColor, lineHeight: 1.1, cursor: "pointer", wordBreak: "break-all" }}
-              onMouseEnter={e => e.currentTarget.style.opacity = "0.7"} onMouseLeave={e => e.currentTarget.style.opacity = "1"}>
-              {currentBalance < 0 ? "-" : ""}${fmt(Math.abs(currentBalance))}
+                style={{ width: 140, padding: "6px 10px", borderRadius: 8, border: "1px solid rgba(56,189,248,0.4)", background: "#0f172a", color: "#e2e8f0", fontSize: 16, fontWeight: 700, fontFamily: "'Space Mono', monospace", textAlign: "center" }} />
+              <button onClick={() => setEditingBalance(false)} style={{ padding: "6px 14px", borderRadius: 6, border: "none", cursor: "pointer", background: "#38bdf8", color: "#0f172a", fontSize: 12, fontWeight: 700 }}>{t.set}</button>
             </div>
           )}
-          <div style={{ display: "flex", justifyContent: "center", gap: 24, marginTop: 14, flexWrap: "wrap" }}>
+
+          <div style={{ display: "flex", justifyContent: "center", gap: 24, marginTop: 4, flexWrap: "wrap" }}>
             <div style={{ textAlign: "center" }}>
               <div style={{ fontSize: 10, color: "#64748b", textTransform: "uppercase", letterSpacing: 1 }}>{t.totalEarnings}</div>
               <div style={{ fontSize: 16, fontWeight: 600, fontFamily: "'Space Mono', monospace", color: "#34d399", marginTop: 2 }}>+${fmt(totals.earnings)}</div>
@@ -1107,6 +1608,26 @@ export default function ExpenseTracker() {
               </div>
             </div>
           )}
+
+          {/* Balance Correction */}
+          <div style={{ marginTop: 14, paddingTop: 14, borderTop: "1px solid #334155" }}>
+            <div style={{ fontSize: 10, color: "#475569", marginBottom: 8 }}>{t.correctionHint}</div>
+            <div style={{ display: "flex", gap: 6, justifyContent: "center", flexWrap: "wrap" }}>
+              <input type="text" placeholder={lang === "zh" ? "备注（可选）" : "Note (optional)"} value={correctionNote} onChange={e => setCorrectionNote(e.target.value)}
+                style={{ flex: "1 1 100px", padding: "7px 10px", borderRadius: 6, border: "1px solid #334155", background: "#0f172a", color: "#e2e8f0", fontSize: 12 }} />
+              <input type="number" placeholder="+/- $" value={correctionAmount} onChange={e => setCorrectionAmount(e.target.value)}
+                onKeyDown={e => { if (e.key === "Enter") addCorrection(); }}
+                style={{ width: 90, padding: "7px 10px", borderRadius: 6, border: "1px solid #334155", background: "#0f172a", color: "#e2e8f0", fontSize: 12, fontFamily: "'Space Mono', monospace" }} />
+              <button onClick={addCorrection} disabled={!correctionAmount || parseFloat(correctionAmount) === 0}
+                style={{
+                  padding: "7px 14px", borderRadius: 6, border: "none", cursor: correctionAmount ? "pointer" : "default",
+                  background: correctionAmount ? "linear-gradient(135deg, #f59e0b, #ef4444)" : "#334155",
+                  color: correctionAmount ? "#0f172a" : "#64748b",
+                  fontSize: 11, fontWeight: 700, whiteSpace: "nowrap",
+                  opacity: correctionAmount ? 1 : 0.5,
+                }}>{t.addCorrection}</button>
+            </div>
+          </div>
         </div>
 
         {/* Controls */}
@@ -1156,6 +1677,21 @@ export default function ExpenseTracker() {
               background: "linear-gradient(135deg, #c084fc, #a855f7)", color: "#0f172a", fontSize: 13, fontWeight: 700, whiteSpace: "nowrap",
             }}>{t.setBtn}</button>
           </div>
+          {/* Scope toggle */}
+          <div style={{ display: "flex", gap: 4, marginBottom: 14 }}>
+            <button onClick={() => setBudgetScope("current")} style={{
+              padding: "6px 14px", borderRadius: 6, border: "none", cursor: "pointer",
+              fontSize: 11, fontWeight: budgetScope === "current" ? 700 : 500,
+              background: budgetScope === "current" ? "linear-gradient(135deg, #c084fc, #a855f7)" : "#334155",
+              color: budgetScope === "current" ? "#0f172a" : "#94a3b8",
+            }}>{t.thisMonth} ({MONTHS[budgetMonth]})</button>
+            <button onClick={() => setBudgetScope("all")} style={{
+              padding: "6px 14px", borderRadius: 6, border: "none", cursor: "pointer",
+              fontSize: 11, fontWeight: budgetScope === "all" ? 700 : 500,
+              background: budgetScope === "all" ? "linear-gradient(135deg, #fbbf24, #f59e0b)" : "#334155",
+              color: budgetScope === "all" ? "#0f172a" : "#94a3b8",
+            }}>{t.allMonthsScope}</button>
+          </div>
 
           {/* Budget table */}
           <div style={{ overflowX: "auto" }}>
@@ -1168,11 +1704,14 @@ export default function ExpenseTracker() {
                 </tr>
               </thead>
               <tbody>
-                {budgetEntries.length === 0 ? (
+                {visibleBudgets.length === 0 ? (
                   <tr><td colSpan={6} style={{ padding: 20, textAlign: "center", color: "#475569", fontStyle: "italic" }}>{t.noBudgets}</td></tr>
-                ) : budgetEntries.map((b, i) => {
+                ) : visibleBudgets.map((b, i) => {
                   const liveSpent = spendingByCategory[b.category] || 0;
-                  const spent = b.locked ? b.lockedSpent : liveSpent;
+                  // Per-month lock state for all-months budgets
+                  const ms = b.scope === "all" ? ((b.monthState || {})[budgetMonth] || { locked: false, lockedSpent: 0 }) : { locked: b.locked, lockedSpent: b.lockedSpent };
+                  const isLocked = ms.locked;
+                  const spent = isLocked ? ms.lockedSpent : liveSpent;
                   const spentPct = b.amount > 0 ? (spent / b.amount) * 100 : 0;
                   const isOver = spent >= b.amount;
                   const isClose = spentPct >= 80 && !isOver;
@@ -1180,16 +1719,21 @@ export default function ExpenseTracker() {
                   const isEditing = editingBudgetId === b.id;
 
                   return (
-                    <tr key={b.id} style={{ borderBottom: "1px solid #1e293b", background: i % 2 === 0 ? "transparent" : "rgba(51,65,85,0.3)", opacity: b.locked ? 0.7 : 1, transition: "opacity 0.3s ease" }}>
-                      <td style={{ padding: "8px 10px", fontWeight: 500 }}>
+                    <tr key={`${b.id}-${budgetMonth}`} style={{ borderBottom: "1px solid #1e293b", background: i % 2 === 0 ? "transparent" : "rgba(51,65,85,0.3)", opacity: isLocked ? 0.7 : 1, transition: "opacity 0.3s ease" }}>
+                      <td style={{ padding: "8px 10px", fontWeight: 500, verticalAlign: "middle" }}>
                         {b.label}
-                        {b.locked && <span style={{ marginLeft: 6, fontSize: 10 }}>🔒</span>}
+                        {isLocked && <span style={{ marginLeft: 6, fontSize: 10 }}>🔒</span>}
+                        <span style={{
+                          marginLeft: 6, padding: "1px 6px", borderRadius: 3, fontSize: 9, fontWeight: 600,
+                          background: b.scope === "all" ? "rgba(251,191,36,0.15)" : "rgba(129,140,248,0.15)",
+                          color: b.scope === "all" ? "#fbbf24" : "#a5b4fc",
+                        }}>{b.scope === "all" ? t.allMonthsScope : (MONTHS_EN[b.scope] !== undefined ? MONTHS[b.scope] : MONTHS[budgetMonth])} {b.scopeYear || selectedYear}</span>
                       </td>
                       <td style={{ padding: "8px 10px" }}>
                         <span style={{ padding: "2px 8px", borderRadius: 4, fontSize: 11, fontWeight: 600, background: "rgba(192,132,252,0.15)", color: "#d8b4fe" }}>{xCat[b.category] || b.category}</span>
                       </td>
                       <td style={{ padding: "8px 10px", fontFamily: "'Space Mono', monospace" }}>
-                        {isEditing && !b.locked ? (
+                        {isEditing && !isLocked ? (
                           <div style={{ display: "flex", gap: 4 }}>
                             <input type="number" value={editingBudgetAmount} autoFocus
                               onChange={e => setEditingBudgetAmount(e.target.value)}
@@ -1198,9 +1742,9 @@ export default function ExpenseTracker() {
                             <button onClick={() => saveEditBudget(b.id)} style={{ padding: "4px 8px", borderRadius: 4, border: "none", background: "#a855f7", color: "#0f172a", fontSize: 10, fontWeight: 700, cursor: "pointer" }}>✓</button>
                           </div>
                         ) : (
-                          <span onClick={() => { if (!b.locked) { setEditingBudgetId(b.id); setEditingBudgetAmount(String(b.amount)); } }}
-                            style={{ cursor: b.locked ? "default" : "pointer", color: "#c084fc", borderBottom: b.locked ? "none" : "1px dashed #7c3aed" }}
-                            title={b.locked ? t.unlockToEdit : t.clickToEdit}>
+                          <span onClick={() => { if (!isLocked) { setEditingBudgetId(b.id); setEditingBudgetAmount(String(b.amount)); } }}
+                            style={{ cursor: isLocked ? "default" : "pointer", color: "#c084fc", borderBottom: isLocked ? "none" : "1px dashed #7c3aed" }}
+                            title={isLocked ? t.unlockToEdit : t.clickToEdit}>
                             ${fmt(b.amount)}
                           </span>
                         )}
@@ -1225,23 +1769,29 @@ export default function ExpenseTracker() {
                           <span style={{ fontSize: 9, color: isOver ? "#f87171" : "#475569" }}>
                             {spentPct.toFixed(0)}% {t.ofBudgetLimit}
                           </span>
-                          {b.locked && <span style={{ fontSize: 9, color: "#fbbf24", fontWeight: 600 }}>{t.locked}</span>}
+                          {isLocked && <span style={{ fontSize: 9, color: "#fbbf24", fontWeight: 600 }}>{t.locked}</span>}
                         </div>
                       </td>
                       <td style={{ padding: "8px 10px" }}>
                         <div style={{ display: "flex", gap: 4, alignItems: "center" }}>
                           <button onClick={() => toggleLockBudget(b.id)}
-                            title={b.locked ? t.unlockResume : t.lockStop}
-                            style={{ background: "none", border: "none", color: b.locked ? "#fbbf24" : "#64748b", cursor: "pointer", fontSize: 14 }}>
-                            {b.locked ? "🔒" : "🔓"}
+                            title={isLocked ? t.unlockResume : t.lockStop}
+                            style={{ background: "none", border: "none", color: isLocked ? "#fbbf24" : "#64748b", cursor: "pointer", fontSize: 14 }}>
+                            {isLocked ? "🔒" : "🔓"}
                           </button>
-                          <button onClick={() => removeBudget(b.id)} style={{ background: "none", border: "none", color: "#64748b", cursor: "pointer", fontSize: 16 }}>×</button>
+                          {b.scope === "all" ? (
+                            <button onClick={() => excludeBudgetFromMonth(b.id, budgetMonth)}
+                              title={lang === "zh" ? "从本月移除" : "Remove from this month"}
+                              style={{ background: "none", border: "none", color: "#64748b", cursor: "pointer", fontSize: 16 }}>×</button>
+                          ) : (
+                            <button onClick={() => removeBudget(b.id)} style={{ background: "none", border: "none", color: "#64748b", cursor: "pointer", fontSize: 16 }}>×</button>
+                          )}
                         </div>
                       </td>
                     </tr>
                   );
                 })}
-                {budgetEntries.length > 0 && (
+                {visibleBudgets.length > 0 && (
                   <tr style={{ borderTop: "2px solid #334155", fontWeight: 700 }}>
                     <td style={{ padding: "10px 10px" }}>{t.total}</td>
                     <td></td>
@@ -1455,7 +2005,10 @@ export default function ExpenseTracker() {
               const progress = goal.value > 0 ? Math.min(100, (goal.saved / goal.value) * 100) : 0;
               const isComplete = goal.saved >= goal.value;
               const remaining = Math.max(0, goal.value - goal.saved);
-              const inputVal = goalInputs[goal.id] || "";
+              const inputVal = goalAddInputs[goal.id] || "";
+              const takeVal = goalTakeInputs[goal.id] || "";
+              const addV = getAddValidation(goal);
+              const takeV = getTakeValidation(goal);
 
               return (
                 <div key={goal.id} style={{
@@ -1547,46 +2100,157 @@ export default function ExpenseTracker() {
                     {/* Fund controls */}
                     {!isComplete && (
                       <div>
-                        <div style={{ display: "flex", gap: 6 }}>
-                          <input type="number" placeholder={t.amount} value={inputVal}
-                            onChange={e => setGoalInputs(prev => ({ ...prev, [goal.id]: e.target.value }))}
-                            onKeyDown={e => { if (e.key === "Enter") addToGoal(goal.id); }}
+                        {/* Source selector for adding */}
+                        <div style={{ display: "flex", gap: 4, marginBottom: 8 }}>
+                          <button onClick={() => setGoalFundSource(prev => ({ ...prev, [goal.id]: "balance" }))}
                             style={{
-                              flex: 1, padding: "7px 10px", borderRadius: 6, border: "1px solid #334155",
+                              flex: 1, padding: "8px 6px", borderRadius: 8, cursor: "pointer",
+                              background: (goalFundSource[goal.id] || "balance") === "balance" ? "rgba(56,189,248,0.15)" : "#0f172a",
+                              border: (goalFundSource[goal.id] || "balance") === "balance" ? "2px solid #38bdf8" : "1px solid #334155",
+                              textAlign: "center", transition: "all 0.2s ease",
+                            }}>
+                            <div style={{ fontSize: 14, marginBottom: 2 }}>💰</div>
+                            <div style={{ fontSize: 9, fontWeight: 600, color: (goalFundSource[goal.id] || "balance") === "balance" ? "#38bdf8" : "#64748b" }}>{t.fromBalance}</div>
+                            <div style={{ fontSize: 10, fontFamily: "'Space Mono', monospace", color: (goalFundSource[goal.id] || "balance") === "balance" ? "#7dd3fc" : "#475569", marginTop: 2 }}>
+                              ${fmt(availableBalance)}
+                            </div>
+                          </button>
+                          <button onClick={() => setGoalFundSource(prev => ({ ...prev, [goal.id]: "froggy" }))}
+                            style={{
+                              flex: 1, padding: "8px 6px", borderRadius: 8, cursor: froggyBank > 0 ? "pointer" : "default",
+                              background: (goalFundSource[goal.id]) === "froggy" ? "rgba(110,231,183,0.15)" : "#0f172a",
+                              border: (goalFundSource[goal.id]) === "froggy" ? "2px solid #6ee7b7" : "1px solid #334155",
+                              textAlign: "center", transition: "all 0.2s ease",
+                              opacity: froggyBank > 0 ? 1 : 0.4,
+                            }}>
+                            <div style={{ fontSize: 14, marginBottom: 2 }}>🐸</div>
+                            <div style={{ fontSize: 9, fontWeight: 600, color: (goalFundSource[goal.id]) === "froggy" ? "#6ee7b7" : "#64748b" }}>{t.fromFroggy}</div>
+                            <div style={{ fontSize: 10, fontFamily: "'Space Mono', monospace", color: (goalFundSource[goal.id]) === "froggy" ? "#34d399" : "#475569", marginTop: 2 }}>
+                              ${fmt(froggyBank)}
+                            </div>
+                          </button>
+                        </div>
+
+                        {/* Amount + Add button */}
+                        <div style={{ display: "flex", gap: 6, marginBottom: goal.saved > 0 ? 8 : 0 }}>
+                          <input type="number" placeholder={t.amount} value={inputVal}
+                            onChange={e => setGoalAddInputs(prev => ({ ...prev, [goal.id]: e.target.value }))}
+                            onKeyDown={e => { if (e.key === "Enter" && addV.valid) addToGoal(goal.id); }}
+                            style={{
+                              flex: 1, padding: "7px 10px", borderRadius: 6,
+                              border: addV.msg ? "1px solid #f87171" : "1px solid #334155",
                               background: "#1e293b", color: "#e2e8f0", fontSize: 12, fontFamily: "'Space Mono', monospace",
                             }} />
-                          <button onClick={() => addToGoal(goal.id)} style={{
-                            padding: "7px 12px", borderRadius: 6, border: "none", cursor: "pointer",
-                            background: "linear-gradient(135deg, #34d399, #22d3ee)", color: "#0f172a",
-                            fontSize: 11, fontWeight: 700, whiteSpace: "nowrap",
-                          }}>{t.add}</button>
-                          {goal.saved > 0 && (
-                            <button onClick={() => withdrawFromGoal(goal.id)} style={{
-                              padding: "7px 12px", borderRadius: 6, border: "1px solid #334155",
-                              background: "transparent", color: "#94a3b8", cursor: "pointer",
-                              fontSize: 11, fontWeight: 600, whiteSpace: "nowrap",
-                            }}>{t.take}</button>
-                          )}
+                          <button onClick={() => addToGoal(goal.id)} disabled={inputVal && !addV.valid} style={{
+                            padding: "7px 14px", borderRadius: 6, border: "none",
+                            cursor: (inputVal && !addV.valid) ? "not-allowed" : "pointer",
+                            opacity: (inputVal && !addV.valid) ? 0.5 : 1,
+                            background: (goalFundSource[goal.id] || "balance") === "froggy"
+                              ? "linear-gradient(135deg, #34d399, #6ee7b7)"
+                              : "linear-gradient(135deg, #38bdf8, #818cf8)",
+                            color: "#0f172a", fontSize: 11, fontWeight: 700, whiteSpace: "nowrap",
+                          }}>{t.addFunds}</button>
                         </div>
-                        {froggyBank > 0 && (
-                          <button onClick={() => transferFromFroggy(goal.id)} style={{
-                            width: "100%", marginTop: 6, padding: "7px 12px", borderRadius: 6,
-                            border: "1px solid rgba(110,231,183,0.3)", cursor: "pointer",
-                            background: "rgba(6,78,59,0.3)", color: "#6ee7b7",
-                            fontSize: 11, fontWeight: 600, display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
-                          }}>
-                            🐸 {t.useFromFroggy} <span style={{ fontFamily: "'Space Mono', monospace", fontSize: 10, color: "#34d399" }}>(${fmt(froggyBank)})</span>
-                          </button>
+                        {addV.msg && (
+                          <div style={{ fontSize: 10, color: "#fca5a5", padding: "4px 0 6px", lineHeight: 1.3 }}>{addV.msg}</div>
+                        )}
+
+                        {/* Withdraw section */}
+                        {goal.saved > 0 && (
+                          <div>
+                            <div style={{ fontSize: 9, color: "#475569", textTransform: "uppercase", letterSpacing: 1, marginBottom: 4 }}>{t.withdraw}</div>
+                            <div style={{ display: "flex", gap: 4, marginBottom: 6 }}>
+                              <button onClick={() => setGoalWithdrawDest(prev => ({ ...prev, [goal.id]: "balance" }))}
+                                style={{
+                                  flex: 1, padding: "6px 4px", borderRadius: 6, cursor: "pointer",
+                                  background: (goalWithdrawDest[goal.id] || "balance") === "balance" ? "rgba(56,189,248,0.1)" : "#0f172a",
+                                  border: (goalWithdrawDest[goal.id] || "balance") === "balance" ? "1.5px solid #38bdf8" : "1px solid #334155",
+                                  textAlign: "center", transition: "all 0.2s ease",
+                                }}>
+                                <div style={{ fontSize: 9, fontWeight: 600, color: (goalWithdrawDest[goal.id] || "balance") === "balance" ? "#38bdf8" : "#64748b" }}>💰 {t.toBalance}</div>
+                              </button>
+                              <button onClick={() => setGoalWithdrawDest(prev => ({ ...prev, [goal.id]: "froggy" }))}
+                                style={{
+                                  flex: 1, padding: "6px 4px", borderRadius: 6, cursor: "pointer",
+                                  background: (goalWithdrawDest[goal.id]) === "froggy" ? "rgba(110,231,183,0.1)" : "#0f172a",
+                                  border: (goalWithdrawDest[goal.id]) === "froggy" ? "1.5px solid #6ee7b7" : "1px solid #334155",
+                                  textAlign: "center", transition: "all 0.2s ease",
+                                }}>
+                                <div style={{ fontSize: 9, fontWeight: 600, color: (goalWithdrawDest[goal.id]) === "froggy" ? "#6ee7b7" : "#64748b" }}>🐸 {t.toFroggy}</div>
+                              </button>
+                            </div>
+                            <div style={{ display: "flex", gap: 6 }}>
+                              <input type="number" placeholder={t.amount} value={takeVal}
+                                onChange={e => setGoalTakeInputs(prev => ({ ...prev, [goal.id]: e.target.value }))}
+                                style={{
+                                  flex: 1, padding: "7px 10px", borderRadius: 6,
+                                  border: takeV.msg ? "1px solid #f87171" : "1px solid #334155",
+                                  background: "#1e293b", color: "#e2e8f0", fontSize: 12, fontFamily: "'Space Mono', monospace",
+                                }} />
+                              <button onClick={() => withdrawFromGoal(goal.id)} disabled={takeVal && !takeV.valid} style={{
+                                padding: "7px 14px", borderRadius: 6, border: "1px solid #475569",
+                                cursor: (takeVal && !takeV.valid) ? "not-allowed" : "pointer",
+                                background: "transparent", color: (takeVal && !takeV.valid) ? "#475569" : "#94a3b8",
+                                opacity: (takeVal && !takeV.valid) ? 0.5 : 1,
+                                fontSize: 11, fontWeight: 600, whiteSpace: "nowrap",
+                              }}>{t.take}</button>
+                            </div>
+                            {takeV.msg && (
+                              <div style={{ fontSize: 10, color: "#fca5a5", padding: "4px 0 2px", lineHeight: 1.3 }}>{takeV.msg}</div>
+                            )}
+                          </div>
                         )}
                       </div>
                     )}
                     {isComplete && (
-                      <div style={{
-                        textAlign: "center", padding: "8px 0", borderRadius: 6,
-                        background: "rgba(52,211,153,0.1)", border: "1px solid rgba(52,211,153,0.2)",
-                        fontSize: 12, color: "#34d399", fontWeight: 600,
-                      }}>
-                        🎉 {t.fullyFunded}
+                      <div>
+                        <div style={{
+                          textAlign: "center", padding: "8px 0", borderRadius: 6, marginBottom: 8,
+                          background: "rgba(52,211,153,0.1)", border: "1px solid rgba(52,211,153,0.2)",
+                          fontSize: 12, color: "#34d399", fontWeight: 600,
+                        }}>
+                          🎉 {t.fullyFunded}
+                        </div>
+                        {/* Withdraw option even when complete */}
+                        <div style={{ display: "flex", gap: 4, marginBottom: 6 }}>
+                          <button onClick={() => setGoalWithdrawDest(prev => ({ ...prev, [goal.id]: "balance" }))}
+                            style={{
+                              flex: 1, padding: "6px 4px", borderRadius: 6, cursor: "pointer",
+                              background: (goalWithdrawDest[goal.id] || "balance") === "balance" ? "rgba(56,189,248,0.1)" : "#0f172a",
+                              border: (goalWithdrawDest[goal.id] || "balance") === "balance" ? "1.5px solid #38bdf8" : "1px solid #334155",
+                              textAlign: "center",
+                            }}>
+                            <div style={{ fontSize: 9, fontWeight: 600, color: (goalWithdrawDest[goal.id] || "balance") === "balance" ? "#38bdf8" : "#64748b" }}>💰 {t.toBalance}</div>
+                          </button>
+                          <button onClick={() => setGoalWithdrawDest(prev => ({ ...prev, [goal.id]: "froggy" }))}
+                            style={{
+                              flex: 1, padding: "6px 4px", borderRadius: 6, cursor: "pointer",
+                              background: (goalWithdrawDest[goal.id]) === "froggy" ? "rgba(110,231,183,0.1)" : "#0f172a",
+                              border: (goalWithdrawDest[goal.id]) === "froggy" ? "1.5px solid #6ee7b7" : "1px solid #334155",
+                              textAlign: "center",
+                            }}>
+                            <div style={{ fontSize: 9, fontWeight: 600, color: (goalWithdrawDest[goal.id]) === "froggy" ? "#6ee7b7" : "#64748b" }}>🐸 {t.toFroggy}</div>
+                          </button>
+                        </div>
+                        <div style={{ display: "flex", gap: 6 }}>
+                          <input type="number" placeholder={t.amount} value={takeVal}
+                            onChange={e => setGoalTakeInputs(prev => ({ ...prev, [goal.id]: e.target.value }))}
+                            style={{
+                              flex: 1, padding: "7px 10px", borderRadius: 6,
+                              border: takeV.msg ? "1px solid #f87171" : "1px solid #334155",
+                              background: "#1e293b", color: "#e2e8f0", fontSize: 12, fontFamily: "'Space Mono', monospace",
+                            }} />
+                          <button onClick={() => withdrawFromGoal(goal.id)} disabled={takeVal && !takeV.valid} style={{
+                            padding: "7px 14px", borderRadius: 6, border: "1px solid #475569",
+                            cursor: (takeVal && !takeV.valid) ? "not-allowed" : "pointer",
+                            background: "transparent", color: (takeVal && !takeV.valid) ? "#475569" : "#94a3b8",
+                            opacity: (takeVal && !takeV.valid) ? 0.5 : 1,
+                            fontSize: 11, fontWeight: 600, whiteSpace: "nowrap",
+                          }}>{t.take}</button>
+                        </div>
+                        {takeV.msg && (
+                          <div style={{ fontSize: 10, color: "#fca5a5", padding: "4px 0 2px", lineHeight: 1.3 }}>{takeV.msg}</div>
+                        )}
                       </div>
                     )}
                   </div>
@@ -1649,17 +2313,72 @@ export default function ExpenseTracker() {
             ${fmt(froggyBank)}
           </div>
 
-          {budgetEntries.filter(b => b.locked && b.amount - b.lockedSpent > 0).length > 0 && (
-            <div style={{ textAlign: "left", borderTop: "1px solid #334155", paddingTop: 12 }}>
-              <div style={{ fontSize: 10, color: "#64748b", textTransform: "uppercase", letterSpacing: 1, marginBottom: 8 }}>{t.savedFrom}</div>
-              {budgetEntries.filter(b => b.locked && b.amount - b.lockedSpent > 0).map(b => (
-                <div key={b.id} style={{ display: "flex", justifyContent: "space-between", marginBottom: 6 }}>
-                  <span style={{ fontSize: 11, color: "#94a3b8" }}>{b.label}</span>
-                  <span style={{ fontSize: 12, fontFamily: "'Space Mono', monospace", color: "#34d399", fontWeight: 600 }}>+${fmt(b.amount - b.lockedSpent)}</span>
+          {/* Saved History */}
+          <div style={{ marginTop: 12 }}>
+            <button onClick={() => setShowFroggyHistory(!showFroggyHistory)} style={{
+              width: "100%", padding: "8px 0", borderRadius: 8, border: "1px solid #334155",
+              background: showFroggyHistory ? "rgba(110,231,183,0.1)" : "transparent",
+              color: showFroggyHistory ? "#6ee7b7" : "#64748b",
+              fontSize: 11, fontWeight: 600, cursor: "pointer",
+              transition: "all 0.2s ease",
+            }}>
+              {showFroggyHistory ? t.hideHistory : t.viewHistory}
+            </button>
+
+            {showFroggyHistory && (
+              <div style={{ marginTop: 10, textAlign: "left" }}>
+                {/* Month/Year selectors */}
+                <div style={{ display: "flex", gap: 6, marginBottom: 10 }}>
+                  <select value={froggyHistoryMonth} onChange={e => setFroggyHistoryMonth(parseInt(e.target.value))}
+                    style={{
+                      flex: 1, padding: "6px 8px", borderRadius: 6, border: "1px solid #334155",
+                      background: "#0f172a", color: "#e2e8f0", fontSize: 11,
+                    }}>
+                    {MONTHS.map((m, i) => <option key={i} value={i}>{m}</option>)}
+                  </select>
+                  <input type="number" value={froggyHistoryYear} onChange={e => setFroggyHistoryYear(parseInt(e.target.value) || CURRENT_YEAR)}
+                    style={{
+                      width: 70, padding: "6px 8px", borderRadius: 6, border: "1px solid #334155",
+                      background: "#0f172a", color: "#e2e8f0", fontSize: 11, fontFamily: "'Space Mono', monospace",
+                    }} />
                 </div>
-              ))}
-            </div>
-          )}
+
+                {/* Records */}
+                {(() => {
+                  const filtered = froggyHistory.filter(h => h.month === froggyHistoryMonth && h.year === froggyHistoryYear);
+                  if (filtered.length === 0) return (
+                    <p style={{ margin: 0, fontSize: 10, color: "#475569", fontStyle: "italic", textAlign: "center", padding: "8px 0" }}>
+                      {t.noHistory}
+                    </p>
+                  );
+                  return filtered.map(h => (
+                    <div key={h.id || h.timestamp} style={{
+                      display: "flex", justifyContent: "space-between", alignItems: "center",
+                      padding: "6px 0", borderBottom: "1px solid #1e293b",
+                    }}>
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <div style={{ fontSize: 11, color: "#e2e8f0", fontWeight: 500, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{h.label}</div>
+                        <div style={{ fontSize: 9, color: "#475569" }}>
+                          <span style={{ padding: "1px 4px", borderRadius: 3, background: "rgba(192,132,252,0.15)", color: "#d8b4fe" }}>{xCat[h.category] || eCat[h.category] || h.category}</span>
+                        </div>
+                      </div>
+                      <div style={{ textAlign: "right", marginLeft: 8 }}>
+                        <div style={{
+                          fontSize: 12, fontFamily: "'Space Mono', monospace", fontWeight: 600,
+                          color: h.amount > 0 ? "#34d399" : "#f87171",
+                        }}>
+                          {h.amount > 0 ? "+" : ""}{h.amount < 0 ? "-" : ""}${fmt(Math.abs(h.amount))}
+                        </div>
+                        <div style={{ fontSize: 8, color: "#475569" }}>
+                          {h.amount > 0 ? t.historyIn : t.historyOut}
+                        </div>
+                      </div>
+                    </div>
+                  ));
+                })()}
+              </div>
+            )}
+          </div>
 
           {froggyBank === 0 && (
             <p style={{ margin: 0, fontSize: 10, color: "#475569", fontStyle: "italic" }}>
@@ -1696,8 +2415,8 @@ export default function ExpenseTracker() {
                   <tr><td colSpan={5} style={{ padding: 20, textAlign: "center", color: "#475569", fontStyle: "italic" }}>{t.noEarnings}</td></tr>
                 ) : currentTableData.earnings.map((e, i) => (
                   <tr key={e.id} style={{ borderBottom: "1px solid #1e293b", background: i % 2 === 0 ? "transparent" : "rgba(51,65,85,0.3)" }}>
-                    <td style={{ padding: "8px 10px", fontFamily: "'Space Mono', monospace", fontSize: 12, color: "#94a3b8" }}>{e.date || "—"}</td>
-                    <td style={{ padding: "8px 10px", fontWeight: 500 }}>{e.label}</td>
+                    <td style={{ padding: "8px 10px", fontFamily: "'Space Mono', monospace", fontSize: 12, color: "#94a3b8", verticalAlign: "middle" }}>{e.date || "—"}</td>
+                    <td style={{ padding: "8px 10px", fontWeight: 500, verticalAlign: "middle" }}>{e.label}</td>
                     <td style={{ padding: "8px 10px" }}><span style={{ padding: "2px 8px", borderRadius: 4, fontSize: 11, fontWeight: 600, background: "rgba(52,211,153,0.15)", color: "#6ee7b7" }}>{xCat[e.category] || eCat[e.category] || e.category}</span></td>
                     <td style={{ padding: "8px 10px", fontFamily: "'Space Mono', monospace", color: "#34d399" }}>+${fmt(e.amount)}</td>
                     <td style={{ padding: "8px 10px" }}><button onClick={() => removeEarning(e.id)} style={{ background: "none", border: "none", color: "#64748b", cursor: "pointer", fontSize: 16 }}>×</button></td>
@@ -1740,8 +2459,8 @@ export default function ExpenseTracker() {
                   <tr><td colSpan={5} style={{ padding: 20, textAlign: "center", color: "#475569", fontStyle: "italic" }}>{t.noExpenses}</td></tr>
                 ) : currentTableData.expenses.map((e, i) => (
                   <tr key={e.id} style={{ borderBottom: "1px solid #1e293b", background: i % 2 === 0 ? "transparent" : "rgba(51,65,85,0.3)" }}>
-                    <td style={{ padding: "8px 10px", fontFamily: "'Space Mono', monospace", fontSize: 12, color: "#94a3b8" }}>{e.date || "—"}</td>
-                    <td style={{ padding: "8px 10px", fontWeight: 500 }}>{e.label}</td>
+                    <td style={{ padding: "8px 10px", fontFamily: "'Space Mono', monospace", fontSize: 12, color: "#94a3b8", verticalAlign: "middle" }}>{e.date || "—"}</td>
+                    <td style={{ padding: "8px 10px", fontWeight: 500, verticalAlign: "middle" }}>{e.label}</td>
                     <td style={{ padding: "8px 10px" }}><span style={{ padding: "2px 8px", borderRadius: 4, fontSize: 11, fontWeight: 600, background: "rgba(129,140,248,0.15)", color: "#a5b4fc" }}>{xCat[e.category] || eCat[e.category] || e.category}</span></td>
                     <td style={{ padding: "8px 10px", fontFamily: "'Space Mono', monospace", color: "#f87171" }}>-${fmt(e.amount)}</td>
                     <td style={{ padding: "8px 10px" }}><button onClick={() => removeExpense(e.id)} style={{ background: "none", border: "none", color: "#64748b", cursor: "pointer", fontSize: 16 }}>×</button></td>
@@ -1759,7 +2478,7 @@ export default function ExpenseTracker() {
         </div>
 
         <div style={{ textAlign: "center", fontSize: 10, color: "#334155", paddingTop: 8, paddingBottom: 16 }}>
-          © 2026 1XD233 · Sakuhin · MIT License
+          © 2026 1XD233 · Sakuhin · Personal Finance Tracker · MIT License
         </div>
 
         {/* Undo toast */}
@@ -1776,6 +2495,7 @@ export default function ExpenseTracker() {
           </div>
         )}
       </div>
+      )}
     </div>
   );
 }
