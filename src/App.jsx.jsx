@@ -316,50 +316,50 @@ let nextId = 1;
 // ─── EARNING ICONS (Garden / Growth theme) ───
 const EarnIcons = {
   Salary: ({ a, o }) => (<>
-    <rect x="10" y="12" width="40" height="46" rx="2" fill={a?"#047857":"#444"} opacity={o}/>
-    <rect x="14" y="16" width="10" height="7" rx="1" fill={a?"#34d399":"#555"} opacity={o}/>
-    <rect x="28" y="16" width="10" height="7" rx="1" fill={a?"#34d399":"#555"} opacity={o}/>
-    <rect x="14" y="27" width="10" height="7" rx="1" fill={a?"#6ee7b7":"#555"} opacity={o}/>
-    <rect x="28" y="27" width="10" height="7" rx="1" fill={a?"#6ee7b7":"#555"} opacity={o}/>
-    <rect x="14" y="38" width="10" height="7" rx="1" fill={a?"#34d399":"#555"} opacity={o}/>
-    <rect x="28" y="38" width="10" height="7" rx="1" fill={a?"#34d399":"#555"} opacity={o}/>
-    <rect x="24" y="48" width="12" height="10" rx="1" fill={a?"#a7f3d0":"#555"} opacity={o}/>
+    <rect x="10" y="12" width="40" height="46" rx="2" fill={a?"#4a7a4a":"#444"} opacity={o}/>
+    <rect x="14" y="16" width="10" height="7" rx="1" fill={a?"#7eb87d":"#555"} opacity={o}/>
+    <rect x="28" y="16" width="10" height="7" rx="1" fill={a?"#7eb87d":"#555"} opacity={o}/>
+    <rect x="14" y="27" width="10" height="7" rx="1" fill={a?"#a3d4a2":"#555"} opacity={o}/>
+    <rect x="28" y="27" width="10" height="7" rx="1" fill={a?"#a3d4a2":"#555"} opacity={o}/>
+    <rect x="14" y="38" width="10" height="7" rx="1" fill={a?"#7eb87d":"#555"} opacity={o}/>
+    <rect x="28" y="38" width="10" height="7" rx="1" fill={a?"#7eb87d":"#555"} opacity={o}/>
+    <rect x="24" y="48" width="12" height="10" rx="1" fill={a?"#b0ccb0":"#555"} opacity={o}/>
     <polygon points="2,14 30,-4 58,14" fill={a?"#065f46":"#3a3a3a"} opacity={o}/>
-    {a&&<rect x="28" y="-8" width="4" height="8" fill="#059669" opacity={0.8}/>}
-    {a&&<polygon points="26,-8 30,-16 34,-8" fill="#34d399" opacity={0.7}/>}
+    {a&&<rect x="28" y="-8" width="4" height="8" fill="#5a8a5a" opacity={0.8}/>}
+    {a&&<polygon points="26,-8 30,-16 34,-8" fill="#7eb87d" opacity={0.7}/>}
   </>),
   Freelance: ({ a, o }) => (<>
     <rect x="6" y="18" width="48" height="30" rx="3" fill={a?"#5b21b6":"#444"} opacity={o}/>
-    <rect x="10" y="22" width="40" height="22" rx="2" fill={a?"#7c3aed":"#555"} opacity={o}/>
+    <rect x="10" y="22" width="40" height="22" rx="2" fill={a?"#6b5ab4":"#555"} opacity={o}/>
     {a&&<><text x="30" y="37" textAnchor="middle" fill="#c4b5fd" fontSize="8" fontFamily="monospace" opacity={0.9}>{"< / >"}</text>
-    <rect x="14" y="27" width="16" height="2" rx="1" fill="#a78bfa" opacity={0.4}/>
-    <rect x="14" y="31" width="12" height="2" rx="1" fill="#a78bfa" opacity={0.3}/></>}
+    <rect x="14" y="27" width="16" height="2" rx="1" fill="#9b8ad4" opacity={0.4}/>
+    <rect x="14" y="31" width="12" height="2" rx="1" fill="#9b8ad4" opacity={0.3}/></>}
     <path d="M2,48 L58,48 L54,52 Q30,56 6,52 Z" fill={a?"#4c1d95":"#3a3a3a"} opacity={o}/>
-    {a&&<circle cx="30" cy="54" r="2" fill="#7c3aed" opacity={0.5}/>}
+    {a&&<circle cx="30" cy="54" r="2" fill="#6b5ab4" opacity={0.5}/>}
   </>),
   Investments: ({ a, o }) => (<>
-    <rect x="8" y="50" width="44" height="8" rx="2" fill={a?"#92400e":"#444"} opacity={o}/>
-    <line x1="14" y1="50" x2="14" y2="40" stroke={a?"#059669":"#555"} strokeWidth="3" opacity={o}/>
-    <ellipse cx="14" cy="36" rx="6" ry="5" fill={a?"#34d399":"#555"} opacity={o}/>
-    {a&&<ellipse cx="11" cy="34" rx="4" ry="3" fill="#6ee7b7" opacity={0.5}/>}
-    <line x1="30" y1="50" x2="30" y2="28" stroke={a?"#059669":"#555"} strokeWidth="3" opacity={o}/>
-    <ellipse cx="30" cy="24" rx="8" ry="6" fill={a?"#10b981":"#555"} opacity={o}/>
-    {a&&<ellipse cx="27" cy="22" rx="5" ry="4" fill="#6ee7b7" opacity={0.4}/>}
-    <line x1="46" y1="50" x2="46" y2="16" stroke={a?"#059669":"#555"} strokeWidth="4" opacity={o}/>
-    <ellipse cx="46" cy="12" rx="10" ry="7" fill={a?"#34d399":"#555"} opacity={o}/>
-    {a&&<><ellipse cx="42" cy="10" rx="6" ry="5" fill="#6ee7b7" opacity={0.4}/>
-    <circle cx="46" cy="8" r="3" fill="#fbbf24" opacity={0.8}/>
-    <text x="46" y="10" textAnchor="middle" fill="#92400e" fontSize="4" fontWeight="700">$</text></>}
+    <rect x="8" y="50" width="44" height="8" rx="2" fill={a?"#6b5020":"#444"} opacity={o}/>
+    <line x1="14" y1="50" x2="14" y2="40" stroke={a?"#5a8a5a":"#555"} strokeWidth="3" opacity={o}/>
+    <ellipse cx="14" cy="36" rx="6" ry="5" fill={a?"#7eb87d":"#555"} opacity={o}/>
+    {a&&<ellipse cx="11" cy="34" rx="4" ry="3" fill="#a3d4a2" opacity={0.5}/>}
+    <line x1="30" y1="50" x2="30" y2="28" stroke={a?"#5a8a5a":"#555"} strokeWidth="3" opacity={o}/>
+    <ellipse cx="30" cy="24" rx="8" ry="6" fill={a?"#6b9c6b":"#555"} opacity={o}/>
+    {a&&<ellipse cx="27" cy="22" rx="5" ry="4" fill="#a3d4a2" opacity={0.4}/>}
+    <line x1="46" y1="50" x2="46" y2="16" stroke={a?"#5a8a5a":"#555"} strokeWidth="4" opacity={o}/>
+    <ellipse cx="46" cy="12" rx="10" ry="7" fill={a?"#7eb87d":"#555"} opacity={o}/>
+    {a&&<><ellipse cx="42" cy="10" rx="6" ry="5" fill="#a3d4a2" opacity={0.4}/>
+    <circle cx="46" cy="8" r="3" fill="#d4b85c" opacity={0.8}/>
+    <text x="46" y="10" textAnchor="middle" fill="#6b5020" fontSize="4" fontWeight="700">$</text></>}
   </>),
   Bonus: ({ a, o }) => (<>
-    <rect x="14" y="28" width="32" height="28" rx="3" fill={a?"#dc2626":"#444"} opacity={o}/>
-    <rect x="10" y="22" width="40" height="10" rx="3" fill={a?"#ef4444":"#555"} opacity={o}/>
+    <rect x="14" y="28" width="32" height="28" rx="3" fill={a?"#b04848":"#444"} opacity={o}/>
+    <rect x="10" y="22" width="40" height="10" rx="3" fill={a?"#c45c5c":"#555"} opacity={o}/>
     <rect x="27" y="22" width="6" height="34" fill={a?"#fecdd3":"#555"} opacity={o}/>
     <rect x="10" y="33" width="40" height="4" fill={a?"#fecdd3":"#555"} opacity={o}/>
-    <path d="M30,22 Q20,6 12,16" stroke={a?"#fbbf24":"#555"} strokeWidth="3" fill="none" opacity={o}/>
-    <path d="M30,22 Q40,6 48,16" stroke={a?"#fbbf24":"#555"} strokeWidth="3" fill="none" opacity={o}/>
-    {a&&<><circle cx="12" cy="14" r="3" fill="#fbbf24" opacity={0.8}/>
-    <circle cx="48" cy="14" r="3" fill="#fbbf24" opacity={0.8}/></>}
+    <path d="M30,22 Q20,6 12,16" stroke={a?"#d4b85c":"#555"} strokeWidth="3" fill="none" opacity={o}/>
+    <path d="M30,22 Q40,6 48,16" stroke={a?"#d4b85c":"#555"} strokeWidth="3" fill="none" opacity={o}/>
+    {a&&<><circle cx="12" cy="14" r="3" fill="#d4b85c" opacity={0.8}/>
+    <circle cx="48" cy="14" r="3" fill="#d4b85c" opacity={0.8}/></>}
   </>),
   "Side Hustle": ({ a, o }) => (<>
     <path d="M16,20 L16,52 Q16,56 20,56 L40,56 Q44,56 44,52 L44,20 Q44,16 40,16 L20,16 Q16,16 16,20 Z" fill={a?"#ea580c":"#444"} opacity={o}/>
@@ -379,7 +379,7 @@ const EarnIcons = {
     <circle cx="30" cy="32" r="20" fill={a?"#0e7490":"#444"} opacity={o}/>
     <circle cx="30" cy="32" r="14" fill={a?"#06b6d4":"#555"} opacity={o} strokeWidth="0"/>
     <text x="30" y="37" textAnchor="middle" fill={a?"#ecfeff":"#777"} fontSize="18" fontWeight="700" opacity={o}>+</text>
-    {a&&<circle cx="30" cy="32" r="20" fill="none" stroke="#22d3ee" strokeWidth="1.5" opacity={0.3} strokeDasharray="4 3"/>}
+    {a&&<circle cx="30" cy="32" r="20" fill="none" stroke="#9cc8a0" strokeWidth="1.5" opacity={0.3} strokeDasharray="4 3"/>}
   </>),
 };
 
@@ -388,14 +388,14 @@ const ExpIcons = {
   Food: ({ a, o }) => (<>
     <circle cx="30" cy="34" r="20" fill={a?"#991b1b":"#444"} opacity={o}/>
     <circle cx="30" cy="34" r="16" fill={a?"#fecaca":"#555"} opacity={o}/>
-    <circle cx="30" cy="34" r="10" fill={a?"#fca5a5":"#555"} opacity={o}/>
-    {a&&<><circle cx="26" cy="32" r="3" fill="#ef4444" opacity={0.7}/>
-    <circle cx="34" cy="30" r="2" fill="#dc2626" opacity={0.6}/>
-    <circle cx="30" cy="38" r="2.5" fill="#f87171" opacity={0.5}/>
-    <rect x="6" y="14" width="2.5" height="22" rx="1" fill="#fbbf24" opacity={0.9}/>
-    <rect x="2" y="14" width="2" height="14" rx="1" fill="#fbbf24" opacity={0.8}/>
-    <rect x="10" y="14" width="2" height="14" rx="1" fill="#fbbf24" opacity={0.8}/>
-    <rect x="6" y="12" width="2.5" height="4" rx="1" fill="#f59e0b" opacity={0.9}/></>}
+    <circle cx="30" cy="34" r="10" fill={a?"#dba097":"#555"} opacity={o}/>
+    {a&&<><circle cx="26" cy="32" r="3" fill="#c45c5c" opacity={0.7}/>
+    <circle cx="34" cy="30" r="2" fill="#b04848" opacity={0.6}/>
+    <circle cx="30" cy="38" r="2.5" fill="#d4776a" opacity={0.5}/>
+    <rect x="6" y="14" width="2.5" height="22" rx="1" fill="#d4b85c" opacity={0.9}/>
+    <rect x="2" y="14" width="2" height="14" rx="1" fill="#d4b85c" opacity={0.8}/>
+    <rect x="10" y="14" width="2" height="14" rx="1" fill="#d4b85c" opacity={0.8}/>
+    <rect x="6" y="12" width="2.5" height="4" rx="1" fill="#c9a84c" opacity={0.9}/></>}
   </>),
   Transport: ({ a, o }) => (<>
     <rect x="4" y="30" width="52" height="20" rx="5" fill={a?"#1e40af":"#444"} opacity={o}/>
@@ -403,17 +403,17 @@ const ExpIcons = {
     <rect x="20" y="16" width="8" height="12" rx="2" fill={a?"#93c5fd":"#666"} opacity={o}/>
     <rect x="32" y="16" width="8" height="12" rx="2" fill={a?"#93c5fd":"#666"} opacity={o}/>
     <circle cx="16" cy="50" r="6" fill={a?"#1e3a8a":"#3a3a3a"} opacity={o}/>
-    <circle cx="16" cy="50" r="3" fill={a?"#64748b":"#555"} opacity={o}/>
+    <circle cx="16" cy="50" r="3" fill={a?"#6b6580":"#555"} opacity={o}/>
     <circle cx="44" cy="50" r="6" fill={a?"#1e3a8a":"#3a3a3a"} opacity={o}/>
-    <circle cx="44" cy="50" r="3" fill={a?"#64748b":"#555"} opacity={o}/>
-    {a&&<><rect x="4" y="38" width="12" height="3" rx="1" fill="#fbbf24" opacity={0.9}/>
-    <rect x="44" y="38" width="12" height="3" rx="1" fill="#f87171" opacity={0.8}/></>}
+    <circle cx="44" cy="50" r="3" fill={a?"#6b6580":"#555"} opacity={o}/>
+    {a&&<><rect x="4" y="38" width="12" height="3" rx="1" fill="#d4b85c" opacity={0.9}/>
+    <rect x="44" y="38" width="12" height="3" rx="1" fill="#d4776a" opacity={0.8}/></>}
   </>),
   Housing: ({ a, o }) => (<>
-    <rect x="10" y="28" width="40" height="30" fill={a?"#92400e":"#444"} opacity={o}/>
+    <rect x="10" y="28" width="40" height="30" fill={a?"#6b5020":"#444"} opacity={o}/>
     <polygon points="-2,30 30,4 62,30" fill={a?"#b45309":"#555"} opacity={o}/>
-    <rect x="24" y="40" width="12" height="18" rx="1" fill={a?"#fbbf24":"#555"} opacity={o}/>
-    {a&&<circle cx="33" cy="50" r="1.5" fill="#92400e"/>}
+    <rect x="24" y="40" width="12" height="18" rx="1" fill={a?"#d4b85c":"#555"} opacity={o}/>
+    {a&&<circle cx="33" cy="50" r="1.5" fill="#6b5020"/>}
     <rect x="14" y="32" width="8" height="8" rx="1" fill={a?"#fde68a":"#555"} opacity={o}/>
     <rect x="38" y="32" width="8" height="8" rx="1" fill={a?"#fde68a":"#555"} opacity={o}/>
     {a&&<><line x1="18" y1="32" x2="18" y2="40" stroke="#d97706" strokeWidth="0.8" opacity={0.5}/>
@@ -426,9 +426,9 @@ const ExpIcons = {
     <circle cx="18" cy="33" r="4" fill={a?"#c4b5fd":"#555"} opacity={o}/>
     <rect x="14" y="31" width="8" height="2.5" rx="1" fill={a?"#ddd6fe":"#555"} opacity={o}/>
     <rect x="16.5" y="28" width="2.5" height="8" rx="1" fill={a?"#ddd6fe":"#555"} opacity={o}/>
-    <circle cx="40" cy="29" r="3" fill={a?"#a78bfa":"#555"} opacity={o}/>
+    <circle cx="40" cy="29" r="3" fill={a?"#9b8ad4":"#555"} opacity={o}/>
     <circle cx="46" cy="35" r="3" fill={a?"#c4b5fd":"#555"} opacity={o}/>
-    <circle cx="40" cy="39" r="2.5" fill={a?"#8b5cf6":"#555"} opacity={o}/>
+    <circle cx="40" cy="39" r="2.5" fill={a?"#7c6bc4":"#555"} opacity={o}/>
     <circle cx="34" cy="35" r="2.5" fill={a?"#ddd6fe":"#555"} opacity={o}/>
     <path d="M12,48 Q8,58 16,58 L22,58 Q16,48 12,48" fill={a?"#4c1d95":"#3a3a3a"} opacity={o}/>
     <path d="M48,48 Q52,58 44,58 L38,58 Q44,48 48,48" fill={a?"#4c1d95":"#3a3a3a"} opacity={o}/>
@@ -442,7 +442,7 @@ const ExpIcons = {
   </>),
   Healthcare: ({ a, o }) => (<>
     <circle cx="30" cy="32" r="22" fill={a?"#991b1b":"#444"} opacity={o}/>
-    <circle cx="30" cy="32" r="18" fill={a?"#dc2626":"#555"} opacity={o}/>
+    <circle cx="30" cy="32" r="18" fill={a?"#b04848":"#555"} opacity={o}/>
     <rect x="24" y="18" width="12" height="28" rx="3" fill={a?"#fef2f2":"#666"} opacity={o}/>
     <rect x="16" y="26" width="28" height="12" rx="3" fill={a?"#fef2f2":"#666"} opacity={o}/>
     {a&&<circle cx="30" cy="32" r="18" fill="none" stroke="#fecaca" strokeWidth="1" opacity={0.4} strokeDasharray="3 2"/>}
@@ -461,13 +461,13 @@ const ExpIcons = {
     <polygon points="30,16 8,28 30,40 52,28" fill={a?"#2563eb":"#555"} opacity={o}/>
     <path d="M18,32 L18,48 Q18,52 30,54 Q42,52 42,48 L42,32" fill={a?"#1d4ed8":"#555"} opacity={o}/>
     {a&&<path d="M18,32 L18,48 Q18,52 30,54 Q42,52 42,48 L42,32" fill="none" stroke="#60a5fa" strokeWidth="1" opacity={0.4}/>}
-    <line x1="52" y1="28" x2="52" y2="54" stroke={a?"#fbbf24":"#555"} strokeWidth="2.5" opacity={o}/>
-    <circle cx="52" cy="56" r="3.5" fill={a?"#fbbf24":"#555"} opacity={o}/>
-    {a&&<circle cx="52" cy="56" r="1.5" fill="#f59e0b" opacity={0.8}/>}
+    <line x1="52" y1="28" x2="52" y2="54" stroke={a?"#d4b85c":"#555"} strokeWidth="2.5" opacity={o}/>
+    <circle cx="52" cy="56" r="3.5" fill={a?"#d4b85c":"#555"} opacity={o}/>
+    {a&&<circle cx="52" cy="56" r="1.5" fill="#c9a84c" opacity={0.8}/>}
   </>),
   Other: ({ a, o }) => (<>
-    <circle cx="30" cy="32" r="20" fill={a?"#4b5563":"#444"} opacity={o}/>
-    <circle cx="30" cy="32" r="15" fill={a?"#6b7280":"#555"} opacity={o}/>
+    <circle cx="30" cy="32" r="20" fill={a?"#4a4460":"#444"} opacity={o}/>
+    <circle cx="30" cy="32" r="15" fill={a?"#68627a":"#555"} opacity={o}/>
     <circle cx="22" cy="30" r="2.5" fill={a?"#d1d5db":"#666"} opacity={o}/>
     <circle cx="30" cy="30" r="2.5" fill={a?"#d1d5db":"#666"} opacity={o}/>
     <circle cx="38" cy="30" r="2.5" fill={a?"#d1d5db":"#666"} opacity={o}/>
@@ -507,8 +507,8 @@ function FinancialScene({ type, data, categories, Icons, t, catNames }) {
 
   return (
     <div style={{
-      borderRadius: 14, overflow: "hidden", border: "1px solid #334155",
-      marginBottom: 16, background: "#0f172a", position: "relative",
+      borderRadius: 14, overflow: "hidden", border: "1px solid #2e2a3a",
+      marginBottom: 16, background: "#14121e", position: "relative",
     }}>
       <style>{`
         @keyframes float-${type} { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-4px)} }
@@ -518,10 +518,10 @@ function FinancialScene({ type, data, categories, Icons, t, catNames }) {
         .scene-icon-${type}.active { filter: none; }
       `}</style>
       <div style={{ padding: "12px 16px 0", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <h3 style={{ margin: 0, fontSize: 15, fontWeight: 700, color: isE ? "#34d399" : "#f87171" }}>
+        <h3 style={{ margin: 0, fontSize: 15, fontWeight: 700, color: isE ? "#7eb87d" : "#d4776a" }}>
           {isE ? "↗ " + t.earningsBreakdown : "↘ " + t.expensesBreakdown}
         </h3>
-        <span style={{ fontSize: 13, color: "#64748b", fontFamily: "'Space Mono', monospace" }}>
+        <span style={{ fontSize: 13, color: "#6b6580", fontFamily: "'Space Mono', monospace" }}>
           {t.total}: ${fmt(total)}
         </span>
       </div>
@@ -529,22 +529,22 @@ function FinancialScene({ type, data, categories, Icons, t, catNames }) {
       <svg viewBox="0 0 680 245" style={{ width: "100%", display: "block" }}>
         <defs>
           <linearGradient id={`sky-${type}`} x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor={isE ? "#022c22" : "#0c0a1a"}/>
-            <stop offset="60%" stopColor={isE ? "#064e3b" : "#1e1b4b"}/>
+            <stop offset="0%" stopColor={isE ? "#0f1a0f" : "#0c0a1a"}/>
+            <stop offset="60%" stopColor={isE ? "#2a4a2a" : "#1e1b4b"}/>
             <stop offset="100%" stopColor={isE ? "#065f46" : "#312e81"}/>
           </linearGradient>
-          <radialGradient id={`moon-${type}`}><stop offset="0%" stopColor={isE?"#d1fae5":"#c7d2fe"}/><stop offset="100%" stopColor={isE?"#6ee7b7":"#818cf8"} stopOpacity="0"/></radialGradient>
+          <radialGradient id={`moon-${type}`}><stop offset="0%" stopColor={isE?"#c8dcc8":"#c7d2fe"}/><stop offset="100%" stopColor={isE?"#a3d4a2":"#c9a0dc"} stopOpacity="0"/></radialGradient>
         </defs>
         <rect width="680" height="245" fill={`url(#sky-${type})`}/>
 
         {/* Moon / Sun */}
-        <circle cx={isE ? 600 : 80} cy="40" r="16" fill={isE ? "#a7f3d0" : "#c7d2fe"} opacity={total > 0 ? 0.9 : 0.2} style={{ transition: "opacity 1s ease" }}/>
+        <circle cx={isE ? 600 : 80} cy="40" r="16" fill={isE ? "#b0ccb0" : "#c7d2fe"} opacity={total > 0 ? 0.9 : 0.2} style={{ transition: "opacity 1s ease" }}/>
         <circle cx={isE ? 600 : 80} cy="40" r="30" fill={`url(#moon-${type})`} opacity={total > 0 ? 0.3 : 0.05} style={{ transition: "opacity 1s ease" }}/>
 
         {/* Stars / particles */}
         {particles.map((p, i) => (
           <circle key={i} cx={p.x} cy={p.y} r={p.r}
-            fill={total > 0 ? (isE ? "#6ee7b7" : "#a5b4fc") : "#334155"}
+            fill={total > 0 ? (isE ? "#a3d4a2" : "#a8a0cc") : "#2e2a3a"}
             opacity={total > 0 ? 0.3 : 0.1}
             style={{ animation: total > 0 ? `twinkle-${type} ${p.speed}s ease-in-out ${p.delay}s infinite` : "none", transition: "fill 1s ease" }}
           />
@@ -553,11 +553,11 @@ function FinancialScene({ type, data, categories, Icons, t, catNames }) {
         {/* Hills / background landscape */}
         <ellipse cx="120" cy="180" rx="160" ry="30" fill={isE ? "#053b2e" : "#1a1640"} opacity={total > 0 ? 0.6 : 0.2} style={{ transition: "opacity 0.8s ease" }}/>
         <ellipse cx="480" cy="182" rx="200" ry="25" fill={isE ? "#042f26" : "#171340"} opacity={total > 0 ? 0.5 : 0.15} style={{ transition: "opacity 0.8s ease" }}/>
-        <ellipse cx="340" cy="178" rx="280" ry="20" fill={isE ? "#064e3b" : "#1e1b4b"} opacity={total > 0 ? 0.4 : 0.1} style={{ transition: "opacity 0.8s ease" }}/>
+        <ellipse cx="340" cy="178" rx="280" ry="20" fill={isE ? "#2a4a2a" : "#1e1b4b"} opacity={total > 0 ? 0.4 : 0.1} style={{ transition: "opacity 0.8s ease" }}/>
 
         {/* Ground plane */}
-        <rect x="0" y="175" width="680" height="70" fill={total > 0 ? (isE ? "#064e3b" : "#1e1b4b") : "#151525"} style={{ transition: "fill 0.8s ease" }}/>
-        <rect x="0" y="175" width="680" height="2" fill={total > 0 ? (isE ? "#34d399" : "#818cf8") : "#222"} opacity={total > 0 ? 0.15 : 0.05} style={{ transition: "opacity 0.8s ease" }}/>
+        <rect x="0" y="175" width="680" height="70" fill={total > 0 ? (isE ? "#2a4a2a" : "#1e1b4b") : "#151525"} style={{ transition: "fill 0.8s ease" }}/>
+        <rect x="0" y="175" width="680" height="2" fill={total > 0 ? (isE ? "#7eb87d" : "#c9a0dc") : "#222"} opacity={total > 0 ? 0.15 : 0.05} style={{ transition: "opacity 0.8s ease" }}/>
 
         {/* Category icons */}
         {catList.map((cat, i) => {
@@ -585,7 +585,7 @@ function FinancialScene({ type, data, categories, Icons, t, catNames }) {
 
               {/* Label */}
               <text x={x + 30} y={192} textAnchor="middle"
-                fill={cat.active ? (isE ? "#6ee7b7" : "#c7d2fe") : "#3f3f5c"}
+                fill={cat.active ? (isE ? "#a3d4a2" : "#c7d2fe") : "#3d3850"}
                 fontSize="9" fontWeight={cat.active ? "600" : "400"}
                 style={{ transition: "fill 0.5s ease" }}>
                 {catNames[cat.name] || cat.name}
@@ -593,7 +593,7 @@ function FinancialScene({ type, data, categories, Icons, t, catNames }) {
 
               {/* Percentage */}
               <text x={x + 30} y={204} textAnchor="middle"
-                fill={cat.active ? (isE ? "#34d399" : "#818cf8") : "#2a2a40"}
+                fill={cat.active ? (isE ? "#7eb87d" : "#c9a0dc") : "#2a2834"}
                 fontSize={cat.active ? "11" : "9"} fontWeight="700" fontFamily="'Space Mono', monospace"
                 style={{ transition: "all 0.5s ease" }}>
                 {cat.active ? cat.pct.toFixed(1) + "%" : "0%"}
@@ -601,7 +601,7 @@ function FinancialScene({ type, data, categories, Icons, t, catNames }) {
 
               {/* Amount */}
               <text x={x + 30} y={217} textAnchor="middle"
-                fill={cat.active ? "#94a3b8" : "#2a2a40"}
+                fill={cat.active ? "#9590a8" : "#2a2834"}
                 fontSize={cat.active ? "11" : "9"} fontWeight="500" fontFamily="'Space Mono', monospace"
                 style={{ transition: "all 0.5s ease" }}>
                 {cat.active ? "$" + fmt(cat.amount) : ""}
@@ -1304,24 +1304,28 @@ export default function ExpenseTracker() {
   const totalSpentInMonth = visibleBudgets.reduce((s, b) => s + (spendingByCategory[b.category] || 0), 0);
 
   const fmt = (n) => n.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-  const balanceColor = currentBalance >= 0 ? "#34d399" : "#f87171";
+  const balanceColor = currentBalance >= 0 ? "#7eb87d" : "#d4776a";
 
   return (
-    <div style={{ minHeight: "100vh", fontFamily: "'DM Sans', 'Segoe UI', sans-serif", background: "linear-gradient(145deg, #0f172a 0%, #1e293b 50%, #0f172a 100%)", color: "#e2e8f0", padding: "24px 16px", overflowX: "hidden" }}>
+    <div style={{ minHeight: "100vh", fontFamily: "'Noto Sans JP', 'Segoe UI', sans-serif", background: "linear-gradient(145deg, #171520 0%, #1e1b28 50%, #171520 100%)", color: "#e2e8f0", padding: "24px 16px", overflowX: "hidden" }}>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap');
-        * { box-sizing: border-box; max-width: 100%; }
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap');
+        * { box-sizing: border-box; }
         html, body, #root { overflow-x: hidden; width: 100%; }
         input, select { outline: none; max-width: 100%; }
-        input:focus, select:focus { border-color: #38bdf8 !important; box-shadow: 0 0 0 2px rgba(56,189,248,0.25); }
-        table { table-layout: auto; word-break: break-word; border-collapse: collapse; }
+        input:focus, select:focus { border-color: #38bdf8 !important; box-shadow: 0 0 0 2px rgba(139,126,200,0.25); }
+        table { border-collapse: collapse; }
         td, th { vertical-align: middle; line-height: 1.4; }
         td span { vertical-align: middle; display: inline-block; }
+        table td, table th { white-space: nowrap; }
+        table td.status-cell { white-space: normal; }
         @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
         @keyframes fadeInUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes breathe { 0%, 100% { opacity: 0.4; } 50% { opacity: 0.8; } }
+        ::selection { background: rgba(139,126,200,0.3); color: #e2e8f0; }
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb { background: #2e2a3a; border-radius: 3px; }
         @media (max-width: 600px) {
           .mobile-stack { flex-direction: column !important; }
           .mobile-full { flex: 1 1 100% !important; max-width: 100% !important; min-width: 0 !important; width: 100% !important; }
@@ -1332,11 +1336,11 @@ export default function ExpenseTracker() {
       {!onboarded ? (
         <div style={{ maxWidth: 520, margin: "0 auto", padding: "40px 0" }}>
           <div style={{ textAlign: "center", marginBottom: 32 }}>
-            <div style={{ width: 56, height: 56, borderRadius: 14, background: "linear-gradient(135deg, #38bdf8, #818cf8)", display: "inline-flex", alignItems: "center", justifyContent: "center", fontSize: 28, fontWeight: 700, color: "#0f172a", marginBottom: 14 }}>$</div>
+            <div style={{ width: 56, height: 56, borderRadius: 14, background: "linear-gradient(135deg, #8b7ec8, #c9a0dc)", display: "inline-flex", alignItems: "center", justifyContent: "center", fontSize: 24, fontWeight: 700, color: "#14121e", marginBottom: 14 }}>作</div>
             <h1 style={{ margin: "0 0 6px", fontSize: 24, fontWeight: 700, fontFamily: "'Space Mono', monospace" }}>{t.onboardTitle}</h1>
             <button onClick={() => updateLang(lang === "en" ? "zh" : "en")} style={{
               padding: "4px 12px", borderRadius: 6, border: "none", cursor: "pointer",
-              background: "linear-gradient(135deg, #f59e0b, #ef4444)", color: "#fff",
+              background: "linear-gradient(135deg, #c9a84c, #d4776a)", color: "#fff",
               fontSize: 11, fontWeight: 700, marginTop: 8,
             }}>{lang === "en" ? "中文" : "EN"}</button>
           </div>
@@ -1345,18 +1349,18 @@ export default function ExpenseTracker() {
           {!onboardMode && (
             <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
               <button onClick={() => setOnboardMode("starting")} style={{
-                padding: 20, borderRadius: 14, border: "2px solid #334155", cursor: "pointer",
-                background: "#1e293b", textAlign: "left",
+                padding: 20, borderRadius: 14, border: "2px solid #2e2a3a", cursor: "pointer",
+                background: "#1f1c2a", textAlign: "left",
               }}>
                 <div style={{ fontSize: 15, fontWeight: 600, color: "#e2e8f0", marginBottom: 4 }}>💰 {t.iKnowStarting}</div>
-                <div style={{ fontSize: 12, color: "#94a3b8" }}>{t.onboardStep1Hint}</div>
+                <div style={{ fontSize: 12, color: "#9590a8" }}>{t.onboardStep1Hint}</div>
               </button>
               <button onClick={() => setOnboardMode("current")} style={{
-                padding: 20, borderRadius: 14, border: "2px solid #334155", cursor: "pointer",
-                background: "#1e293b", textAlign: "left",
+                padding: 20, borderRadius: 14, border: "2px solid #2e2a3a", cursor: "pointer",
+                background: "#1f1c2a", textAlign: "left",
               }}>
                 <div style={{ fontSize: 15, fontWeight: 600, color: "#e2e8f0", marginBottom: 4 }}>📱 {t.iKnowCurrent}</div>
-                <div style={{ fontSize: 12, color: "#94a3b8" }}>{t.currentBalanceHint}</div>
+                <div style={{ fontSize: 12, color: "#9590a8" }}>{t.currentBalanceHint}</div>
               </button>
             </div>
           )}
@@ -1364,28 +1368,28 @@ export default function ExpenseTracker() {
           {/* PATH A: I know my starting balance */}
           {onboardMode === "starting" && (
             <div>
-              <button onClick={() => setOnboardMode(null)} style={{ background: "none", border: "none", color: "#64748b", cursor: "pointer", fontSize: 12, marginBottom: 12, padding: 0 }}>← {t.goBack}</button>
-              <div style={{ padding: 20, borderRadius: 14, background: "#1e293b", border: "1px solid #334155", marginBottom: 16 }}>
+              <button onClick={() => setOnboardMode(null)} style={{ background: "none", border: "none", color: "#6b6580", cursor: "pointer", fontSize: 12, marginBottom: 12, padding: 0 }}>← {t.goBack}</button>
+              <div style={{ padding: 20, borderRadius: 14, background: "#1f1c2a", border: "1px solid #2e2a3a", marginBottom: 16 }}>
                 <div style={{ fontSize: 15, fontWeight: 600, marginBottom: 12 }}>{t.onboardStep1}</div>
-                <p style={{ margin: "0 0 12px", fontSize: 12, color: "#94a3b8", lineHeight: 1.5 }}>{t.onboardStep1Hint}</p>
+                <p style={{ margin: "0 0 12px", fontSize: 12, color: "#9590a8", lineHeight: 1.5 }}>{t.onboardStep1Hint}</p>
                 <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                  <span style={{ fontSize: 24, fontWeight: 700, color: "#38bdf8" }}>$</span>
+                  <span style={{ fontSize: 24, fontWeight: 700, color: "#8b7ec8" }}>$</span>
                   <input type="number" placeholder="0.00" value={startingBalance} onChange={e => setStartingBalance(e.target.value)}
-                    style={{ flex: 1, padding: "12px 14px", borderRadius: 10, border: "2px solid rgba(56,189,248,0.4)", background: "#0f172a", color: "#e2e8f0", fontSize: 22, fontWeight: 700, fontFamily: "'Space Mono', monospace", textAlign: "center" }} />
+                    style={{ flex: 1, padding: "12px 14px", borderRadius: 10, border: "2px solid rgba(139,126,200,0.4)", background: "#14121e", color: "#e2e8f0", fontSize: 22, fontWeight: 700, fontFamily: "'Space Mono', monospace", textAlign: "center" }} />
                 </div>
               </div>
-              <div style={{ padding: 20, borderRadius: 14, background: "#1e293b", border: "1px solid #334155", marginBottom: 24 }}>
+              <div style={{ padding: 20, borderRadius: 14, background: "#1f1c2a", border: "1px solid #2e2a3a", marginBottom: 24 }}>
                 <div style={{ fontSize: 15, fontWeight: 600, marginBottom: 8 }}>{t.onboardStep2}</div>
-                <p style={{ margin: 0, fontSize: 12, color: "#94a3b8", lineHeight: 1.5 }}>{t.onboardStep2Hint}</p>
+                <p style={{ margin: 0, fontSize: 12, color: "#9590a8", lineHeight: 1.5 }}>{t.onboardStep2Hint}</p>
               </div>
               {startingBalance && (
-                <div style={{ padding: 16, borderRadius: 10, background: "rgba(52,211,153,0.08)", border: "1px solid rgba(52,211,153,0.2)", textAlign: "center", marginBottom: 20 }}>
-                  <div style={{ fontSize: 11, color: "#64748b", textTransform: "uppercase", letterSpacing: 1, marginBottom: 6 }}>{t.startingBalance}</div>
-                  <div style={{ fontSize: 28, fontWeight: 700, fontFamily: "'Space Mono', monospace", color: "#34d399" }}>${fmt(parseFloat(startingBalance) || 0)}</div>
+                <div style={{ padding: 16, borderRadius: 10, background: "rgba(126,184,125,0.08)", border: "1px solid rgba(126,184,125,0.2)", textAlign: "center", marginBottom: 20 }}>
+                  <div style={{ fontSize: 11, color: "#6b6580", textTransform: "uppercase", letterSpacing: 1, marginBottom: 6 }}>{t.startingBalance}</div>
+                  <div style={{ fontSize: 28, fontWeight: 700, fontFamily: "'Space Mono', monospace", color: "#7eb87d" }}>${fmt(parseFloat(startingBalance) || 0)}</div>
                 </div>
               )}
               <button onClick={completeOnboarding} disabled={!startingBalance}
-                style={{ width: "100%", padding: "14px 0", borderRadius: 10, border: "none", cursor: startingBalance ? "pointer" : "default", background: startingBalance ? "linear-gradient(135deg, #38bdf8, #818cf8)" : "#334155", color: startingBalance ? "#0f172a" : "#64748b", fontSize: 15, fontWeight: 700, opacity: startingBalance ? 1 : 0.6 }}>
+                style={{ width: "100%", padding: "14px 0", borderRadius: 10, border: "none", cursor: startingBalance ? "pointer" : "default", background: startingBalance ? "linear-gradient(135deg, #8b7ec8, #c9a0dc)" : "#2e2a3a", color: startingBalance ? "#14121e" : "#6b6580", fontSize: 15, fontWeight: 700, opacity: startingBalance ? 1 : 0.6 }}>
                 {t.onboardStart}
               </button>
             </div>
@@ -1394,21 +1398,21 @@ export default function ExpenseTracker() {
           {/* PATH B: I only know my current balance */}
           {onboardMode === "current" && (
             <div>
-              <button onClick={() => { setOnboardMode(null); setOnboardStep(1); }} style={{ background: "none", border: "none", color: "#64748b", cursor: "pointer", fontSize: 12, marginBottom: 12, padding: 0 }}>← {t.goBack}</button>
+              <button onClick={() => { setOnboardMode(null); setOnboardStep(1); }} style={{ background: "none", border: "none", color: "#6b6580", cursor: "pointer", fontSize: 12, marginBottom: 12, padding: 0 }}>← {t.goBack}</button>
 
               {onboardStep === 1 && (
                 <div>
-                  <div style={{ padding: 20, borderRadius: 14, background: "#1e293b", border: "1px solid #334155", marginBottom: 16 }}>
+                  <div style={{ padding: 20, borderRadius: 14, background: "#1f1c2a", border: "1px solid #2e2a3a", marginBottom: 16 }}>
                     <div style={{ fontSize: 15, fontWeight: 600, marginBottom: 12 }}>{t.currentBalanceNow}</div>
-                    <p style={{ margin: "0 0 12px", fontSize: 12, color: "#94a3b8", lineHeight: 1.5 }}>{t.currentBalanceHint}</p>
+                    <p style={{ margin: "0 0 12px", fontSize: 12, color: "#9590a8", lineHeight: 1.5 }}>{t.currentBalanceHint}</p>
                     <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                      <span style={{ fontSize: 24, fontWeight: 700, color: "#34d399" }}>$</span>
+                      <span style={{ fontSize: 24, fontWeight: 700, color: "#7eb87d" }}>$</span>
                       <input type="number" placeholder="0.00" value={onboardCurrentBal} onChange={e => setOnboardCurrentBal(e.target.value)}
-                        style={{ flex: 1, padding: "12px 14px", borderRadius: 10, border: "2px solid rgba(52,211,153,0.4)", background: "#0f172a", color: "#e2e8f0", fontSize: 22, fontWeight: 700, fontFamily: "'Space Mono', monospace", textAlign: "center" }} />
+                        style={{ flex: 1, padding: "12px 14px", borderRadius: 10, border: "2px solid rgba(52,211,153,0.4)", background: "#14121e", color: "#e2e8f0", fontSize: 22, fontWeight: 700, fontFamily: "'Space Mono', monospace", textAlign: "center" }} />
                     </div>
                   </div>
                   <button onClick={() => setOnboardStep(2)} disabled={!onboardCurrentBal}
-                    style={{ width: "100%", padding: "14px 0", borderRadius: 10, border: "none", cursor: onboardCurrentBal ? "pointer" : "default", background: onboardCurrentBal ? "linear-gradient(135deg, #34d399, #6ee7b7)" : "#334155", color: onboardCurrentBal ? "#0f172a" : "#64748b", fontSize: 15, fontWeight: 700, opacity: onboardCurrentBal ? 1 : 0.6 }}>
+                    style={{ width: "100%", padding: "14px 0", borderRadius: 10, border: "none", cursor: onboardCurrentBal ? "pointer" : "default", background: onboardCurrentBal ? "linear-gradient(135deg, #7eb87d, #a3d4a2)" : "#2e2a3a", color: onboardCurrentBal ? "#14121e" : "#6b6580", fontSize: 15, fontWeight: 700, opacity: onboardCurrentBal ? 1 : 0.6 }}>
                     {lang === "zh" ? "下一步 →" : "Next →"}
                   </button>
                 </div>
@@ -1420,52 +1424,52 @@ export default function ExpenseTracker() {
                 const calculatedStart = (parseFloat(onboardCurrentBal) || 0) - tE + tX;
                 return (
                   <div>
-                    <div style={{ padding: 20, borderRadius: 14, background: "#1e293b", border: "1px solid #334155", marginBottom: 16 }}>
+                    <div style={{ padding: 20, borderRadius: 14, background: "#1f1c2a", border: "1px solid #2e2a3a", marginBottom: 16 }}>
                       <div style={{ fontSize: 15, fontWeight: 600, marginBottom: 12 }}>{t.addRecordsFirst}</div>
                       <div style={{ marginBottom: 12 }}>
-                        <div style={{ fontSize: 11, color: "#34d399", fontWeight: 600, marginBottom: 6 }}>↗ {t.earnings}</div>
+                        <div style={{ fontSize: 11, color: "#7eb87d", fontWeight: 600, marginBottom: 6 }}>↗ {t.earnings}</div>
                         <div style={{ display: "flex", gap: 4, flexWrap: "wrap" }}>
-                          <input type="text" placeholder={t.earningLabel} value={earnLabel} onChange={e => setEarnLabel(e.target.value)} style={{ flex: "1 1 80px", padding: "7px 8px", borderRadius: 6, border: "1px solid #334155", background: "#0f172a", color: "#e2e8f0", fontSize: 11 }} />
-                          <select value={earnCategory} onChange={e => setEarnCategory(e.target.value)} style={{ padding: "7px 4px", borderRadius: 6, border: "1px solid #334155", background: "#0f172a", color: "#e2e8f0", fontSize: 11 }}>
+                          <input type="text" placeholder={t.earningLabel} value={earnLabel} onChange={e => setEarnLabel(e.target.value)} style={{ flex: "1 1 80px", padding: "7px 8px", borderRadius: 6, border: "1px solid #2e2a3a", background: "#14121e", color: "#e2e8f0", fontSize: 11 }} />
+                          <select value={earnCategory} onChange={e => setEarnCategory(e.target.value)} style={{ padding: "7px 4px", borderRadius: 6, border: "1px solid #2e2a3a", background: "#14121e", color: "#e2e8f0", fontSize: 11 }}>
                             {EARN_CATEGORIES.map(c => <option key={c} value={c}>{eCat[c] || c}</option>)}
                           </select>
-                          <input type="number" placeholder="$" value={earnAmount} onChange={e => setEarnAmount(e.target.value)} style={{ width: 55, padding: "7px 6px", borderRadius: 6, border: "1px solid #334155", background: "#0f172a", color: "#e2e8f0", fontSize: 11, fontFamily: "'Space Mono', monospace" }} />
-                          <input type="date" value={earnDate} onChange={e => setEarnDate(e.target.value)} style={{ padding: "7px 4px", borderRadius: 6, border: "1px solid #334155", background: "#0f172a", color: "#e2e8f0", fontSize: 10 }} />
-                          <button onClick={addEarning} style={{ padding: "7px 10px", borderRadius: 6, border: "none", background: "#34d399", color: "#0f172a", fontSize: 11, fontWeight: 700, cursor: "pointer" }}>+</button>
+                          <input type="number" placeholder="$" value={earnAmount} onChange={e => setEarnAmount(e.target.value)} style={{ width: 55, padding: "7px 6px", borderRadius: 6, border: "1px solid #2e2a3a", background: "#14121e", color: "#e2e8f0", fontSize: 11, fontFamily: "'Space Mono', monospace" }} />
+                          <input type="date" value={earnDate} onChange={e => setEarnDate(e.target.value)} style={{ padding: "7px 4px", borderRadius: 6, border: "1px solid #2e2a3a", background: "#14121e", color: "#e2e8f0", fontSize: 10 }} />
+                          <button onClick={addEarning} style={{ padding: "7px 10px", borderRadius: 6, border: "none", background: "#7eb87d", color: "#14121e", fontSize: 11, fontWeight: 700, cursor: "pointer" }}>+</button>
                         </div>
-                        {tE > 0 && <div style={{ fontSize: 10, color: "#34d399", marginTop: 4 }}>{t.totalEarnings}: +${fmt(tE)}</div>}
+                        {tE > 0 && <div style={{ fontSize: 10, color: "#7eb87d", marginTop: 4 }}>{t.totalEarnings}: +${fmt(tE)}</div>}
                       </div>
                       <div>
-                        <div style={{ fontSize: 11, color: "#f87171", fontWeight: 600, marginBottom: 6 }}>↘ {t.expenses}</div>
+                        <div style={{ fontSize: 11, color: "#d4776a", fontWeight: 600, marginBottom: 6 }}>↘ {t.expenses}</div>
                         <div style={{ display: "flex", gap: 4, flexWrap: "wrap" }}>
-                          <input type="text" placeholder={t.expenseLabel} value={expLabel} onChange={e => setExpLabel(e.target.value)} style={{ flex: "1 1 80px", padding: "7px 8px", borderRadius: 6, border: "1px solid #334155", background: "#0f172a", color: "#e2e8f0", fontSize: 11 }} />
-                          <select value={expCategory} onChange={e => setExpCategory(e.target.value)} style={{ padding: "7px 4px", borderRadius: 6, border: "1px solid #334155", background: "#0f172a", color: "#e2e8f0", fontSize: 11 }}>
+                          <input type="text" placeholder={t.expenseLabel} value={expLabel} onChange={e => setExpLabel(e.target.value)} style={{ flex: "1 1 80px", padding: "7px 8px", borderRadius: 6, border: "1px solid #2e2a3a", background: "#14121e", color: "#e2e8f0", fontSize: 11 }} />
+                          <select value={expCategory} onChange={e => setExpCategory(e.target.value)} style={{ padding: "7px 4px", borderRadius: 6, border: "1px solid #2e2a3a", background: "#14121e", color: "#e2e8f0", fontSize: 11 }}>
                             {EXP_CATEGORIES.map(c => <option key={c} value={c}>{xCat[c] || c}</option>)}
                           </select>
-                          <input type="number" placeholder="$" value={expAmount} onChange={e => setExpAmount(e.target.value)} style={{ width: 55, padding: "7px 6px", borderRadius: 6, border: "1px solid #334155", background: "#0f172a", color: "#e2e8f0", fontSize: 11, fontFamily: "'Space Mono', monospace" }} />
-                          <input type="date" value={expDate} onChange={e => setExpDate(e.target.value)} style={{ padding: "7px 4px", borderRadius: 6, border: "1px solid #334155", background: "#0f172a", color: "#e2e8f0", fontSize: 10 }} />
-                          <button onClick={addExpense} style={{ padding: "7px 10px", borderRadius: 6, border: "none", background: "#f87171", color: "#0f172a", fontSize: 11, fontWeight: 700, cursor: "pointer" }}>+</button>
+                          <input type="number" placeholder="$" value={expAmount} onChange={e => setExpAmount(e.target.value)} style={{ width: 55, padding: "7px 6px", borderRadius: 6, border: "1px solid #2e2a3a", background: "#14121e", color: "#e2e8f0", fontSize: 11, fontFamily: "'Space Mono', monospace" }} />
+                          <input type="date" value={expDate} onChange={e => setExpDate(e.target.value)} style={{ padding: "7px 4px", borderRadius: 6, border: "1px solid #2e2a3a", background: "#14121e", color: "#e2e8f0", fontSize: 10 }} />
+                          <button onClick={addExpense} style={{ padding: "7px 10px", borderRadius: 6, border: "none", background: "#d4776a", color: "#14121e", fontSize: 11, fontWeight: 700, cursor: "pointer" }}>+</button>
                         </div>
-                        {tX > 0 && <div style={{ fontSize: 10, color: "#f87171", marginTop: 4 }}>{t.totalExpenses}: -${fmt(tX)}</div>}
+                        {tX > 0 && <div style={{ fontSize: 10, color: "#d4776a", marginTop: 4 }}>{t.totalExpenses}: -${fmt(tX)}</div>}
                       </div>
                     </div>
 
-                    <div style={{ padding: 16, borderRadius: 10, background: "rgba(56,189,248,0.08)", border: "1px solid rgba(56,189,248,0.2)", textAlign: "center", marginBottom: 12 }}>
-                      <div style={{ fontSize: 10, color: "#64748b", marginBottom: 4 }}>{t.currentBalanceNow}: ${fmt(parseFloat(onboardCurrentBal) || 0)}</div>
+                    <div style={{ padding: 16, borderRadius: 10, background: "rgba(139,126,200,0.08)", border: "1px solid rgba(56,189,248,0.2)", textAlign: "center", marginBottom: 12 }}>
+                      <div style={{ fontSize: 10, color: "#6b6580", marginBottom: 4 }}>{t.currentBalanceNow}: ${fmt(parseFloat(onboardCurrentBal) || 0)}</div>
                       {(tE > 0 || tX > 0) && (
-                        <div style={{ fontSize: 10, color: "#475569", marginBottom: 8 }}>
+                        <div style={{ fontSize: 10, color: "#504a60", marginBottom: 8 }}>
                           {tE > 0 && <span> − {t.earnings} ${fmt(tE)}</span>}
                           {tX > 0 && <span> + {t.expenses} ${fmt(tX)}</span>}
                         </div>
                       )}
-                      <div style={{ fontSize: 11, color: "#94a3b8", textTransform: "uppercase", letterSpacing: 1, marginBottom: 4 }}>{t.calculatedStarting}</div>
-                      <div style={{ fontSize: 28, fontWeight: 700, fontFamily: "'Space Mono', monospace", color: "#38bdf8" }}>${fmt(calculatedStart)}</div>
+                      <div style={{ fontSize: 11, color: "#9590a8", textTransform: "uppercase", letterSpacing: 1, marginBottom: 4 }}>{t.calculatedStarting}</div>
+                      <div style={{ fontSize: 28, fontWeight: 700, fontFamily: "'Space Mono', monospace", color: "#8b7ec8" }}>${fmt(calculatedStart)}</div>
                     </div>
 
-                    <button onClick={completeOnboardingReverse} style={{ width: "100%", padding: "14px 0", borderRadius: 10, border: "none", cursor: "pointer", background: "linear-gradient(135deg, #38bdf8, #818cf8)", color: "#0f172a", fontSize: 15, fontWeight: 700 }}>
+                    <button onClick={completeOnboardingReverse} style={{ width: "100%", padding: "14px 0", borderRadius: 10, border: "none", cursor: "pointer", background: "linear-gradient(135deg, #8b7ec8, #c9a0dc)", color: "#14121e", fontSize: 15, fontWeight: 700 }}>
                       {t.looksGood}
                     </button>
-                    <button onClick={() => setOnboardStep(1)} style={{ width: "100%", padding: "10px 0", borderRadius: 8, border: "none", cursor: "pointer", background: "transparent", color: "#64748b", fontSize: 12, marginTop: 6 }}>
+                    <button onClick={() => setOnboardStep(1)} style={{ width: "100%", padding: "10px 0", borderRadius: 8, border: "none", cursor: "pointer", background: "transparent", color: "#6b6580", fontSize: 12, marginTop: 6 }}>
                       ← {t.goBack}
                     </button>
                   </div>
@@ -1477,44 +1481,45 @@ export default function ExpenseTracker() {
       ) : (
       <div style={{ maxWidth: 1100, margin: "0 auto", width: "100%", minWidth: 0 }}>
         {/* Header */}
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8 }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-            <div style={{ width: 40, height: 40, borderRadius: 10, background: "linear-gradient(135deg, #38bdf8, #818cf8)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 20, fontWeight: 700, color: "#0f172a" }}>$</div>
-            <div>
-              <h1 style={{ margin: 0, fontSize: 22, fontWeight: 700, fontFamily: "'Space Mono', monospace", letterSpacing: "-0.5px" }}>{t.moneyTracker}</h1>
-              <p style={{ margin: 0, fontSize: 10, color: "#64748b" }}>{lang === "zh" ? "个人财务追踪" : "Personal Finance Tracker"} · {selectedYear} · {isAll ? t.fullYear : MONTHS[selectedMonth]}</p>
+        <div style={{ marginBottom: 8 }}>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 8 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+              <div style={{ width: 36, height: 36, borderRadius: 9, background: "linear-gradient(135deg, #8b7ec8, #c9a0dc)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16, fontWeight: 700, color: "#14121e", flexShrink: 0 }}>作</div>
+              <div>
+                <h1 style={{ margin: 0, fontSize: 20, fontWeight: 700, fontFamily: "'Space Mono', monospace", letterSpacing: "-0.5px" }}>{t.moneyTracker}</h1>
+                <p style={{ margin: 0, fontSize: 10, color: "#6b6580" }}>{lang === "zh" ? "个人财务追踪" : "Personal Finance Tracker"} · {selectedYear} · {isAll ? t.fullYear : MONTHS[selectedMonth]}</p>
+              </div>
             </div>
-          </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 6, flexWrap: "wrap" }}>
-            <button onClick={() => setShowResetConfirm(true)} style={{
-              padding: "8px 12px", borderRadius: 8, border: "none", cursor: "pointer",
-              background: "#334155", color: "#94a3b8", fontSize: 11, fontWeight: 600,
-            }}>
-              {lang === "zh" ? "重置" : "Reset"}
-            </button>
-            <button onClick={() => updateLang(lang === "en" ? "zh" : "en")} style={{
-              padding: "8px 14px", borderRadius: 8, border: "none", cursor: "pointer",
-              background: "linear-gradient(135deg, #f59e0b, #ef4444)", color: "#fff",
-              fontSize: 12, fontWeight: 700,
-            }}>
-              {lang === "en" ? "中文" : "EN"}
-            </button>
-            {undoStack.length > 0 && (
-              <button onClick={undo} style={{
-                padding: "8px 16px", borderRadius: 8,
-                border: "none", cursor: "pointer",
-                background: "linear-gradient(135deg, #334155, #475569)",
-                color: "#e2e8f0", fontSize: 13, fontWeight: 700,
-                display: "flex", alignItems: "center", gap: 6,
-                boxShadow: "0 2px 10px rgba(0,0,0,0.3)",
+            <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+              <button onClick={() => setShowResetConfirm(true)} style={{
+                padding: "6px 10px", borderRadius: 6, border: "none", cursor: "pointer",
+                background: "#2e2a3a", color: "#9590a8", fontSize: 10, fontWeight: 600,
               }}>
-                <span style={{ fontSize: 14 }}>↩</span> {t.undo}
-                <span style={{
-                  padding: "1px 6px", borderRadius: 5, background: "rgba(255,255,255,0.15)",
-                  fontSize: 11, fontFamily: "'Space Mono', monospace",
-                }}>{undoStack.length}</span>
+                {lang === "zh" ? "重置" : "Reset"}
               </button>
-            )}
+              <button onClick={() => updateLang(lang === "en" ? "zh" : "en")} style={{
+                padding: "6px 10px", borderRadius: 6, border: "none", cursor: "pointer",
+                background: "linear-gradient(135deg, #c9a84c, #d4776a)", color: "#fff",
+                fontSize: 10, fontWeight: 700,
+              }}>
+                {lang === "en" ? "中文" : "EN"}
+              </button>
+              {undoStack.length > 0 && (
+                <button onClick={undo} style={{
+                  padding: "6px 10px", borderRadius: 6,
+                  border: "none", cursor: "pointer",
+                  background: "linear-gradient(135deg, #2e2a3a, #3d3850)",
+                  color: "#e2e8f0", fontSize: 11, fontWeight: 700,
+                  display: "flex", alignItems: "center", gap: 4,
+                }}>
+                  ↩ {t.undo}
+                  <span style={{
+                    padding: "1px 5px", borderRadius: 4, background: "rgba(255,255,255,0.08)",
+                    fontSize: 10, fontFamily: "'Space Mono', monospace",
+                  }}>{undoStack.length}</span>
+                </button>
+              )}
+            </div>
           </div>
         </div>
 
@@ -1522,10 +1527,10 @@ export default function ExpenseTracker() {
         {showResetConfirm && (
           <div style={{
             padding: 16, borderRadius: 12, marginTop: 12, marginBottom: 8,
-            background: "rgba(239,68,68,0.08)", border: "1px solid rgba(239,68,68,0.3)",
+            background: "rgba(196,92,92,0.08)", border: "1px solid rgba(196,92,92,0.3)",
             textAlign: "center",
           }}>
-            <p style={{ margin: "0 0 10px", fontSize: 14, fontWeight: 600, color: "#fca5a5" }}>
+            <p style={{ margin: "0 0 10px", fontSize: 14, fontWeight: 600, color: "#dba097" }}>
               {lang === "zh" ? "确定要重置所有数据吗？此操作无法撤销。" : "Reset all data? This cannot be undone."}
             </p>
             <div style={{ display: "flex", gap: 8, justifyContent: "center" }}>
@@ -1538,7 +1543,7 @@ export default function ExpenseTracker() {
               </button>
               <button onClick={() => setShowResetConfirm(false)} style={{
                 padding: "8px 20px", borderRadius: 8, border: "1px solid #475569", cursor: "pointer",
-                background: "transparent", color: "#94a3b8", fontSize: 13, fontWeight: 600,
+                background: "transparent", color: "#9590a8", fontSize: 13, fontWeight: 600,
               }}>
                 {lang === "zh" ? "取消" : "Cancel"}
               </button>
@@ -1547,8 +1552,8 @@ export default function ExpenseTracker() {
         )}
 
         {/* Balance */}
-        <div style={{ marginTop: 20, marginBottom: 20, padding: "28px 24px", background: "linear-gradient(135deg, #1e293b 0%, #0f172a 100%)", borderRadius: 16, border: `1px solid ${currentBalance >= 0 ? "rgba(52,211,153,0.3)" : "rgba(248,113,113,0.3)"}`, textAlign: "center" }}>
-          <div style={{ fontSize: 11, color: "#94a3b8", textTransform: "uppercase", letterSpacing: 2, marginBottom: 8 }}>
+        <div style={{ marginTop: 20, marginBottom: 20, padding: "28px 24px", background: "linear-gradient(135deg, #1f1c2a 0%, #14121e 100%)", borderRadius: 16, border: `1px solid ${currentBalance >= 0 ? "rgba(52,211,153,0.3)" : "rgba(248,113,113,0.3)"}`, textAlign: "center" }}>
+          <div style={{ fontSize: 11, color: "#9590a8", textTransform: "uppercase", letterSpacing: 2, marginBottom: 8 }}>
             {t.calculatedBalance}
           </div>
           <div style={{ fontSize: 32, fontWeight: 700, fontFamily: "'Space Mono', monospace", color: balanceColor, lineHeight: 1.1, wordBreak: "break-all", marginBottom: 6 }}>
@@ -1556,73 +1561,73 @@ export default function ExpenseTracker() {
           </div>
 
           {/* Starting balance reference */}
-          <div style={{ fontSize: 10, color: "#475569", marginBottom: 14 }}>
+          <div style={{ fontSize: 10, color: "#504a60", marginBottom: 14 }}>
             {t.startingBalance}: ${fmt(parseFloat(startingBalance) || 0)}
-            <span style={{ fontSize: 10, color: "#64748b", cursor: "pointer", marginLeft: 6 }} onClick={() => setEditingBalance(!editingBalance)}>✎ {t.edit}</span>
+            <span style={{ fontSize: 10, color: "#6b6580", cursor: "pointer", marginLeft: 6 }} onClick={() => setEditingBalance(!editingBalance)}>✎ {t.edit}</span>
           </div>
           {editingBalance && (
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8, flexWrap: "wrap", marginBottom: 14, padding: "10px 0", borderTop: "1px solid #334155", borderBottom: "1px solid #334155" }}>
-              <span style={{ fontSize: 11, color: "#94a3b8" }}>{t.startingBalance}:</span>
-              <span style={{ fontSize: 18, fontWeight: 700, color: "#38bdf8" }}>$</span>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8, flexWrap: "wrap", marginBottom: 14, padding: "10px 0", borderTop: "1px solid #2e2a3a", borderBottom: "1px solid #2e2a3a" }}>
+              <span style={{ fontSize: 11, color: "#9590a8" }}>{t.startingBalance}:</span>
+              <span style={{ fontSize: 18, fontWeight: 700, color: "#8b7ec8" }}>$</span>
               <input type="number" placeholder="0.00" autoFocus value={startingBalance} onChange={e => updateBalance(e.target.value)} onKeyDown={e => { if (e.key === "Enter") setEditingBalance(false); }}
-                style={{ width: 140, padding: "6px 10px", borderRadius: 8, border: "1px solid rgba(56,189,248,0.4)", background: "#0f172a", color: "#e2e8f0", fontSize: 16, fontWeight: 700, fontFamily: "'Space Mono', monospace", textAlign: "center" }} />
-              <button onClick={() => setEditingBalance(false)} style={{ padding: "6px 14px", borderRadius: 6, border: "none", cursor: "pointer", background: "#38bdf8", color: "#0f172a", fontSize: 12, fontWeight: 700 }}>{t.set}</button>
+                style={{ width: 140, padding: "6px 10px", borderRadius: 8, border: "1px solid rgba(139,126,200,0.4)", background: "#14121e", color: "#e2e8f0", fontSize: 16, fontWeight: 700, fontFamily: "'Space Mono', monospace", textAlign: "center" }} />
+              <button onClick={() => setEditingBalance(false)} style={{ padding: "6px 14px", borderRadius: 6, border: "none", cursor: "pointer", background: "#8b7ec8", color: "#14121e", fontSize: 12, fontWeight: 700 }}>{t.set}</button>
             </div>
           )}
 
           <div style={{ display: "flex", justifyContent: "center", gap: 24, marginTop: 4, flexWrap: "wrap" }}>
             <div style={{ textAlign: "center" }}>
-              <div style={{ fontSize: 10, color: "#64748b", textTransform: "uppercase", letterSpacing: 1 }}>{t.totalEarnings}</div>
-              <div style={{ fontSize: 16, fontWeight: 600, fontFamily: "'Space Mono', monospace", color: "#34d399", marginTop: 2 }}>+${fmt(totals.earnings)}</div>
+              <div style={{ fontSize: 10, color: "#6b6580", textTransform: "uppercase", letterSpacing: 1 }}>{t.totalEarnings}</div>
+              <div style={{ fontSize: 16, fontWeight: 600, fontFamily: "'Space Mono', monospace", color: "#7eb87d", marginTop: 2 }}>+${fmt(totals.earnings)}</div>
             </div>
-            <div style={{ width: 1, background: "#334155" }}></div>
+            <div style={{ width: 1, background: "#2e2a3a" }}></div>
             <div style={{ textAlign: "center" }}>
-              <div style={{ fontSize: 10, color: "#64748b", textTransform: "uppercase", letterSpacing: 1 }}>{t.totalExpenses}</div>
-              <div style={{ fontSize: 16, fontWeight: 600, fontFamily: "'Space Mono', monospace", color: "#f87171", marginTop: 2 }}>-${fmt(totals.expenses)}</div>
+              <div style={{ fontSize: 10, color: "#6b6580", textTransform: "uppercase", letterSpacing: 1 }}>{t.totalExpenses}</div>
+              <div style={{ fontSize: 16, fontWeight: 600, fontFamily: "'Space Mono', monospace", color: "#d4776a", marginTop: 2 }}>-${fmt(totals.expenses)}</div>
             </div>
-            <div style={{ width: 1, background: "#334155" }}></div>
+            <div style={{ width: 1, background: "#2e2a3a" }}></div>
             <div style={{ textAlign: "center" }}>
-              <div style={{ fontSize: 10, color: "#64748b", textTransform: "uppercase", letterSpacing: 1 }}>{t.net}</div>
-              <div style={{ fontSize: 16, fontWeight: 600, fontFamily: "'Space Mono', monospace", color: totals.earnings - totals.expenses >= 0 ? "#34d399" : "#f87171", marginTop: 2 }}>
+              <div style={{ fontSize: 10, color: "#6b6580", textTransform: "uppercase", letterSpacing: 1 }}>{t.net}</div>
+              <div style={{ fontSize: 16, fontWeight: 600, fontFamily: "'Space Mono', monospace", color: totals.earnings - totals.expenses >= 0 ? "#7eb87d" : "#d4776a", marginTop: 2 }}>
                 {totals.earnings - totals.expenses >= 0 ? "+" : "-"}${fmt(Math.abs(totals.earnings - totals.expenses))}
               </div>
             </div>
           </div>
           {totalAllocated > 0 && (
-            <div style={{ display: "flex", justifyContent: "center", gap: 24, marginTop: 12, paddingTop: 12, borderTop: "1px solid #334155", flexWrap: "wrap" }}>
+            <div style={{ display: "flex", justifyContent: "center", gap: 24, marginTop: 12, paddingTop: 12, borderTop: "1px solid #2e2a3a", flexWrap: "wrap" }}>
               <div style={{ textAlign: "center" }}>
-                <div style={{ fontSize: 10, color: "#64748b", textTransform: "uppercase", letterSpacing: 1 }}>{t.savedForGoals}</div>
-                <div style={{ fontSize: 16, fontWeight: 600, fontFamily: "'Space Mono', monospace", color: "#fbbf24", marginTop: 2 }}>${fmt(goals.reduce((s, g) => s + g.saved, 0))}</div>
+                <div style={{ fontSize: 10, color: "#6b6580", textTransform: "uppercase", letterSpacing: 1 }}>{t.savedForGoals}</div>
+                <div style={{ fontSize: 16, fontWeight: 600, fontFamily: "'Space Mono', monospace", color: "#d4b85c", marginTop: 2 }}>${fmt(goals.reduce((s, g) => s + g.saved, 0))}</div>
               </div>
-              <div style={{ width: 1, background: "#334155" }}></div>
+              <div style={{ width: 1, background: "#2e2a3a" }}></div>
               {froggyBank > 0 && <>
                 <div style={{ textAlign: "center" }}>
-                  <div style={{ fontSize: 10, color: "#64748b", textTransform: "uppercase", letterSpacing: 1 }}>{t.froggyBankLabel}</div>
-                  <div style={{ fontSize: 16, fontWeight: 600, fontFamily: "'Space Mono', monospace", color: "#6ee7b7", marginTop: 2 }}>${fmt(froggyBank)}</div>
+                  <div style={{ fontSize: 10, color: "#6b6580", textTransform: "uppercase", letterSpacing: 1 }}>{t.froggyBankLabel}</div>
+                  <div style={{ fontSize: 16, fontWeight: 600, fontFamily: "'Space Mono', monospace", color: "#a3d4a2", marginTop: 2 }}>${fmt(froggyBank)}</div>
                 </div>
-                <div style={{ width: 1, background: "#334155" }}></div>
+                <div style={{ width: 1, background: "#2e2a3a" }}></div>
               </>}
               <div style={{ textAlign: "center" }}>
-                <div style={{ fontSize: 10, color: "#64748b", textTransform: "uppercase", letterSpacing: 1 }}>{t.available}</div>
-                <div style={{ fontSize: 16, fontWeight: 600, fontFamily: "'Space Mono', monospace", color: availableBalance >= 0 ? "#38bdf8" : "#f87171", marginTop: 2 }}>${fmt(availableBalance)}</div>
+                <div style={{ fontSize: 10, color: "#6b6580", textTransform: "uppercase", letterSpacing: 1 }}>{t.available}</div>
+                <div style={{ fontSize: 16, fontWeight: 600, fontFamily: "'Space Mono', monospace", color: availableBalance >= 0 ? "#8b7ec8" : "#d4776a", marginTop: 2 }}>${fmt(availableBalance)}</div>
               </div>
             </div>
           )}
 
           {/* Balance Correction */}
-          <div style={{ marginTop: 14, paddingTop: 14, borderTop: "1px solid #334155" }}>
-            <div style={{ fontSize: 10, color: "#475569", marginBottom: 8 }}>{t.correctionHint}</div>
+          <div style={{ marginTop: 14, paddingTop: 14, borderTop: "1px solid #2e2a3a" }}>
+            <div style={{ fontSize: 10, color: "#504a60", marginBottom: 8 }}>{t.correctionHint}</div>
             <div style={{ display: "flex", gap: 6, justifyContent: "center", flexWrap: "wrap" }}>
               <input type="text" placeholder={lang === "zh" ? "备注（可选）" : "Note (optional)"} value={correctionNote} onChange={e => setCorrectionNote(e.target.value)}
-                style={{ flex: "1 1 100px", padding: "7px 10px", borderRadius: 6, border: "1px solid #334155", background: "#0f172a", color: "#e2e8f0", fontSize: 12 }} />
+                style={{ flex: "1 1 100px", padding: "7px 10px", borderRadius: 6, border: "1px solid #2e2a3a", background: "#14121e", color: "#e2e8f0", fontSize: 12 }} />
               <input type="number" placeholder="+/- $" value={correctionAmount} onChange={e => setCorrectionAmount(e.target.value)}
                 onKeyDown={e => { if (e.key === "Enter") addCorrection(); }}
-                style={{ width: 90, padding: "7px 10px", borderRadius: 6, border: "1px solid #334155", background: "#0f172a", color: "#e2e8f0", fontSize: 12, fontFamily: "'Space Mono', monospace" }} />
+                style={{ width: 90, padding: "7px 10px", borderRadius: 6, border: "1px solid #2e2a3a", background: "#14121e", color: "#e2e8f0", fontSize: 12, fontFamily: "'Space Mono', monospace" }} />
               <button onClick={addCorrection} disabled={!correctionAmount || parseFloat(correctionAmount) === 0}
                 style={{
                   padding: "7px 14px", borderRadius: 6, border: "none", cursor: correctionAmount ? "pointer" : "default",
-                  background: correctionAmount ? "linear-gradient(135deg, #f59e0b, #ef4444)" : "#334155",
-                  color: correctionAmount ? "#0f172a" : "#64748b",
+                  background: correctionAmount ? "linear-gradient(135deg, #c9a84c, #d4776a)" : "#2e2a3a",
+                  color: correctionAmount ? "#14121e" : "#6b6580",
                   fontSize: 11, fontWeight: 700, whiteSpace: "nowrap",
                   opacity: correctionAmount ? 1 : 0.5,
                 }}>{t.addCorrection}</button>
@@ -1631,50 +1636,50 @@ export default function ExpenseTracker() {
         </div>
 
         {/* Controls */}
-        <div style={{ display: "flex", flexDirection: "column", gap: 14, marginBottom: 24, padding: 16, background: "#1e293b", borderRadius: 12, border: "1px solid #334155" }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: 14, marginBottom: 24, padding: 16, background: "#1f1c2a", borderRadius: 12, border: "1px solid #2e2a3a" }}>
           <div>
-            <label style={{ fontSize: 11, color: "#94a3b8", textTransform: "uppercase", letterSpacing: 1, display: "block", marginBottom: 6 }}>{t.enterYear}</label>
+            <label style={{ fontSize: 11, color: "#9590a8", textTransform: "uppercase", letterSpacing: 1, display: "block", marginBottom: 6 }}>{t.enterYear}</label>
             <input type="number" placeholder="e.g. 2026" value={selectedYear} onChange={e => handleYearChange(e.target.value)}
-              style={{ width: "100%", maxWidth: 160, padding: "10px 12px", borderRadius: 8, border: "1px solid #334155", background: "#0f172a", color: "#e2e8f0", fontSize: 15, fontFamily: "'Space Mono', monospace" }} />
+              style={{ width: "100%", maxWidth: 160, padding: "10px 12px", borderRadius: 8, border: "1px solid #2e2a3a", background: "#14121e", color: "#e2e8f0", fontSize: 15, fontFamily: "'Space Mono', monospace" }} />
           </div>
           <div>
-            <label style={{ fontSize: 11, color: "#94a3b8", textTransform: "uppercase", letterSpacing: 1, display: "block", marginBottom: 6 }}>{t.selectMonth}</label>
+            <label style={{ fontSize: 11, color: "#9590a8", textTransform: "uppercase", letterSpacing: 1, display: "block", marginBottom: 6 }}>{t.selectMonth}</label>
             <div style={{ display: "flex", flexWrap: "wrap", gap: 4 }}>
-              <button onClick={() => setSelectedMonth("all")} style={{ padding: "7px 14px", borderRadius: 6, border: "none", cursor: "pointer", fontSize: 12, fontWeight: isAll ? 700 : 500, background: isAll ? "linear-gradient(135deg, #fbbf24, #f59e0b)" : "#334155", color: isAll ? "#0f172a" : "#94a3b8" }}>{t.all}</button>
+              <button onClick={() => setSelectedMonth("all")} style={{ padding: "7px 14px", borderRadius: 6, border: "none", cursor: "pointer", fontSize: 12, fontWeight: isAll ? 700 : 500, background: isAll ? "linear-gradient(135deg, #fbbf24, #f59e0b)" : "#2e2a3a", color: isAll ? "#14121e" : "#9590a8" }}>{t.all}</button>
               {MONTHS.map((m, i) => (
-                <button key={m} onClick={() => setSelectedMonth(i)} style={{ padding: "7px 10px", borderRadius: 6, border: "none", cursor: "pointer", fontSize: 12, fontWeight: selectedMonth === i ? 700 : 500, background: selectedMonth === i ? "linear-gradient(135deg, #38bdf8, #818cf8)" : "#334155", color: selectedMonth === i ? "#0f172a" : "#94a3b8" }}>{m}</button>
+                <button key={m} onClick={() => setSelectedMonth(i)} style={{ padding: "7px 10px", borderRadius: 6, border: "none", cursor: "pointer", fontSize: 12, fontWeight: selectedMonth === i ? 700 : 500, background: selectedMonth === i ? "linear-gradient(135deg, #8b7ec8, #c9a0dc)" : "#2e2a3a", color: selectedMonth === i ? "#14121e" : "#9590a8" }}>{m}</button>
               ))}
             </div>
           </div>
         </div>
 
         {isAll && (
-          <div style={{ padding: "10px 14px", borderRadius: 8, marginBottom: 16, background: "rgba(251,191,36,0.1)", border: "1px solid rgba(251,191,36,0.3)", fontSize: 12, color: "#fbbf24" }}>
+          <div style={{ padding: "10px 14px", borderRadius: 8, marginBottom: 16, background: "rgba(251,191,36,0.1)", border: "1px solid rgba(251,191,36,0.3)", fontSize: 12, color: "#d4b85c" }}>
             📌 {t.viewingAllMonths}
           </div>
         )}
 
         {/* ─── BUDGET CONTROL ─── */}
-        <div style={{ padding: 16, borderRadius: 14, background: "#1e293b", border: "1px solid #334155", marginBottom: 20 }}>
-          <h3 style={{ margin: "0 0 14px", fontSize: 15, fontWeight: 700, color: "#c084fc", display: "flex", alignItems: "center", gap: 8 }}>
+        <div style={{ padding: 16, borderRadius: 14, background: "#1f1c2a", border: "1px solid #2e2a3a", marginBottom: 20 }}>
+          <h3 style={{ margin: "0 0 14px", fontSize: 15, fontWeight: 700, color: "#9b8ad4", display: "flex", alignItems: "center", gap: 8 }}>
             <span style={{ fontSize: 18 }}>◎</span> Monthly Budget
-            <span style={{ fontSize: 11, fontWeight: 500, color: "#64748b" }}>— {MONTHS[budgetMonth]} {selectedYear}</span>
+            <span style={{ fontSize: 11, fontWeight: 500, color: "#6b6580" }}>— {MONTHS[budgetMonth]} {selectedYear}</span>
           </h3>
 
           {/* Input row */}
           <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 14 }}>
             <input placeholder={t.budgetLabel} value={budgetLabel} onChange={e => setBudgetLabel(e.target.value)}
-              style={{ flex: "1 1 160px", padding: "9px 12px", borderRadius: 8, border: "1px solid #334155", background: "#0f172a", color: "#e2e8f0", fontSize: 13 }} />
+              style={{ flex: "1 1 160px", padding: "9px 12px", borderRadius: 8, border: "1px solid #2e2a3a", background: "#14121e", color: "#e2e8f0", fontSize: 13 }} />
             <select value={budgetCategory} onChange={e => setBudgetCategory(e.target.value)}
-              style={{ flex: "1 1 130px", padding: "9px 12px", borderRadius: 8, border: "1px solid #334155", background: "#0f172a", color: "#e2e8f0", fontSize: 13 }}>
+              style={{ flex: "1 1 130px", padding: "9px 12px", borderRadius: 8, border: "1px solid #2e2a3a", background: "#14121e", color: "#e2e8f0", fontSize: 13 }}>
               {EXP_CATEGORIES.map(c => <option key={c} value={c}>{xCat[c] || c}</option>)}
             </select>
             <input type="number" placeholder={t.budgetLimit} value={budgetAmount} onChange={e => setBudgetAmount(e.target.value)}
               onKeyDown={e => { if (e.key === "Enter") addBudget(); }}
-              style={{ flex: "1 1 140px", padding: "9px 12px", borderRadius: 8, border: "1px solid #334155", background: "#0f172a", color: "#e2e8f0", fontSize: 13, fontFamily: "'Space Mono', monospace" }} />
+              style={{ flex: "1 1 140px", padding: "9px 12px", borderRadius: 8, border: "1px solid #2e2a3a", background: "#14121e", color: "#e2e8f0", fontSize: 13, fontFamily: "'Space Mono', monospace" }} />
             <button onClick={addBudget} style={{
               padding: "9px 18px", borderRadius: 8, border: "none", cursor: "pointer",
-              background: "linear-gradient(135deg, #c084fc, #a855f7)", color: "#0f172a", fontSize: 13, fontWeight: 700, whiteSpace: "nowrap",
+              background: "linear-gradient(135deg, #9b8ad4, #7c6bc4)", color: "#14121e", fontSize: 13, fontWeight: 700, whiteSpace: "nowrap",
             }}>{t.setBtn}</button>
           </div>
           {/* Scope toggle */}
@@ -1682,30 +1687,30 @@ export default function ExpenseTracker() {
             <button onClick={() => setBudgetScope("current")} style={{
               padding: "6px 14px", borderRadius: 6, border: "none", cursor: "pointer",
               fontSize: 11, fontWeight: budgetScope === "current" ? 700 : 500,
-              background: budgetScope === "current" ? "linear-gradient(135deg, #c084fc, #a855f7)" : "#334155",
-              color: budgetScope === "current" ? "#0f172a" : "#94a3b8",
+              background: budgetScope === "current" ? "linear-gradient(135deg, #9b8ad4, #7c6bc4)" : "#2e2a3a",
+              color: budgetScope === "current" ? "#14121e" : "#9590a8",
             }}>{t.thisMonth} ({MONTHS[budgetMonth]})</button>
             <button onClick={() => setBudgetScope("all")} style={{
               padding: "6px 14px", borderRadius: 6, border: "none", cursor: "pointer",
               fontSize: 11, fontWeight: budgetScope === "all" ? 700 : 500,
-              background: budgetScope === "all" ? "linear-gradient(135deg, #fbbf24, #f59e0b)" : "#334155",
-              color: budgetScope === "all" ? "#0f172a" : "#94a3b8",
+              background: budgetScope === "all" ? "linear-gradient(135deg, #fbbf24, #f59e0b)" : "#2e2a3a",
+              color: budgetScope === "all" ? "#14121e" : "#9590a8",
             }}>{t.allMonthsScope}</button>
           </div>
 
           {/* Budget table */}
-          <div style={{ overflowX: "auto" }}>
-            <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
+          <div style={{ overflowX: "auto", WebkitOverflowScrolling: "touch" }}>
+            <table style={{ width: "100%", minWidth: 600, borderCollapse: "collapse", fontSize: 13 }}>
               <thead>
-                <tr style={{ borderBottom: "2px solid #334155" }}>
+                <tr style={{ borderBottom: "2px solid #2e2a3a" }}>
                   {[t.label, t.category, t.budgetLimitCol, t.spent, t.status, ""].map((h, idx) => (
-                    <th key={idx} style={{ padding: "8px 10px", textAlign: "left", color: "#64748b", fontSize: 11, textTransform: "uppercase", letterSpacing: 1 }}>{h}</th>
+                    <th key={idx} style={{ padding: "8px 10px", textAlign: "left", color: "#6b6580", fontSize: 11, textTransform: "uppercase", letterSpacing: 1, whiteSpace: "nowrap" }}>{h}</th>
                   ))}
                 </tr>
               </thead>
               <tbody>
                 {visibleBudgets.length === 0 ? (
-                  <tr><td colSpan={6} style={{ padding: 20, textAlign: "center", color: "#475569", fontStyle: "italic" }}>{t.noBudgets}</td></tr>
+                  <tr><td colSpan={6} style={{ padding: 20, textAlign: "center", color: "#504a60", fontStyle: "italic" }}>{t.noBudgets}</td></tr>
                 ) : visibleBudgets.map((b, i) => {
                   const liveSpent = spendingByCategory[b.category] || 0;
                   // Per-month lock state for all-months budgets
@@ -1719,18 +1724,18 @@ export default function ExpenseTracker() {
                   const isEditing = editingBudgetId === b.id;
 
                   return (
-                    <tr key={`${b.id}-${budgetMonth}`} style={{ borderBottom: "1px solid #1e293b", background: i % 2 === 0 ? "transparent" : "rgba(51,65,85,0.3)", opacity: isLocked ? 0.7 : 1, transition: "opacity 0.3s ease" }}>
-                      <td style={{ padding: "8px 10px", fontWeight: 500, verticalAlign: "middle" }}>
+                    <tr key={`${b.id}-${budgetMonth}`} style={{ borderBottom: "1px solid #262231", background: i % 2 === 0 ? "transparent" : "rgba(51,65,85,0.3)", opacity: isLocked ? 0.7 : 1, transition: "opacity 0.3s ease" }}>
+                      <td className="status-cell" style={{ padding: "8px 10px", fontWeight: 500, verticalAlign: "middle" }}>
                         {b.label}
                         {isLocked && <span style={{ marginLeft: 6, fontSize: 10 }}>🔒</span>}
                         <span style={{
                           marginLeft: 6, padding: "1px 6px", borderRadius: 3, fontSize: 9, fontWeight: 600,
-                          background: b.scope === "all" ? "rgba(251,191,36,0.15)" : "rgba(129,140,248,0.15)",
-                          color: b.scope === "all" ? "#fbbf24" : "#a5b4fc",
+                          background: b.scope === "all" ? "rgba(201,168,76,0.15)" : "rgba(107,90,180,0.15)",
+                          color: b.scope === "all" ? "#d4b85c" : "#a8a0cc",
                         }}>{b.scope === "all" ? t.allMonthsScope : (MONTHS_EN[b.scope] !== undefined ? MONTHS[b.scope] : MONTHS[budgetMonth])} {b.scopeYear || selectedYear}</span>
                       </td>
                       <td style={{ padding: "8px 10px" }}>
-                        <span style={{ padding: "2px 8px", borderRadius: 4, fontSize: 11, fontWeight: 600, background: "rgba(192,132,252,0.15)", color: "#d8b4fe" }}>{xCat[b.category] || b.category}</span>
+                        <span style={{ padding: "2px 8px", borderRadius: 4, fontSize: 11, fontWeight: 600, background: "rgba(124,107,196,0.15)", color: "#b8a8d8" }}>{xCat[b.category] || b.category}</span>
                       </td>
                       <td style={{ padding: "8px 10px", fontFamily: "'Space Mono', monospace" }}>
                         {isEditing && !isLocked ? (
@@ -1738,53 +1743,53 @@ export default function ExpenseTracker() {
                             <input type="number" value={editingBudgetAmount} autoFocus
                               onChange={e => setEditingBudgetAmount(e.target.value)}
                               onKeyDown={e => { if (e.key === "Enter") saveEditBudget(b.id); if (e.key === "Escape") setEditingBudgetId(null); }}
-                              style={{ width: 80, padding: "4px 6px", borderRadius: 4, border: "1px solid #a855f7", background: "#0f172a", color: "#e2e8f0", fontSize: 12, fontFamily: "'Space Mono', monospace" }} />
-                            <button onClick={() => saveEditBudget(b.id)} style={{ padding: "4px 8px", borderRadius: 4, border: "none", background: "#a855f7", color: "#0f172a", fontSize: 10, fontWeight: 700, cursor: "pointer" }}>✓</button>
+                              style={{ width: 80, padding: "4px 6px", borderRadius: 4, border: "1px solid #a855f7", background: "#14121e", color: "#e2e8f0", fontSize: 12, fontFamily: "'Space Mono', monospace" }} />
+                            <button onClick={() => saveEditBudget(b.id)} style={{ padding: "4px 8px", borderRadius: 4, border: "none", background: "#7c6bc4", color: "#14121e", fontSize: 10, fontWeight: 700, cursor: "pointer" }}>✓</button>
                           </div>
                         ) : (
                           <span onClick={() => { if (!isLocked) { setEditingBudgetId(b.id); setEditingBudgetAmount(String(b.amount)); } }}
-                            style={{ cursor: isLocked ? "default" : "pointer", color: "#c084fc", borderBottom: isLocked ? "none" : "1px dashed #7c3aed" }}
+                            style={{ cursor: isLocked ? "default" : "pointer", color: "#9b8ad4", borderBottom: isLocked ? "none" : "1px dashed #7c3aed" }}
                             title={isLocked ? t.unlockToEdit : t.clickToEdit}>
                             ${fmt(b.amount)}
                           </span>
                         )}
                       </td>
-                      <td style={{ padding: "8px 10px", fontFamily: "'Space Mono', monospace", color: isOver ? "#f87171" : "#94a3b8" }}>
+                      <td style={{ padding: "8px 10px", fontFamily: "'Space Mono', monospace", color: isOver ? "#d4776a" : "#9590a8", whiteSpace: "nowrap" }}>
                         ${fmt(spent)}
                       </td>
-                      <td style={{ padding: "8px 10px" }}>
+                      <td className="status-cell" style={{ padding: "8px 10px", minWidth: 160 }}>
                         <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 3 }}>
-                          <span style={{ fontSize: 9, color: "#64748b" }}>${fmt(spent)} {t.of} ${fmt(b.amount)} {t.spentWord}</span>
-                          <span style={{ fontSize: 9, color: isOver ? "#f87171" : "#34d399" }}>
+                          <span style={{ fontSize: 9, color: "#6b6580" }}>${fmt(spent)} {t.of} ${fmt(b.amount)} {t.spentWord}</span>
+                          <span style={{ fontSize: 9, color: isOver ? "#d4776a" : "#7eb87d" }}>
                             {isOver ? `${t.over} $${fmt(Math.abs(remaining))}` : `${t.remaining} $${fmt(remaining)}`}
                           </span>
                         </div>
-                        <div style={{ width: "100%", height: 6, borderRadius: 3, background: "#0f172a", overflow: "hidden", marginBottom: 4 }}>
+                        <div style={{ width: "100%", height: 6, borderRadius: 3, background: "#14121e", overflow: "hidden", marginBottom: 4 }}>
                           <div style={{ width: `${Math.min(100, spentPct)}%`, height: "100%", borderRadius: 3,
-                            background: isOver ? "linear-gradient(90deg, #ef4444, #f87171)" : isClose ? "linear-gradient(90deg, #f59e0b, #fbbf24)" : "linear-gradient(90deg, #a855f7, #c084fc)",
+                            background: isOver ? "linear-gradient(90deg, #c45c5c, #d4776a)" : isClose ? "linear-gradient(90deg, #c9a84c, #d4b85c)" : "linear-gradient(90deg, #7c6bc4, #9b8ad4)",
                             transition: "width 0.6s ease",
                           }}/>
                         </div>
                         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                          <span style={{ fontSize: 9, color: isOver ? "#f87171" : "#475569" }}>
+                          <span style={{ fontSize: 9, color: isOver ? "#d4776a" : "#504a60" }}>
                             {spentPct.toFixed(0)}% {t.ofBudgetLimit}
                           </span>
-                          {isLocked && <span style={{ fontSize: 9, color: "#fbbf24", fontWeight: 600 }}>{t.locked}</span>}
+                          {isLocked && <span style={{ fontSize: 9, color: "#d4b85c", fontWeight: 600 }}>{t.locked}</span>}
                         </div>
                       </td>
                       <td style={{ padding: "8px 10px" }}>
                         <div style={{ display: "flex", gap: 4, alignItems: "center" }}>
                           <button onClick={() => toggleLockBudget(b.id)}
                             title={isLocked ? t.unlockResume : t.lockStop}
-                            style={{ background: "none", border: "none", color: isLocked ? "#fbbf24" : "#64748b", cursor: "pointer", fontSize: 14 }}>
+                            style={{ background: "none", border: "none", color: isLocked ? "#d4b85c" : "#6b6580", cursor: "pointer", fontSize: 14 }}>
                             {isLocked ? "🔒" : "🔓"}
                           </button>
                           {b.scope === "all" ? (
                             <button onClick={() => excludeBudgetFromMonth(b.id, budgetMonth)}
                               title={lang === "zh" ? "从本月移除" : "Remove from this month"}
-                              style={{ background: "none", border: "none", color: "#64748b", cursor: "pointer", fontSize: 16 }}>×</button>
+                              style={{ background: "none", border: "none", color: "#6b6580", cursor: "pointer", fontSize: 16 }}>×</button>
                           ) : (
-                            <button onClick={() => removeBudget(b.id)} style={{ background: "none", border: "none", color: "#64748b", cursor: "pointer", fontSize: 16 }}>×</button>
+                            <button onClick={() => removeBudget(b.id)} style={{ background: "none", border: "none", color: "#6b6580", cursor: "pointer", fontSize: 16 }}>×</button>
                           )}
                         </div>
                       </td>
@@ -1792,16 +1797,16 @@ export default function ExpenseTracker() {
                   );
                 })}
                 {visibleBudgets.length > 0 && (
-                  <tr style={{ borderTop: "2px solid #334155", fontWeight: 700 }}>
+                  <tr style={{ borderTop: "2px solid #2e2a3a", fontWeight: 700 }}>
                     <td style={{ padding: "10px 10px" }}>{t.total}</td>
                     <td></td>
-                    <td style={{ padding: "10px 10px", fontFamily: "'Space Mono', monospace", color: "#c084fc" }}>${fmt(totalBudget)}</td>
-                    <td style={{ padding: "10px 10px", fontFamily: "'Space Mono', monospace", color: totalSpentInMonth > totalBudget ? "#f87171" : "#94a3b8" }}>${fmt(totalSpentInMonth)}</td>
+                    <td style={{ padding: "10px 10px", fontFamily: "'Space Mono', monospace", color: "#9b8ad4" }}>${fmt(totalBudget)}</td>
+                    <td style={{ padding: "10px 10px", fontFamily: "'Space Mono', monospace", color: totalSpentInMonth > totalBudget ? "#d4776a" : "#9590a8" }}>${fmt(totalSpentInMonth)}</td>
                     <td style={{ padding: "10px 10px" }}>
                       <span style={{
                         padding: "2px 8px", borderRadius: 4, fontSize: 10, fontWeight: 700,
-                        background: totalSpentInMonth > totalBudget ? "rgba(239,68,68,0.15)" : "rgba(52,211,153,0.15)",
-                        color: totalSpentInMonth > totalBudget ? "#f87171" : "#34d399",
+                        background: totalSpentInMonth > totalBudget ? "rgba(196,92,92,0.15)" : "rgba(126,184,125,0.15)",
+                        color: totalSpentInMonth > totalBudget ? "#d4776a" : "#7eb87d",
                       }}>
                         {totalSpentInMonth > totalBudget ? t.overBudget : t.onTrack}
                       </span>
@@ -1822,33 +1827,33 @@ export default function ExpenseTracker() {
         <div className="mobile-stack" style={{ display: "flex", flexWrap: "wrap", gap: 16, marginBottom: 20, alignItems: "start" }}>
 
         {/* ─── GOALS SECTION ─── */}
-        <div className="mobile-full" style={{ padding: 20, borderRadius: 14, background: "#1e293b", border: "1px solid #334155", flex: "1 1 400px", minWidth: 0 }}>
+        <div className="mobile-full" style={{ padding: 20, borderRadius: 14, background: "#1f1c2a", border: "1px solid #2e2a3a", flex: "1 1 400px", minWidth: 0 }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
-            <h3 style={{ margin: 0, fontSize: 17, fontWeight: 700, color: "#fbbf24", display: "flex", alignItems: "center", gap: 8 }}>
+            <h3 style={{ margin: 0, fontSize: 17, fontWeight: 700, color: "#d4b85c", display: "flex", alignItems: "center", gap: 8 }}>
               <span style={{ fontSize: 20 }}>★</span> {t.goals}
             </h3>
             <button onClick={() => setShowGoalForm(!showGoalForm)} style={{
               padding: "7px 16px", borderRadius: 8, border: "none", cursor: "pointer",
-              background: showGoalForm ? "#334155" : "linear-gradient(135deg, #fbbf24, #f59e0b)",
-              color: showGoalForm ? "#94a3b8" : "#0f172a", fontSize: 13, fontWeight: 700,
+              background: showGoalForm ? "#2e2a3a" : "linear-gradient(135deg, #fbbf24, #f59e0b)",
+              color: showGoalForm ? "#9590a8" : "#14121e", fontSize: 13, fontWeight: 700,
             }}>{showGoalForm ? t.cancel : t.addGoal}</button>
           </div>
 
           {/* Add Goal Form */}
           {showGoalForm && (
             <div style={{
-              padding: 16, borderRadius: 10, background: "#0f172a", border: "1px solid #334155", marginBottom: 16,
+              padding: 16, borderRadius: 10, background: "#14121e", border: "1px solid #2e2a3a", marginBottom: 16,
             }}>
               <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 12 }}>
                 <input placeholder={t.goalName} value={goalName} onChange={e => handleGoalNameChange(e.target.value)}
-                  style={{ flex: "1 1 200px", padding: "10px 12px", borderRadius: 8, border: "1px solid #334155", background: "#1e293b", color: "#e2e8f0", fontSize: 13 }} />
+                  style={{ flex: "1 1 200px", padding: "10px 12px", borderRadius: 8, border: "1px solid #2e2a3a", background: "#1f1c2a", color: "#e2e8f0", fontSize: 13 }} />
                 <input type="number" placeholder={t.targetPrice} value={goalValue} onChange={e => setGoalValue(e.target.value)}
-                  style={{ flex: "1 1 140px", padding: "10px 12px", borderRadius: 8, border: "1px solid #334155", background: "#1e293b", color: "#e2e8f0", fontSize: 13, fontFamily: "'Space Mono', monospace" }} />
+                  style={{ flex: "1 1 140px", padding: "10px 12px", borderRadius: 8, border: "1px solid #2e2a3a", background: "#1f1c2a", color: "#e2e8f0", fontSize: 13, fontFamily: "'Space Mono', monospace" }} />
               </div>
 
               {/* Image picker tabs */}
               <div style={{ marginBottom: 10 }}>
-                <label style={{ fontSize: 11, color: "#94a3b8", textTransform: "uppercase", letterSpacing: 1, display: "block", marginBottom: 8 }}>{t.chooseIcon}</label>
+                <label style={{ fontSize: 11, color: "#9590a8", textTransform: "uppercase", letterSpacing: 1, display: "block", marginBottom: 8 }}>{t.chooseIcon}</label>
                 <div style={{ display: "flex", gap: 4, marginBottom: 10 }}>
                   {[
                     { key: "preset", label: t.pickIcon },
@@ -1859,8 +1864,8 @@ export default function ExpenseTracker() {
                       style={{
                         padding: "6px 14px", borderRadius: 6, border: "none", cursor: "pointer",
                         fontSize: 11, fontWeight: goalImageType === tab.key ? 700 : 500,
-                        background: goalImageType === tab.key ? "linear-gradient(135deg, #fbbf24, #f59e0b)" : "#334155",
-                        color: goalImageType === tab.key ? "#0f172a" : "#94a3b8",
+                        background: goalImageType === tab.key ? "linear-gradient(135deg, #fbbf24, #f59e0b)" : "#2e2a3a",
+                        color: goalImageType === tab.key ? "#14121e" : "#9590a8",
                       }}>{tab.label}</button>
                   ))}
                 </div>
@@ -1871,13 +1876,13 @@ export default function ExpenseTracker() {
                     {GOAL_PRESETS.map(p => (
                       <button key={p.label} onClick={() => { setGoalImage(p.emoji); setAutoMatched(false); setAiSource(""); }}
                         style={{
-                          width: 56, height: 56, borderRadius: 10, border: goalImage === p.emoji ? "2px solid #fbbf24" : "1px solid #334155",
-                          background: goalImage === p.emoji ? "rgba(251,191,36,0.1)" : "#1e293b",
+                          width: 56, height: 56, borderRadius: 10, border: goalImage === p.emoji ? "2px solid #fbbf24" : "1px solid #2e2a3a",
+                          background: goalImage === p.emoji ? "rgba(251,191,36,0.1)" : "#1f1c2a",
                           cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 2,
                           transition: "all 0.15s",
                         }}>
                         <span style={{ fontSize: 22 }}>{p.emoji}</span>
-                        <span style={{ fontSize: 8, color: goalImage === p.emoji ? "#fbbf24" : "#64748b" }}>{p.label}</span>
+                        <span style={{ fontSize: 8, color: goalImage === p.emoji ? "#d4b85c" : "#6b6580" }}>{p.label}</span>
                       </button>
                     ))}
                   </div>
@@ -1887,8 +1892,8 @@ export default function ExpenseTracker() {
                 {goalImageType === "emoji" && (
                   <div>
                     <input placeholder={t.emojiPlaceholder} value={goalImage} onChange={e => { setGoalImage(e.target.value); setAutoMatched(false); setAiSource(""); }}
-                      style={{ width: "100%", padding: "10px 12px", borderRadius: 8, border: "1px solid #334155", background: "#1e293b", color: "#e2e8f0", fontSize: 20, textAlign: "center" }} />
-                    <p style={{ margin: "6px 0 0", fontSize: 11, color: "#64748b" }}>
+                      style={{ width: "100%", padding: "10px 12px", borderRadius: 8, border: "1px solid #2e2a3a", background: "#1f1c2a", color: "#e2e8f0", fontSize: 20, textAlign: "center" }} />
+                    <p style={{ margin: "6px 0 0", fontSize: 11, color: "#6b6580" }}>
                       {t.emojiHint}
                     </p>
                   </div>
@@ -1899,15 +1904,15 @@ export default function ExpenseTracker() {
                   <div>
                     <label style={{
                       display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
-                      padding: "24px 16px", borderRadius: 10, border: "2px dashed #334155",
-                      background: goalImage ? "transparent" : "#1a1a2e", cursor: "pointer",
+                      padding: "24px 16px", borderRadius: 10, border: "2px dashed #2e2a3a",
+                      background: goalImage ? "transparent" : "#1c1b28", cursor: "pointer",
                       transition: "border-color 0.2s ease",
                     }}
-                      onDragOver={e => { e.preventDefault(); e.currentTarget.style.borderColor = "#fbbf24"; }}
-                      onDragLeave={e => { e.currentTarget.style.borderColor = "#334155"; }}
+                      onDragOver={e => { e.preventDefault(); e.currentTarget.style.borderColor = "#d4b85c"; }}
+                      onDragLeave={e => { e.currentTarget.style.borderColor = "#2e2a3a"; }}
                       onDrop={e => {
                         e.preventDefault();
-                        e.currentTarget.style.borderColor = "#334155";
+                        e.currentTarget.style.borderColor = "#2e2a3a";
                         const file = e.dataTransfer.files[0];
                         if (file && file.type.startsWith("image/")) {
                           const reader = new FileReader();
@@ -1921,8 +1926,8 @@ export default function ExpenseTracker() {
                       ) : (
                         <>
                           <span style={{ fontSize: 32, marginBottom: 8 }}>📁</span>
-                          <span style={{ fontSize: 13, color: "#94a3b8", fontWeight: 600 }}>{t.clickBrowse}</span>
-                          <span style={{ fontSize: 11, color: "#475569", marginTop: 4 }}>{t.fileTypes}</span>
+                          <span style={{ fontSize: 13, color: "#9590a8", fontWeight: 600 }}>{t.clickBrowse}</span>
+                          <span style={{ fontSize: 11, color: "#504a60", marginTop: 4 }}>{t.fileTypes}</span>
                         </>
                       )}
                       <input type="file" accept="image/*"
@@ -1939,7 +1944,7 @@ export default function ExpenseTracker() {
                     </label>
                     {goalImage && (
                       <button onClick={() => setGoalImage("")}
-                        style={{ marginTop: 8, padding: "4px 12px", borderRadius: 6, border: "1px solid #334155", background: "transparent", color: "#64748b", fontSize: 11, cursor: "pointer" }}>
+                        style={{ marginTop: 8, padding: "4px 12px", borderRadius: 6, border: "1px solid #2e2a3a", background: "transparent", color: "#6b6580", fontSize: 11, cursor: "pointer" }}>
                         Remove photo
                       </button>
                     )}
@@ -1951,22 +1956,22 @@ export default function ExpenseTracker() {
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: 12 }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
                   {aiLoading && !goalImage && (
-                    <span style={{ fontSize: 12, color: "#a5b4fc", display: "flex", alignItems: "center", gap: 6 }}>
+                    <span style={{ fontSize: 12, color: "#a8a0cc", display: "flex", alignItems: "center", gap: 6 }}>
                       <span style={{ display: "inline-block", animation: "spin 1s linear infinite" }}>⟳</span> AI is picking an icon...
                     </span>
                   )}
                   {goalImage && (
                     <>
-                      <span style={{ fontSize: 11, color: autoMatched ? "#fbbf24" : "#64748b" }}>
+                      <span style={{ fontSize: 11, color: autoMatched ? "#d4b85c" : "#6b6580" }}>
                         {autoMatched ? (aiSource === "ai" ? "✨ AI picked:" : t.autoMatched) : "Preview:"}
                       </span>
                       {goalImageType === "url" || goalImageType === "upload" ? (
-                        <img src={goalImage} alt="preview" style={{ width: 36, height: 36, borderRadius: 6, objectFit: "cover", border: "1px solid #334155" }} />
+                        <img src={goalImage} alt="preview" style={{ width: 36, height: 36, borderRadius: 6, objectFit: "cover", border: "1px solid #2e2a3a" }} />
                       ) : (
                         <span style={{ fontSize: 28 }}>{goalImage}</span>
                       )}
                       {autoMatched && (
-                        <span style={{ fontSize: 10, color: "#64748b", fontStyle: "italic" }}>
+                        <span style={{ fontSize: 10, color: "#6b6580", fontStyle: "italic" }}>
                           not right? pick below
                         </span>
                       )}
@@ -1978,7 +1983,7 @@ export default function ExpenseTracker() {
                       style={{
                         padding: "6px 14px", borderRadius: 6, border: "1px solid rgba(129,140,248,0.3)",
                         background: "rgba(129,140,248,0.1)",
-                        color: "#a5b4fc", fontSize: 12, fontWeight: 600, cursor: "pointer",
+                        color: "#a8a0cc", fontSize: 12, fontWeight: 600, cursor: "pointer",
                         display: "flex", alignItems: "center", gap: 6,
                       }}>
                       ✨ {t.aiPickIcon}
@@ -1987,7 +1992,7 @@ export default function ExpenseTracker() {
                 </div>
                 <button onClick={addGoal} style={{
                   padding: "10px 24px", borderRadius: 8, border: "none", cursor: "pointer",
-                  background: "linear-gradient(135deg, #fbbf24, #f59e0b)", color: "#0f172a", fontSize: 13, fontWeight: 700, whiteSpace: "nowrap",
+                  background: "linear-gradient(135deg, #fbbf24, #f59e0b)", color: "#14121e", fontSize: 13, fontWeight: 700, whiteSpace: "nowrap",
                 }}>{t.addGoalBtn}</button>
               </div>
             </div>
@@ -1995,7 +2000,7 @@ export default function ExpenseTracker() {
 
           {/* Goal Cards */}
           {goals.length === 0 && !showGoalForm && (
-            <p style={{ textAlign: "center", color: "#475569", fontStyle: "italic", fontSize: 13, padding: "20px 0" }}>
+            <p style={{ textAlign: "center", color: "#504a60", fontStyle: "italic", fontSize: 13, padding: "20px 0" }}>
               {t.noGoals}
             </p>
           )}
@@ -2013,12 +2018,12 @@ export default function ExpenseTracker() {
               return (
                 <div key={goal.id} style={{
                   borderRadius: 12, overflow: "hidden",
-                  background: "#0f172a", border: `1px solid ${isComplete ? "rgba(52,211,153,0.4)" : "#334155"}`,
+                  background: "#14121e", border: `1px solid ${isComplete ? "rgba(52,211,153,0.4)" : "#2e2a3a"}`,
                   transition: "border-color 0.5s ease",
                 }}>
                   {/* Image */}
                   <div style={{
-                    width: "100%", height: 160, background: "#1a1a2e",
+                    width: "100%", height: 160, background: "#1c1b28",
                     display: "flex", alignItems: "center", justifyContent: "center",
                     overflow: "hidden", position: "relative",
                   }}>
@@ -2038,13 +2043,13 @@ export default function ExpenseTracker() {
                         lineHeight: 1,
                       }}>{goal.image}</div>
                     ) : (
-                      <div style={{ fontSize: 40, color: "#334155" }}>★</div>
+                      <div style={{ fontSize: 40, color: "#2e2a3a" }}>★</div>
                     )}
                     {isComplete && (
                       <div style={{
                         position: "absolute", top: 10, right: 10,
                         padding: "4px 10px", borderRadius: 6,
-                        background: "rgba(52,211,153,0.9)", color: "#0f172a",
+                        background: "rgba(52,211,153,0.9)", color: "#14121e",
                         fontSize: 11, fontWeight: 700, letterSpacing: 0.5,
                       }}>{t.goalReached}</div>
                     )}
@@ -2052,7 +2057,7 @@ export default function ExpenseTracker() {
                       position: "absolute", top: 8, left: 8,
                       width: 24, height: 24, borderRadius: 6,
                       background: "rgba(0,0,0,0.5)", border: "none",
-                      color: "#94a3b8", cursor: "pointer", fontSize: 14,
+                      color: "#9590a8", cursor: "pointer", fontSize: 14,
                       display: "flex", alignItems: "center", justifyContent: "center",
                     }}>×</button>
                   </div>
@@ -2061,25 +2066,25 @@ export default function ExpenseTracker() {
                   <div style={{ padding: "12px 14px 14px" }}>
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 6 }}>
                       <div style={{ fontSize: 14, fontWeight: 600, color: "#e2e8f0", lineHeight: 1.3, flex: 1, marginRight: 8 }}>{goal.name}</div>
-                      <div style={{ fontSize: 15, fontWeight: 700, fontFamily: "'Space Mono', monospace", color: "#fbbf24", whiteSpace: "nowrap" }}>
+                      <div style={{ fontSize: 15, fontWeight: 700, fontFamily: "'Space Mono', monospace", color: "#d4b85c", whiteSpace: "nowrap" }}>
                         ${fmt(goal.value)}
                       </div>
                     </div>
 
                     {/* Saved amount */}
-                    <div style={{ fontSize: 12, color: "#94a3b8", marginBottom: 8, fontFamily: "'Space Mono', monospace" }}>
-                      ${fmt(goal.saved)} <span style={{ color: "#475569" }}>saved of</span> ${fmt(goal.value)}
+                    <div style={{ fontSize: 12, color: "#9590a8", marginBottom: 8, fontFamily: "'Space Mono', monospace" }}>
+                      ${fmt(goal.saved)} <span style={{ color: "#504a60" }}>saved of</span> ${fmt(goal.value)}
                     </div>
 
                     {/* Progress bar */}
                     <div style={{
                       width: "100%", height: 10, borderRadius: 5,
-                      background: "#1e293b", overflow: "hidden", marginBottom: 8,
+                      background: "#1f1c2a", overflow: "hidden", marginBottom: 8,
                     }}>
                       <div style={{
                         width: `${progress}%`, height: "100%", borderRadius: 5,
                         background: isComplete
-                          ? "linear-gradient(90deg, #34d399, #6ee7b7)"
+                          ? "linear-gradient(90deg, #7eb87d, #a3d4a2)"
                           : progress > 50
                             ? "linear-gradient(90deg, #fbbf24, #f59e0b)"
                             : "linear-gradient(90deg, #f87171, #fb923c)",
@@ -2089,10 +2094,10 @@ export default function ExpenseTracker() {
 
                     {/* Progress info */}
                     <div style={{ display: "flex", justifyContent: "space-between", fontSize: 11, fontFamily: "'Space Mono', monospace", marginBottom: 10 }}>
-                      <span style={{ color: isComplete ? "#34d399" : "#94a3b8" }}>
+                      <span style={{ color: isComplete ? "#7eb87d" : "#9590a8" }}>
                         {progress.toFixed(1)}%
                       </span>
-                      <span style={{ color: isComplete ? "#34d399" : "#64748b" }}>
+                      <span style={{ color: isComplete ? "#7eb87d" : "#6b6580" }}>
                         {isComplete ? t.goalReached : `${t.toGo} $${fmt(remaining)}`}
                       </span>
                     </div>
@@ -2105,27 +2110,27 @@ export default function ExpenseTracker() {
                           <button onClick={() => setGoalFundSource(prev => ({ ...prev, [goal.id]: "balance" }))}
                             style={{
                               flex: 1, padding: "8px 6px", borderRadius: 8, cursor: "pointer",
-                              background: (goalFundSource[goal.id] || "balance") === "balance" ? "rgba(56,189,248,0.15)" : "#0f172a",
-                              border: (goalFundSource[goal.id] || "balance") === "balance" ? "2px solid #38bdf8" : "1px solid #334155",
+                              background: (goalFundSource[goal.id] || "balance") === "balance" ? "rgba(139,126,200,0.15)" : "#14121e",
+                              border: (goalFundSource[goal.id] || "balance") === "balance" ? "2px solid #38bdf8" : "1px solid #2e2a3a",
                               textAlign: "center", transition: "all 0.2s ease",
                             }}>
                             <div style={{ fontSize: 14, marginBottom: 2 }}>💰</div>
-                            <div style={{ fontSize: 9, fontWeight: 600, color: (goalFundSource[goal.id] || "balance") === "balance" ? "#38bdf8" : "#64748b" }}>{t.fromBalance}</div>
-                            <div style={{ fontSize: 10, fontFamily: "'Space Mono', monospace", color: (goalFundSource[goal.id] || "balance") === "balance" ? "#7dd3fc" : "#475569", marginTop: 2 }}>
+                            <div style={{ fontSize: 9, fontWeight: 600, color: (goalFundSource[goal.id] || "balance") === "balance" ? "#8b7ec8" : "#6b6580" }}>{t.fromBalance}</div>
+                            <div style={{ fontSize: 10, fontFamily: "'Space Mono', monospace", color: (goalFundSource[goal.id] || "balance") === "balance" ? "#a594d4" : "#504a60", marginTop: 2 }}>
                               ${fmt(availableBalance)}
                             </div>
                           </button>
                           <button onClick={() => setGoalFundSource(prev => ({ ...prev, [goal.id]: "froggy" }))}
                             style={{
                               flex: 1, padding: "8px 6px", borderRadius: 8, cursor: froggyBank > 0 ? "pointer" : "default",
-                              background: (goalFundSource[goal.id]) === "froggy" ? "rgba(110,231,183,0.15)" : "#0f172a",
-                              border: (goalFundSource[goal.id]) === "froggy" ? "2px solid #6ee7b7" : "1px solid #334155",
+                              background: (goalFundSource[goal.id]) === "froggy" ? "rgba(163,212,162,0.15)" : "#14121e",
+                              border: (goalFundSource[goal.id]) === "froggy" ? "2px solid #6ee7b7" : "1px solid #2e2a3a",
                               textAlign: "center", transition: "all 0.2s ease",
                               opacity: froggyBank > 0 ? 1 : 0.4,
                             }}>
                             <div style={{ fontSize: 14, marginBottom: 2 }}>🐸</div>
-                            <div style={{ fontSize: 9, fontWeight: 600, color: (goalFundSource[goal.id]) === "froggy" ? "#6ee7b7" : "#64748b" }}>{t.fromFroggy}</div>
-                            <div style={{ fontSize: 10, fontFamily: "'Space Mono', monospace", color: (goalFundSource[goal.id]) === "froggy" ? "#34d399" : "#475569", marginTop: 2 }}>
+                            <div style={{ fontSize: 9, fontWeight: 600, color: (goalFundSource[goal.id]) === "froggy" ? "#a3d4a2" : "#6b6580" }}>{t.fromFroggy}</div>
+                            <div style={{ fontSize: 10, fontFamily: "'Space Mono', monospace", color: (goalFundSource[goal.id]) === "froggy" ? "#7eb87d" : "#504a60", marginTop: 2 }}>
                               ${fmt(froggyBank)}
                             </div>
                           </button>
@@ -2138,45 +2143,45 @@ export default function ExpenseTracker() {
                             onKeyDown={e => { if (e.key === "Enter" && addV.valid) addToGoal(goal.id); }}
                             style={{
                               flex: 1, padding: "7px 10px", borderRadius: 6,
-                              border: addV.msg ? "1px solid #f87171" : "1px solid #334155",
-                              background: "#1e293b", color: "#e2e8f0", fontSize: 12, fontFamily: "'Space Mono', monospace",
+                              border: addV.msg ? "1px solid #f87171" : "1px solid #2e2a3a",
+                              background: "#1f1c2a", color: "#e2e8f0", fontSize: 12, fontFamily: "'Space Mono', monospace",
                             }} />
                           <button onClick={() => addToGoal(goal.id)} disabled={inputVal && !addV.valid} style={{
                             padding: "7px 14px", borderRadius: 6, border: "none",
                             cursor: (inputVal && !addV.valid) ? "not-allowed" : "pointer",
                             opacity: (inputVal && !addV.valid) ? 0.5 : 1,
                             background: (goalFundSource[goal.id] || "balance") === "froggy"
-                              ? "linear-gradient(135deg, #34d399, #6ee7b7)"
-                              : "linear-gradient(135deg, #38bdf8, #818cf8)",
-                            color: "#0f172a", fontSize: 11, fontWeight: 700, whiteSpace: "nowrap",
+                              ? "linear-gradient(135deg, #7eb87d, #a3d4a2)"
+                              : "linear-gradient(135deg, #8b7ec8, #c9a0dc)",
+                            color: "#14121e", fontSize: 11, fontWeight: 700, whiteSpace: "nowrap",
                           }}>{t.addFunds}</button>
                         </div>
                         {addV.msg && (
-                          <div style={{ fontSize: 10, color: "#fca5a5", padding: "4px 0 6px", lineHeight: 1.3 }}>{addV.msg}</div>
+                          <div style={{ fontSize: 10, color: "#dba097", padding: "4px 0 6px", lineHeight: 1.3 }}>{addV.msg}</div>
                         )}
 
                         {/* Withdraw section */}
                         {goal.saved > 0 && (
                           <div>
-                            <div style={{ fontSize: 9, color: "#475569", textTransform: "uppercase", letterSpacing: 1, marginBottom: 4 }}>{t.withdraw}</div>
+                            <div style={{ fontSize: 9, color: "#504a60", textTransform: "uppercase", letterSpacing: 1, marginBottom: 4 }}>{t.withdraw}</div>
                             <div style={{ display: "flex", gap: 4, marginBottom: 6 }}>
                               <button onClick={() => setGoalWithdrawDest(prev => ({ ...prev, [goal.id]: "balance" }))}
                                 style={{
                                   flex: 1, padding: "6px 4px", borderRadius: 6, cursor: "pointer",
-                                  background: (goalWithdrawDest[goal.id] || "balance") === "balance" ? "rgba(56,189,248,0.1)" : "#0f172a",
-                                  border: (goalWithdrawDest[goal.id] || "balance") === "balance" ? "1.5px solid #38bdf8" : "1px solid #334155",
+                                  background: (goalWithdrawDest[goal.id] || "balance") === "balance" ? "rgba(139,126,200,0.1)" : "#14121e",
+                                  border: (goalWithdrawDest[goal.id] || "balance") === "balance" ? "1.5px solid #38bdf8" : "1px solid #2e2a3a",
                                   textAlign: "center", transition: "all 0.2s ease",
                                 }}>
-                                <div style={{ fontSize: 9, fontWeight: 600, color: (goalWithdrawDest[goal.id] || "balance") === "balance" ? "#38bdf8" : "#64748b" }}>💰 {t.toBalance}</div>
+                                <div style={{ fontSize: 9, fontWeight: 600, color: (goalWithdrawDest[goal.id] || "balance") === "balance" ? "#8b7ec8" : "#6b6580" }}>💰 {t.toBalance}</div>
                               </button>
                               <button onClick={() => setGoalWithdrawDest(prev => ({ ...prev, [goal.id]: "froggy" }))}
                                 style={{
                                   flex: 1, padding: "6px 4px", borderRadius: 6, cursor: "pointer",
-                                  background: (goalWithdrawDest[goal.id]) === "froggy" ? "rgba(110,231,183,0.1)" : "#0f172a",
-                                  border: (goalWithdrawDest[goal.id]) === "froggy" ? "1.5px solid #6ee7b7" : "1px solid #334155",
+                                  background: (goalWithdrawDest[goal.id]) === "froggy" ? "rgba(163,212,162,0.1)" : "#14121e",
+                                  border: (goalWithdrawDest[goal.id]) === "froggy" ? "1.5px solid #6ee7b7" : "1px solid #2e2a3a",
                                   textAlign: "center", transition: "all 0.2s ease",
                                 }}>
-                                <div style={{ fontSize: 9, fontWeight: 600, color: (goalWithdrawDest[goal.id]) === "froggy" ? "#6ee7b7" : "#64748b" }}>🐸 {t.toFroggy}</div>
+                                <div style={{ fontSize: 9, fontWeight: 600, color: (goalWithdrawDest[goal.id]) === "froggy" ? "#a3d4a2" : "#6b6580" }}>🐸 {t.toFroggy}</div>
                               </button>
                             </div>
                             <div style={{ display: "flex", gap: 6 }}>
@@ -2184,19 +2189,19 @@ export default function ExpenseTracker() {
                                 onChange={e => setGoalTakeInputs(prev => ({ ...prev, [goal.id]: e.target.value }))}
                                 style={{
                                   flex: 1, padding: "7px 10px", borderRadius: 6,
-                                  border: takeV.msg ? "1px solid #f87171" : "1px solid #334155",
-                                  background: "#1e293b", color: "#e2e8f0", fontSize: 12, fontFamily: "'Space Mono', monospace",
+                                  border: takeV.msg ? "1px solid #f87171" : "1px solid #2e2a3a",
+                                  background: "#1f1c2a", color: "#e2e8f0", fontSize: 12, fontFamily: "'Space Mono', monospace",
                                 }} />
                               <button onClick={() => withdrawFromGoal(goal.id)} disabled={takeVal && !takeV.valid} style={{
                                 padding: "7px 14px", borderRadius: 6, border: "1px solid #475569",
                                 cursor: (takeVal && !takeV.valid) ? "not-allowed" : "pointer",
-                                background: "transparent", color: (takeVal && !takeV.valid) ? "#475569" : "#94a3b8",
+                                background: "transparent", color: (takeVal && !takeV.valid) ? "#504a60" : "#9590a8",
                                 opacity: (takeVal && !takeV.valid) ? 0.5 : 1,
                                 fontSize: 11, fontWeight: 600, whiteSpace: "nowrap",
                               }}>{t.take}</button>
                             </div>
                             {takeV.msg && (
-                              <div style={{ fontSize: 10, color: "#fca5a5", padding: "4px 0 2px", lineHeight: 1.3 }}>{takeV.msg}</div>
+                              <div style={{ fontSize: 10, color: "#dba097", padding: "4px 0 2px", lineHeight: 1.3 }}>{takeV.msg}</div>
                             )}
                           </div>
                         )}
@@ -2206,8 +2211,8 @@ export default function ExpenseTracker() {
                       <div>
                         <div style={{
                           textAlign: "center", padding: "8px 0", borderRadius: 6, marginBottom: 8,
-                          background: "rgba(52,211,153,0.1)", border: "1px solid rgba(52,211,153,0.2)",
-                          fontSize: 12, color: "#34d399", fontWeight: 600,
+                          background: "rgba(126,184,125,0.1)", border: "1px solid rgba(126,184,125,0.2)",
+                          fontSize: 12, color: "#7eb87d", fontWeight: 600,
                         }}>
                           🎉 {t.fullyFunded}
                         </div>
@@ -2216,20 +2221,20 @@ export default function ExpenseTracker() {
                           <button onClick={() => setGoalWithdrawDest(prev => ({ ...prev, [goal.id]: "balance" }))}
                             style={{
                               flex: 1, padding: "6px 4px", borderRadius: 6, cursor: "pointer",
-                              background: (goalWithdrawDest[goal.id] || "balance") === "balance" ? "rgba(56,189,248,0.1)" : "#0f172a",
-                              border: (goalWithdrawDest[goal.id] || "balance") === "balance" ? "1.5px solid #38bdf8" : "1px solid #334155",
+                              background: (goalWithdrawDest[goal.id] || "balance") === "balance" ? "rgba(139,126,200,0.1)" : "#14121e",
+                              border: (goalWithdrawDest[goal.id] || "balance") === "balance" ? "1.5px solid #38bdf8" : "1px solid #2e2a3a",
                               textAlign: "center",
                             }}>
-                            <div style={{ fontSize: 9, fontWeight: 600, color: (goalWithdrawDest[goal.id] || "balance") === "balance" ? "#38bdf8" : "#64748b" }}>💰 {t.toBalance}</div>
+                            <div style={{ fontSize: 9, fontWeight: 600, color: (goalWithdrawDest[goal.id] || "balance") === "balance" ? "#8b7ec8" : "#6b6580" }}>💰 {t.toBalance}</div>
                           </button>
                           <button onClick={() => setGoalWithdrawDest(prev => ({ ...prev, [goal.id]: "froggy" }))}
                             style={{
                               flex: 1, padding: "6px 4px", borderRadius: 6, cursor: "pointer",
-                              background: (goalWithdrawDest[goal.id]) === "froggy" ? "rgba(110,231,183,0.1)" : "#0f172a",
-                              border: (goalWithdrawDest[goal.id]) === "froggy" ? "1.5px solid #6ee7b7" : "1px solid #334155",
+                              background: (goalWithdrawDest[goal.id]) === "froggy" ? "rgba(163,212,162,0.1)" : "#14121e",
+                              border: (goalWithdrawDest[goal.id]) === "froggy" ? "1.5px solid #6ee7b7" : "1px solid #2e2a3a",
                               textAlign: "center",
                             }}>
-                            <div style={{ fontSize: 9, fontWeight: 600, color: (goalWithdrawDest[goal.id]) === "froggy" ? "#6ee7b7" : "#64748b" }}>🐸 {t.toFroggy}</div>
+                            <div style={{ fontSize: 9, fontWeight: 600, color: (goalWithdrawDest[goal.id]) === "froggy" ? "#a3d4a2" : "#6b6580" }}>🐸 {t.toFroggy}</div>
                           </button>
                         </div>
                         <div style={{ display: "flex", gap: 6 }}>
@@ -2237,19 +2242,19 @@ export default function ExpenseTracker() {
                             onChange={e => setGoalTakeInputs(prev => ({ ...prev, [goal.id]: e.target.value }))}
                             style={{
                               flex: 1, padding: "7px 10px", borderRadius: 6,
-                              border: takeV.msg ? "1px solid #f87171" : "1px solid #334155",
-                              background: "#1e293b", color: "#e2e8f0", fontSize: 12, fontFamily: "'Space Mono', monospace",
+                              border: takeV.msg ? "1px solid #f87171" : "1px solid #2e2a3a",
+                              background: "#1f1c2a", color: "#e2e8f0", fontSize: 12, fontFamily: "'Space Mono', monospace",
                             }} />
                           <button onClick={() => withdrawFromGoal(goal.id)} disabled={takeVal && !takeV.valid} style={{
                             padding: "7px 14px", borderRadius: 6, border: "1px solid #475569",
                             cursor: (takeVal && !takeV.valid) ? "not-allowed" : "pointer",
-                            background: "transparent", color: (takeVal && !takeV.valid) ? "#475569" : "#94a3b8",
+                            background: "transparent", color: (takeVal && !takeV.valid) ? "#504a60" : "#9590a8",
                             opacity: (takeVal && !takeV.valid) ? 0.5 : 1,
                             fontSize: 11, fontWeight: 600, whiteSpace: "nowrap",
                           }}>{t.take}</button>
                         </div>
                         {takeV.msg && (
-                          <div style={{ fontSize: 10, color: "#fca5a5", padding: "4px 0 2px", lineHeight: 1.3 }}>{takeV.msg}</div>
+                          <div style={{ fontSize: 10, color: "#dba097", padding: "4px 0 2px", lineHeight: 1.3 }}>{takeV.msg}</div>
                         )}
                       </div>
                     )}
@@ -2263,50 +2268,50 @@ export default function ExpenseTracker() {
         {/* ─── FROGGY BANK ─── */}
         <div className="mobile-full" style={{
           padding: 20, borderRadius: 14,
-          background: "linear-gradient(180deg, #1e293b 0%, #0f2918 100%)",
-          border: `1px solid ${froggyBank > 0 ? "rgba(110,231,183,0.3)" : "#334155"}`,
+          background: "linear-gradient(180deg, #1f1c2a 0%, #162018 100%)",
+          border: `1px solid ${froggyBank > 0 ? "rgba(163,212,162,0.3)" : "#2e2a3a"}`,
           textAlign: "center",
           transition: "border-color 0.5s ease",
           flex: "0 1 280px",
         }}>
           <svg viewBox="0 0 120 100" style={{ width: 110, margin: "0 auto 12px", display: "block" }}>
             <defs>
-              <radialGradient id="frog-glow"><stop offset="0%" stopColor="#34d399" stopOpacity="0.3"/><stop offset="100%" stopColor="#34d399" stopOpacity="0"/></radialGradient>
+              <radialGradient id="frog-glow"><stop offset="0%" stopColor="#7eb87d" stopOpacity="0.3"/><stop offset="100%" stopColor="#7eb87d" stopOpacity="0"/></radialGradient>
             </defs>
             {froggyBank > 0 && <circle cx="60" cy="55" r="48" fill="url(#frog-glow)"/>}
-            <ellipse cx="60" cy="62" rx="32" ry="28" fill={froggyBank > 0 ? "#059669" : "#374151"} style={{ transition: "fill 0.6s ease" }}/>
-            <ellipse cx="60" cy="68" rx="22" ry="18" fill={froggyBank > 0 ? "#6ee7b7" : "#4b5563"} style={{ transition: "fill 0.6s ease" }}/>
-            <circle cx="44" cy="38" r="12" fill={froggyBank > 0 ? "#10b981" : "#4b5563"} style={{ transition: "fill 0.6s ease" }}/>
-            <circle cx="76" cy="38" r="12" fill={froggyBank > 0 ? "#10b981" : "#4b5563"} style={{ transition: "fill 0.6s ease" }}/>
-            <circle cx="44" cy="36" r="7" fill={froggyBank > 0 ? "#d1fae5" : "#6b7280"} style={{ transition: "fill 0.6s ease" }}/>
-            <circle cx="76" cy="36" r="7" fill={froggyBank > 0 ? "#d1fae5" : "#6b7280"} style={{ transition: "fill 0.6s ease" }}/>
-            <circle cx="46" cy="35" r="3.5" fill={froggyBank > 0 ? "#064e3b" : "#374151"} style={{ transition: "fill 0.6s ease" }}/>
-            <circle cx="78" cy="35" r="3.5" fill={froggyBank > 0 ? "#064e3b" : "#374151"} style={{ transition: "fill 0.6s ease" }}/>
-            {froggyBank > 0 && <><circle cx="47" cy="33" r="1.5" fill="#a7f3d0" opacity="0.7"/><circle cx="79" cy="33" r="1.5" fill="#a7f3d0" opacity="0.7"/></>}
+            <ellipse cx="60" cy="62" rx="32" ry="28" fill={froggyBank > 0 ? "#5a8a5a" : "#352f40"} style={{ transition: "fill 0.6s ease" }}/>
+            <ellipse cx="60" cy="68" rx="22" ry="18" fill={froggyBank > 0 ? "#a3d4a2" : "#4a4460"} style={{ transition: "fill 0.6s ease" }}/>
+            <circle cx="44" cy="38" r="12" fill={froggyBank > 0 ? "#6b9c6b" : "#4a4460"} style={{ transition: "fill 0.6s ease" }}/>
+            <circle cx="76" cy="38" r="12" fill={froggyBank > 0 ? "#6b9c6b" : "#4a4460"} style={{ transition: "fill 0.6s ease" }}/>
+            <circle cx="44" cy="36" r="7" fill={froggyBank > 0 ? "#c8dcc8" : "#68627a"} style={{ transition: "fill 0.6s ease" }}/>
+            <circle cx="76" cy="36" r="7" fill={froggyBank > 0 ? "#c8dcc8" : "#68627a"} style={{ transition: "fill 0.6s ease" }}/>
+            <circle cx="46" cy="35" r="3.5" fill={froggyBank > 0 ? "#2a4a2a" : "#352f40"} style={{ transition: "fill 0.6s ease" }}/>
+            <circle cx="78" cy="35" r="3.5" fill={froggyBank > 0 ? "#2a4a2a" : "#352f40"} style={{ transition: "fill 0.6s ease" }}/>
+            {froggyBank > 0 && <><circle cx="47" cy="33" r="1.5" fill="#b0ccb0" opacity="0.7"/><circle cx="79" cy="33" r="1.5" fill="#b0ccb0" opacity="0.7"/></>}
             {froggyBank > 0 ? (
-              <path d="M48,58 Q60,68 72,58" stroke="#047857" strokeWidth="2.5" fill="none" strokeLinecap="round"/>
+              <path d="M48,58 Q60,68 72,58" stroke="#4a7a4a" strokeWidth="2.5" fill="none" strokeLinecap="round"/>
             ) : (
-              <path d="M50,60 L70,60" stroke="#6b7280" strokeWidth="2" strokeLinecap="round"/>
+              <path d="M50,60 L70,60" stroke="#68627a" strokeWidth="2" strokeLinecap="round"/>
             )}
-            {froggyBank > 0 && <><circle cx="38" cy="55" r="5" fill="#34d399" opacity="0.3"/><circle cx="82" cy="55" r="5" fill="#34d399" opacity="0.3"/></>}
-            <rect x="52" y="26" width="16" height="3" rx="1.5" fill={froggyBank > 0 ? "#047857" : "#4b5563"} style={{ transition: "fill 0.6s ease" }}/>
-            {froggyBank > 0 && <><circle cx="52" cy="65" r="4" fill="#fbbf24" opacity="0.8"/><text x="52" y="67" textAnchor="middle" fill="#92400e" fontSize="4" fontWeight="700">$</text></>}
-            {froggyBank >= 50 && <><circle cx="62" cy="70" r="4" fill="#f59e0b" opacity="0.7"/><text x="62" y="72" textAnchor="middle" fill="#92400e" fontSize="4" fontWeight="700">$</text></>}
-            {froggyBank >= 100 && <><circle cx="68" cy="63" r="4" fill="#fbbf24" opacity="0.9"/><text x="68" y="65" textAnchor="middle" fill="#92400e" fontSize="4" fontWeight="700">$</text></>}
-            <ellipse cx="38" cy="88" rx="12" ry="5" fill={froggyBank > 0 ? "#059669" : "#374151"} style={{ transition: "fill 0.6s ease" }}/>
-            <ellipse cx="82" cy="88" rx="12" ry="5" fill={froggyBank > 0 ? "#059669" : "#374151"} style={{ transition: "fill 0.6s ease" }}/>
+            {froggyBank > 0 && <><circle cx="38" cy="55" r="5" fill="#7eb87d" opacity="0.3"/><circle cx="82" cy="55" r="5" fill="#7eb87d" opacity="0.3"/></>}
+            <rect x="52" y="26" width="16" height="3" rx="1.5" fill={froggyBank > 0 ? "#4a7a4a" : "#4a4460"} style={{ transition: "fill 0.6s ease" }}/>
+            {froggyBank > 0 && <><circle cx="52" cy="65" r="4" fill="#d4b85c" opacity="0.8"/><text x="52" y="67" textAnchor="middle" fill="#6b5020" fontSize="4" fontWeight="700">$</text></>}
+            {froggyBank >= 50 && <><circle cx="62" cy="70" r="4" fill="#c9a84c" opacity="0.7"/><text x="62" y="72" textAnchor="middle" fill="#6b5020" fontSize="4" fontWeight="700">$</text></>}
+            {froggyBank >= 100 && <><circle cx="68" cy="63" r="4" fill="#d4b85c" opacity="0.9"/><text x="68" y="65" textAnchor="middle" fill="#6b5020" fontSize="4" fontWeight="700">$</text></>}
+            <ellipse cx="38" cy="88" rx="12" ry="5" fill={froggyBank > 0 ? "#5a8a5a" : "#352f40"} style={{ transition: "fill 0.6s ease" }}/>
+            <ellipse cx="82" cy="88" rx="12" ry="5" fill={froggyBank > 0 ? "#5a8a5a" : "#352f40"} style={{ transition: "fill 0.6s ease" }}/>
           </svg>
 
-          <h3 style={{ margin: "0 0 6px", fontSize: 17, fontWeight: 700, color: froggyBank > 0 ? "#6ee7b7" : "#64748b" }}>
+          <h3 style={{ margin: "0 0 6px", fontSize: 17, fontWeight: 700, color: froggyBank > 0 ? "#a3d4a2" : "#6b6580" }}>
             🐸 {t.froggyBankTitle}
           </h3>
-          <p style={{ margin: "0 0 14px", fontSize: 11, color: "#475569", lineHeight: 1.4 }}>
+          <p style={{ margin: "0 0 14px", fontSize: 11, color: "#504a60", lineHeight: 1.4 }}>
             {t.froggyDesc}
           </p>
 
           <div style={{
             fontSize: 28, fontWeight: 700, fontFamily: "'Space Mono', monospace",
-            color: froggyBank > 0 ? "#34d399" : "#475569",
+            color: froggyBank > 0 ? "#7eb87d" : "#504a60",
             marginBottom: 14,
             transition: "color 0.5s ease",
           }}>
@@ -2316,9 +2321,9 @@ export default function ExpenseTracker() {
           {/* Saved History */}
           <div style={{ marginTop: 12 }}>
             <button onClick={() => setShowFroggyHistory(!showFroggyHistory)} style={{
-              width: "100%", padding: "8px 0", borderRadius: 8, border: "1px solid #334155",
-              background: showFroggyHistory ? "rgba(110,231,183,0.1)" : "transparent",
-              color: showFroggyHistory ? "#6ee7b7" : "#64748b",
+              width: "100%", padding: "8px 0", borderRadius: 8, border: "1px solid #2e2a3a",
+              background: showFroggyHistory ? "rgba(163,212,162,0.1)" : "transparent",
+              color: showFroggyHistory ? "#a3d4a2" : "#6b6580",
               fontSize: 11, fontWeight: 600, cursor: "pointer",
               transition: "all 0.2s ease",
             }}>
@@ -2331,15 +2336,15 @@ export default function ExpenseTracker() {
                 <div style={{ display: "flex", gap: 6, marginBottom: 10 }}>
                   <select value={froggyHistoryMonth} onChange={e => setFroggyHistoryMonth(parseInt(e.target.value))}
                     style={{
-                      flex: 1, padding: "6px 8px", borderRadius: 6, border: "1px solid #334155",
-                      background: "#0f172a", color: "#e2e8f0", fontSize: 11,
+                      flex: 1, padding: "6px 8px", borderRadius: 6, border: "1px solid #2e2a3a",
+                      background: "#14121e", color: "#e2e8f0", fontSize: 11,
                     }}>
                     {MONTHS.map((m, i) => <option key={i} value={i}>{m}</option>)}
                   </select>
                   <input type="number" value={froggyHistoryYear} onChange={e => setFroggyHistoryYear(parseInt(e.target.value) || CURRENT_YEAR)}
                     style={{
-                      width: 70, padding: "6px 8px", borderRadius: 6, border: "1px solid #334155",
-                      background: "#0f172a", color: "#e2e8f0", fontSize: 11, fontFamily: "'Space Mono', monospace",
+                      width: 70, padding: "6px 8px", borderRadius: 6, border: "1px solid #2e2a3a",
+                      background: "#14121e", color: "#e2e8f0", fontSize: 11, fontFamily: "'Space Mono', monospace",
                     }} />
                 </div>
 
@@ -2347,29 +2352,29 @@ export default function ExpenseTracker() {
                 {(() => {
                   const filtered = froggyHistory.filter(h => h.month === froggyHistoryMonth && h.year === froggyHistoryYear);
                   if (filtered.length === 0) return (
-                    <p style={{ margin: 0, fontSize: 10, color: "#475569", fontStyle: "italic", textAlign: "center", padding: "8px 0" }}>
+                    <p style={{ margin: 0, fontSize: 10, color: "#504a60", fontStyle: "italic", textAlign: "center", padding: "8px 0" }}>
                       {t.noHistory}
                     </p>
                   );
                   return filtered.map(h => (
                     <div key={h.id || h.timestamp} style={{
                       display: "flex", justifyContent: "space-between", alignItems: "center",
-                      padding: "6px 0", borderBottom: "1px solid #1e293b",
+                      padding: "6px 0", borderBottom: "1px solid #262231",
                     }}>
                       <div style={{ flex: 1, minWidth: 0 }}>
                         <div style={{ fontSize: 11, color: "#e2e8f0", fontWeight: 500, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{h.label}</div>
-                        <div style={{ fontSize: 9, color: "#475569" }}>
-                          <span style={{ padding: "1px 4px", borderRadius: 3, background: "rgba(192,132,252,0.15)", color: "#d8b4fe" }}>{xCat[h.category] || eCat[h.category] || h.category}</span>
+                        <div style={{ fontSize: 9, color: "#504a60" }}>
+                          <span style={{ padding: "1px 4px", borderRadius: 3, background: "rgba(124,107,196,0.15)", color: "#b8a8d8" }}>{xCat[h.category] || eCat[h.category] || h.category}</span>
                         </div>
                       </div>
                       <div style={{ textAlign: "right", marginLeft: 8 }}>
                         <div style={{
                           fontSize: 12, fontFamily: "'Space Mono', monospace", fontWeight: 600,
-                          color: h.amount > 0 ? "#34d399" : "#f87171",
+                          color: h.amount > 0 ? "#7eb87d" : "#d4776a",
                         }}>
                           {h.amount > 0 ? "+" : ""}{h.amount < 0 ? "-" : ""}${fmt(Math.abs(h.amount))}
                         </div>
-                        <div style={{ fontSize: 8, color: "#475569" }}>
+                        <div style={{ fontSize: 8, color: "#504a60" }}>
                           {h.amount > 0 ? t.historyIn : t.historyOut}
                         </div>
                       </div>
@@ -2381,7 +2386,7 @@ export default function ExpenseTracker() {
           </div>
 
           {froggyBank === 0 && (
-            <p style={{ margin: 0, fontSize: 10, color: "#475569", fontStyle: "italic" }}>
+            <p style={{ margin: 0, fontSize: 10, color: "#504a60", fontStyle: "italic" }}>
               {budgetEntries.length > 0 ? t.lockBudgetHint : t.setBudgetFirst}
             </p>
           )}
@@ -2390,42 +2395,42 @@ export default function ExpenseTracker() {
         </div> {/* end goals & froggy grid */}
 
         {/* Earnings Table */}
-        <div style={{ padding: 16, borderRadius: 12, background: "#1e293b", border: "1px solid #334155", marginBottom: 16 }}>
-          <h3 style={{ margin: "0 0 14px", fontSize: 15, fontWeight: 700, color: "#34d399", display: "flex", alignItems: "center", gap: 8 }}>
+        <div style={{ padding: 16, borderRadius: 12, background: "#1f1c2a", border: "1px solid #2e2a3a", marginBottom: 16 }}>
+          <h3 style={{ margin: "0 0 14px", fontSize: 15, fontWeight: 700, color: "#7eb87d", display: "flex", alignItems: "center", gap: 8 }}>
             <span style={{ fontSize: 18 }}>↗</span> {t.earnings} — {isAll ? `${selectedYear} (${t.allMonths})` : `${MONTHS[selectedMonth]} ${selectedYear}`}
           </h3>
           <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 14 }}>
-            <input placeholder={t.earningLabel} value={earnLabel} onChange={e => setEarnLabel(e.target.value)} style={{ flex: "1 1 140px", padding: "9px 12px", borderRadius: 8, border: "1px solid #334155", background: "#0f172a", color: "#e2e8f0", fontSize: 13 }} />
-            <select value={earnCategory} onChange={e => setEarnCategory(e.target.value)} style={{ flex: "1 1 120px", padding: "9px 12px", borderRadius: 8, border: "1px solid #334155", background: "#0f172a", color: "#e2e8f0", fontSize: 13 }}>
+            <input placeholder={t.earningLabel} value={earnLabel} onChange={e => setEarnLabel(e.target.value)} style={{ flex: "1 1 140px", padding: "9px 12px", borderRadius: 8, border: "1px solid #2e2a3a", background: "#14121e", color: "#e2e8f0", fontSize: 13 }} />
+            <select value={earnCategory} onChange={e => setEarnCategory(e.target.value)} style={{ flex: "1 1 120px", padding: "9px 12px", borderRadius: 8, border: "1px solid #2e2a3a", background: "#14121e", color: "#e2e8f0", fontSize: 13 }}>
               {EARN_CATEGORIES.map(c => <option key={c} value={c}>{eCat[c] || c}</option>)}
             </select>
-            <input type="number" placeholder={t.amountDollar} value={earnAmount} onChange={e => setEarnAmount(e.target.value)} style={{ flex: "1 1 120px", padding: "9px 12px", borderRadius: 8, border: "1px solid #334155", background: "#0f172a", color: "#e2e8f0", fontSize: 13, fontFamily: "'Space Mono', monospace" }} />
-            <input type="date" value={earnDate} max={todayStr} onChange={e => setEarnDate(e.target.value)} style={{ flex: "1 1 130px", padding: "9px 12px", borderRadius: 8, border: "1px solid #334155", background: "#0f172a", color: "#e2e8f0", fontSize: 13, fontFamily: "'Space Mono', monospace" }} />
-            <button onClick={addEarning} style={{ padding: "9px 18px", borderRadius: 8, border: "none", cursor: "pointer", background: "linear-gradient(135deg, #34d399, #22d3ee)", color: "#0f172a", fontSize: 13, fontWeight: 700, whiteSpace: "nowrap" }}>{t.add}</button>
+            <input type="number" placeholder={t.amountDollar} value={earnAmount} onChange={e => setEarnAmount(e.target.value)} style={{ flex: "1 1 120px", padding: "9px 12px", borderRadius: 8, border: "1px solid #2e2a3a", background: "#14121e", color: "#e2e8f0", fontSize: 13, fontFamily: "'Space Mono', monospace" }} />
+            <input type="date" value={earnDate} max={todayStr} onChange={e => setEarnDate(e.target.value)} style={{ flex: "1 1 130px", padding: "9px 12px", borderRadius: 8, border: "1px solid #2e2a3a", background: "#14121e", color: "#e2e8f0", fontSize: 13, fontFamily: "'Space Mono', monospace" }} />
+            <button onClick={addEarning} style={{ padding: "9px 18px", borderRadius: 8, border: "none", cursor: "pointer", background: "linear-gradient(135deg, #7eb87d, #9cc8a0)", color: "#14121e", fontSize: 13, fontWeight: 700, whiteSpace: "nowrap" }}>{t.add}</button>
           </div>
-          <div style={{ overflowX: "auto" }}>
-            <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
-              <thead><tr style={{ borderBottom: "2px solid #334155" }}>
+          <div style={{ overflowX: "auto", WebkitOverflowScrolling: "touch" }}>
+            <table style={{ width: "100%", minWidth: 480, borderCollapse: "collapse", fontSize: 13 }}>
+              <thead><tr style={{ borderBottom: "2px solid #2e2a3a" }}>
                 {[t.date, t.source, t.category, t.amountDollar, ""].map((h, idx) => (
-                  <th key={idx} style={{ padding: "8px 10px", textAlign: "left", color: "#64748b", fontSize: 11, textTransform: "uppercase", letterSpacing: 1 }}>{h}</th>
+                  <th key={idx} style={{ padding: "8px 10px", textAlign: "left", color: "#6b6580", fontSize: 11, textTransform: "uppercase", letterSpacing: 1, whiteSpace: "nowrap" }}>{h}</th>
                 ))}
               </tr></thead>
               <tbody>
                 {currentTableData.earnings.length === 0 ? (
-                  <tr><td colSpan={5} style={{ padding: 20, textAlign: "center", color: "#475569", fontStyle: "italic" }}>{t.noEarnings}</td></tr>
+                  <tr><td colSpan={5} style={{ padding: 20, textAlign: "center", color: "#504a60", fontStyle: "italic" }}>{t.noEarnings}</td></tr>
                 ) : currentTableData.earnings.map((e, i) => (
-                  <tr key={e.id} style={{ borderBottom: "1px solid #1e293b", background: i % 2 === 0 ? "transparent" : "rgba(51,65,85,0.3)" }}>
-                    <td style={{ padding: "8px 10px", fontFamily: "'Space Mono', monospace", fontSize: 12, color: "#94a3b8", verticalAlign: "middle" }}>{e.date || "—"}</td>
+                  <tr key={e.id} style={{ borderBottom: "1px solid #262231", background: i % 2 === 0 ? "transparent" : "rgba(51,65,85,0.3)" }}>
+                    <td style={{ padding: "8px 10px", fontFamily: "'Space Mono', monospace", fontSize: 12, color: "#9590a8", verticalAlign: "middle", whiteSpace: "nowrap" }}>{e.date || "—"}</td>
                     <td style={{ padding: "8px 10px", fontWeight: 500, verticalAlign: "middle" }}>{e.label}</td>
-                    <td style={{ padding: "8px 10px" }}><span style={{ padding: "2px 8px", borderRadius: 4, fontSize: 11, fontWeight: 600, background: "rgba(52,211,153,0.15)", color: "#6ee7b7" }}>{xCat[e.category] || eCat[e.category] || e.category}</span></td>
-                    <td style={{ padding: "8px 10px", fontFamily: "'Space Mono', monospace", color: "#34d399" }}>+${fmt(e.amount)}</td>
-                    <td style={{ padding: "8px 10px" }}><button onClick={() => removeEarning(e.id)} style={{ background: "none", border: "none", color: "#64748b", cursor: "pointer", fontSize: 16 }}>×</button></td>
+                    <td style={{ padding: "8px 10px" }}><span style={{ padding: "2px 8px", borderRadius: 4, fontSize: 11, fontWeight: 600, background: "rgba(126,184,125,0.15)", color: "#a3d4a2" }}>{xCat[e.category] || eCat[e.category] || e.category}</span></td>
+                    <td style={{ padding: "8px 10px", fontFamily: "'Space Mono', monospace", color: "#7eb87d", whiteSpace: "nowrap" }}>+${fmt(e.amount)}</td>
+                    <td style={{ padding: "8px 10px" }}><button onClick={() => removeEarning(e.id)} style={{ background: "none", border: "none", color: "#6b6580", cursor: "pointer", fontSize: 16 }}>×</button></td>
                   </tr>
                 ))}
                 {currentTableData.earnings.length > 0 && (
-                  <tr style={{ borderTop: "2px solid #334155", fontWeight: 700 }}>
+                  <tr style={{ borderTop: "2px solid #2e2a3a", fontWeight: 700 }}>
                     <td></td><td style={{ padding: "10px 10px" }}>{t.total}</td><td></td>
-                    <td style={{ padding: "10px 10px", fontFamily: "'Space Mono', monospace", color: "#34d399" }}>+${fmt(totals.earnings)}</td><td></td>
+                    <td style={{ padding: "10px 10px", fontFamily: "'Space Mono', monospace", color: "#7eb87d", whiteSpace: "nowrap" }}>+${fmt(totals.earnings)}</td><td></td>
                   </tr>
                 )}
               </tbody>
@@ -2434,42 +2439,42 @@ export default function ExpenseTracker() {
         </div>
 
         {/* Expenses Table */}
-        <div style={{ padding: 16, borderRadius: 12, background: "#1e293b", border: "1px solid #334155", marginBottom: 24 }}>
-          <h3 style={{ margin: "0 0 14px", fontSize: 15, fontWeight: 700, color: "#f87171", display: "flex", alignItems: "center", gap: 8 }}>
+        <div style={{ padding: 16, borderRadius: 12, background: "#1f1c2a", border: "1px solid #2e2a3a", marginBottom: 24 }}>
+          <h3 style={{ margin: "0 0 14px", fontSize: 15, fontWeight: 700, color: "#d4776a", display: "flex", alignItems: "center", gap: 8 }}>
             <span style={{ fontSize: 18 }}>↘</span> {t.expenses} — {isAll ? `${selectedYear} (${t.allMonths})` : `${MONTHS[selectedMonth]} ${selectedYear}`}
           </h3>
           <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 14 }}>
-            <input placeholder={t.expenseLabel} value={expLabel} onChange={e => setExpLabel(e.target.value)} style={{ flex: "1 1 140px", padding: "9px 12px", borderRadius: 8, border: "1px solid #334155", background: "#0f172a", color: "#e2e8f0", fontSize: 13 }} />
-            <select value={expCategory} onChange={e => setExpCategory(e.target.value)} style={{ flex: "1 1 120px", padding: "9px 12px", borderRadius: 8, border: "1px solid #334155", background: "#0f172a", color: "#e2e8f0", fontSize: 13 }}>
+            <input placeholder={t.expenseLabel} value={expLabel} onChange={e => setExpLabel(e.target.value)} style={{ flex: "1 1 140px", padding: "9px 12px", borderRadius: 8, border: "1px solid #2e2a3a", background: "#14121e", color: "#e2e8f0", fontSize: 13 }} />
+            <select value={expCategory} onChange={e => setExpCategory(e.target.value)} style={{ flex: "1 1 120px", padding: "9px 12px", borderRadius: 8, border: "1px solid #2e2a3a", background: "#14121e", color: "#e2e8f0", fontSize: 13 }}>
               {EXP_CATEGORIES.map(c => <option key={c} value={c}>{xCat[c] || c}</option>)}
             </select>
-            <input type="number" placeholder={t.amountDollar} value={expAmount} onChange={e => setExpAmount(e.target.value)} style={{ flex: "1 1 120px", padding: "9px 12px", borderRadius: 8, border: "1px solid #334155", background: "#0f172a", color: "#e2e8f0", fontSize: 13, fontFamily: "'Space Mono', monospace" }} />
-            <input type="date" value={expDate} max={todayStr} onChange={e => setExpDate(e.target.value)} style={{ flex: "1 1 130px", padding: "9px 12px", borderRadius: 8, border: "1px solid #334155", background: "#0f172a", color: "#e2e8f0", fontSize: 13, fontFamily: "'Space Mono', monospace" }} />
-            <button onClick={addExpense} style={{ padding: "9px 18px", borderRadius: 8, border: "none", cursor: "pointer", background: "linear-gradient(135deg, #f87171, #fb923c)", color: "#0f172a", fontSize: 13, fontWeight: 700, whiteSpace: "nowrap" }}>+ Add</button>
+            <input type="number" placeholder={t.amountDollar} value={expAmount} onChange={e => setExpAmount(e.target.value)} style={{ flex: "1 1 120px", padding: "9px 12px", borderRadius: 8, border: "1px solid #2e2a3a", background: "#14121e", color: "#e2e8f0", fontSize: 13, fontFamily: "'Space Mono', monospace" }} />
+            <input type="date" value={expDate} max={todayStr} onChange={e => setExpDate(e.target.value)} style={{ flex: "1 1 130px", padding: "9px 12px", borderRadius: 8, border: "1px solid #2e2a3a", background: "#14121e", color: "#e2e8f0", fontSize: 13, fontFamily: "'Space Mono', monospace" }} />
+            <button onClick={addExpense} style={{ padding: "9px 18px", borderRadius: 8, border: "none", cursor: "pointer", background: "linear-gradient(135deg, #f87171, #fb923c)", color: "#14121e", fontSize: 13, fontWeight: 700, whiteSpace: "nowrap" }}>+ Add</button>
           </div>
-          <div style={{ overflowX: "auto" }}>
-            <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
-              <thead><tr style={{ borderBottom: "2px solid #334155" }}>
+          <div style={{ overflowX: "auto", WebkitOverflowScrolling: "touch" }}>
+            <table style={{ width: "100%", minWidth: 480, borderCollapse: "collapse", fontSize: 13 }}>
+              <thead><tr style={{ borderBottom: "2px solid #2e2a3a" }}>
                 {[t.date, t.item, t.category, t.amountDollar, ""].map((h, idx) => (
-                  <th key={idx} style={{ padding: "8px 10px", textAlign: "left", color: "#64748b", fontSize: 11, textTransform: "uppercase", letterSpacing: 1 }}>{h}</th>
+                  <th key={idx} style={{ padding: "8px 10px", textAlign: "left", color: "#6b6580", fontSize: 11, textTransform: "uppercase", letterSpacing: 1, whiteSpace: "nowrap" }}>{h}</th>
                 ))}
               </tr></thead>
               <tbody>
                 {currentTableData.expenses.length === 0 ? (
-                  <tr><td colSpan={5} style={{ padding: 20, textAlign: "center", color: "#475569", fontStyle: "italic" }}>{t.noExpenses}</td></tr>
+                  <tr><td colSpan={5} style={{ padding: 20, textAlign: "center", color: "#504a60", fontStyle: "italic" }}>{t.noExpenses}</td></tr>
                 ) : currentTableData.expenses.map((e, i) => (
-                  <tr key={e.id} style={{ borderBottom: "1px solid #1e293b", background: i % 2 === 0 ? "transparent" : "rgba(51,65,85,0.3)" }}>
-                    <td style={{ padding: "8px 10px", fontFamily: "'Space Mono', monospace", fontSize: 12, color: "#94a3b8", verticalAlign: "middle" }}>{e.date || "—"}</td>
+                  <tr key={e.id} style={{ borderBottom: "1px solid #262231", background: i % 2 === 0 ? "transparent" : "rgba(51,65,85,0.3)" }}>
+                    <td style={{ padding: "8px 10px", fontFamily: "'Space Mono', monospace", fontSize: 12, color: "#9590a8", verticalAlign: "middle", whiteSpace: "nowrap" }}>{e.date || "—"}</td>
                     <td style={{ padding: "8px 10px", fontWeight: 500, verticalAlign: "middle" }}>{e.label}</td>
-                    <td style={{ padding: "8px 10px" }}><span style={{ padding: "2px 8px", borderRadius: 4, fontSize: 11, fontWeight: 600, background: "rgba(129,140,248,0.15)", color: "#a5b4fc" }}>{xCat[e.category] || eCat[e.category] || e.category}</span></td>
-                    <td style={{ padding: "8px 10px", fontFamily: "'Space Mono', monospace", color: "#f87171" }}>-${fmt(e.amount)}</td>
-                    <td style={{ padding: "8px 10px" }}><button onClick={() => removeExpense(e.id)} style={{ background: "none", border: "none", color: "#64748b", cursor: "pointer", fontSize: 16 }}>×</button></td>
+                    <td style={{ padding: "8px 10px" }}><span style={{ padding: "2px 8px", borderRadius: 4, fontSize: 11, fontWeight: 600, background: "rgba(107,90,180,0.15)", color: "#a8a0cc" }}>{xCat[e.category] || eCat[e.category] || e.category}</span></td>
+                    <td style={{ padding: "8px 10px", fontFamily: "'Space Mono', monospace", color: "#d4776a", whiteSpace: "nowrap" }}>-${fmt(e.amount)}</td>
+                    <td style={{ padding: "8px 10px" }}><button onClick={() => removeExpense(e.id)} style={{ background: "none", border: "none", color: "#6b6580", cursor: "pointer", fontSize: 16 }}>×</button></td>
                   </tr>
                 ))}
                 {currentTableData.expenses.length > 0 && (
-                  <tr style={{ borderTop: "2px solid #334155", fontWeight: 700 }}>
+                  <tr style={{ borderTop: "2px solid #2e2a3a", fontWeight: 700 }}>
                     <td></td><td style={{ padding: "10px 10px" }}>{t.total}</td><td></td>
-                    <td style={{ padding: "10px 10px", fontFamily: "'Space Mono', monospace", color: "#f87171" }}>-${fmt(totals.expenses)}</td><td></td>
+                    <td style={{ padding: "10px 10px", fontFamily: "'Space Mono', monospace", color: "#d4776a", whiteSpace: "nowrap" }}>-${fmt(totals.expenses)}</td><td></td>
                   </tr>
                 )}
               </tbody>
@@ -2477,8 +2482,8 @@ export default function ExpenseTracker() {
           </div>
         </div>
 
-        <div style={{ textAlign: "center", fontSize: 10, color: "#334155", paddingTop: 8, paddingBottom: 16 }}>
-          © 2026 1XD233 · Sakuhin · Personal Finance Tracker · MIT License
+        <div style={{ textAlign: "center", fontSize: 10, color: "#504a60", paddingTop: 12, paddingBottom: 20, letterSpacing: 1 }}>
+          © 2026 1XD233 · Sakuhin · 作品 · MIT License
         </div>
 
         {/* Undo toast */}
@@ -2487,7 +2492,7 @@ export default function ExpenseTracker() {
             position: "sticky", bottom: 16,
             margin: "0 auto", width: "fit-content",
             padding: "10px 20px", borderRadius: 10,
-            background: "#334155", color: "#e2e8f0", fontSize: 13, fontWeight: 600,
+            background: "#2e2a3a", color: "#e2e8f0", fontSize: 13, fontWeight: 600,
             boxShadow: "0 4px 20px rgba(0,0,0,0.4)",
             animation: "fadeInUp 0.3s ease",
           }}>
