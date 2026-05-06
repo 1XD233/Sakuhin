@@ -478,7 +478,7 @@ const ExpIcons = {
 };
 
 // ─── SCENE COMPONENT ───
-function FinancialScene({ type, data, categories, Icons, t, catNames, c }) {
+function FinancialScene({ type, data, categories, Icons, t, catNames }) {
   const total = data.reduce((s, e) => s + e.amount, 0);
   const catData = {};
   categories.forEach(c => { catData[c] = 0; });
@@ -1823,8 +1823,8 @@ export default function ExpenseTracker() {
         </div>
 
         {/* Visual Scenes */}
-        <FinancialScene type="earning" data={currentTableData.earnings} categories={EARN_CATEGORIES} Icons={EarnIcons} t={t} catNames={eCat} c={c} />
-        <FinancialScene type="expense" data={currentTableData.expenses} categories={EXP_CATEGORIES} Icons={ExpIcons} t={t} catNames={xCat} c={c} />
+        <FinancialScene type="earning" data={currentTableData.earnings} categories={EARN_CATEGORIES} Icons={EarnIcons} t={t} catNames={eCat} />
+        <FinancialScene type="expense" data={currentTableData.expenses} categories={EXP_CATEGORIES} Icons={ExpIcons} t={t} catNames={xCat} />
 
         {/* ─── GOALS & FROGGY BANK ─── */}
         <div className="mobile-stack" style={{ display: "flex", flexWrap: "wrap", gap: 16, marginBottom: 20, alignItems: "start" }}>
