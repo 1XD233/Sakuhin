@@ -515,7 +515,7 @@ function FinancialScene({ type, data, categories, Icons, t, catNames, c }) {
 
   return (
     <div style={{
-      borderRadius: 14, overflow: "hidden", border: "1px solid #2a2440", background: "#1a1626",
+      borderRadius: 14, overflow: "hidden", border: "1px solid #2a2440",
       marginBottom: 16, background: "#13101e", position: "relative",
     }}>
       <style>{sceneCSS}</style>
