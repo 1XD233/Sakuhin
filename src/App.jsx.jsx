@@ -2488,7 +2488,6 @@ export default function ExpenseTracker() {
         <div style={{ textAlign: "center", fontSize: 10, color: "#504a60", paddingTop: 12, paddingBottom: 20, letterSpacing: 1 }}>
           © 2026 1XD233 · Sakuhin · 作品 · MIT License
         </div>
-        </div>
 
         {/* Undo toast */}
         {undoMessage && (
