@@ -3,8 +3,51 @@ import { useState, useMemo, useRef } from "react";
 const MONTHS_EN = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
 const MONTHS_ZH = ["1月","2月","3月","4月","5月","6月","7月","8月","9月","10月","11月","12月"];
 const CURRENT_YEAR = new Date().getFullYear();
-const EARN_CATEGORIES = ["Salary","Freelance","Investments","Bonus","Side Hustle","Gifts","Adjustment","Other"];
-const EXP_CATEGORIES = ["Food","Transport","Housing","Entertainment","Utilities","Healthcare","Shopping","Education","Adjustment","Other"];
+const DEFAULT_EARN_CATS = [
+  { name: "Salary", emoji: "💼" }, { name: "Freelance", emoji: "💻" }, { name: "Investments", emoji: "📈" },
+  { name: "Bonus", emoji: "🎁" }, { name: "Side Hustle", emoji: "🔧" }, { name: "Gifts", emoji: "🎀" },
+  { name: "Adjustment", emoji: "⚖️" }, { name: "Other", emoji: "📦" }
+];
+const DEFAULT_EXP_CATS = [
+  { name: "Food", emoji: "🍜" }, { name: "Transport", emoji: "🚗" }, { name: "Housing", emoji: "🏠" },
+  { name: "Entertainment", emoji: "🎮" }, { name: "Utilities", emoji: "💡" }, { name: "Healthcare", emoji: "💊" },
+  { name: "Shopping", emoji: "🛍️" }, { name: "Education", emoji: "📚" }, { name: "Adjustment", emoji: "⚖️" },
+  { name: "Other", emoji: "📦" }
+];
+
+const CAT_EMOJI_MAP = {
+  salary: "💼", wage: "💼", paycheck: "💼", income: "💰", freelance: "💻", consulting: "💻",
+  investment: "📈", stocks: "📈", dividends: "📈", crypto: "🪙", trading: "📊", interest: "🏦",
+  bonus: "🎁", commission: "💵", tips: "💵", rental: "🏘️", rent: "🏠", mortgage: "🏠",
+  pension: "👴", retirement: "👴", allowance: "💳", scholarship: "🎓", grant: "🎓",
+  food: "🍜", groceries: "🛒", restaurant: "🍽️", dining: "🍽️", coffee: "☕", drinks: "🍺",
+  transport: "🚗", gas: "⛽", fuel: "⛽", uber: "🚕", taxi: "🚕", bus: "🚌", train: "🚆", parking: "🅿️",
+  housing: "🏠", electricity: "⚡", water: "💧", internet: "📡", phone: "📱", insurance: "🛡️",
+  entertainment: "🎮", movies: "🎬", music: "🎵", games: "🎮", streaming: "📺", concert: "🎤",
+  utilities: "💡", healthcare: "💊", medical: "🏥", dental: "🦷", gym: "💪", fitness: "🏋️",
+  shopping: "🛍️", clothes: "👕", shoes: "👟", electronics: "📱", amazon: "📦",
+  education: "📚", tuition: "🎓", books: "📖", course: "📝", school: "🏫",
+  travel: "✈️", vacation: "🏖️", hotel: "🏨", flight: "✈️", pets: "🐕", pet: "🐾",
+  gifts: "🎀", donation: "❤️", charity: "🤝", subscription: "🔄", membership: "🎫",
+  beauty: "💄", haircut: "💇", spa: "🧖", laundry: "👔", cleaning: "🧹",
+  baby: "👶", kids: "👧", childcare: "🍼", savings: "🐷", emergency: "🚨",
+  tax: "📋", taxes: "📋", fine: "⚠️", loan: "🏦", debt: "💳",
+  other: "📦", misc: "📦", adjustment: "⚖️", correction: "⚖️",
+};
+
+function matchCatEmoji(name) {
+  var lower = (name || "").toLowerCase().trim();
+  if (CAT_EMOJI_MAP[lower]) return CAT_EMOJI_MAP[lower];
+  var keys = Object.keys(CAT_EMOJI_MAP);
+  for (var i = 0; i < keys.length; i++) {
+    if (lower.indexOf(keys[i]) !== -1 || keys[i].indexOf(lower) !== -1) return CAT_EMOJI_MAP[keys[i]];
+  }
+  return null;
+}
+
+// Keep flat arrays for backward compat
+var EARN_CATEGORIES = DEFAULT_EARN_CATS.map(function(c) { return c.name; });
+var EXP_CATEGORIES = DEFAULT_EXP_CATS.map(function(c) { return c.name; });
 const MAX_UNDO = 30;
 
 
@@ -105,6 +148,12 @@ const T = {
     addCorrection: "+ Correction",
     correctionHint: "Adjust if your calculated balance doesn't match reality",
     calculatedBalance: "Calculated Balance",
+    manageCategories: "Manage Categories",
+    addCategory: "Add Category",
+    categoryName: "Category name",
+    earningCat: "Earning",
+    expenseCat: "Expense",
+    defaultCat: "Default",
     iKnowStarting: "I know my starting balance",
     iKnowCurrent: "I only know my current balance",
     currentBalanceNow: "What's your balance right now?",
@@ -249,6 +298,12 @@ const T = {
     addCorrection: "+ 校正",
     correctionHint: "当计算余额与实际不符时进行调整",
     calculatedBalance: "计算余额",
+    manageCategories: "管理类别",
+    addCategory: "添加类别",
+    categoryName: "类别名称",
+    earningCat: "收入",
+    expenseCat: "支出",
+    defaultCat: "默认",
     iKnowStarting: "我知道初始余额",
     iKnowCurrent: "我只知道当前余额",
     currentBalanceNow: "您现在的余额是多少？",
@@ -315,307 +370,79 @@ const defaultYearData = () => {
 };
 let nextId = 1;
 
-// ─── EARNING ICONS (Garden / Growth theme) ───
-const EarnIcons = {
-  Salary: ({ a, o }) => (<>
-    <rect x="10" y="12" width="40" height="46" rx="2" fill={a?"#4a7a4a":"#444"} opacity={o}/>
-    <rect x="14" y="16" width="10" height="7" rx="1" fill={a?"#7eb87d":"#555"} opacity={o}/>
-    <rect x="28" y="16" width="10" height="7" rx="1" fill={a?"#7eb87d":"#555"} opacity={o}/>
-    <rect x="14" y="27" width="10" height="7" rx="1" fill={a?"#a3d4a2":"#555"} opacity={o}/>
-    <rect x="28" y="27" width="10" height="7" rx="1" fill={a?"#a3d4a2":"#555"} opacity={o}/>
-    <rect x="14" y="38" width="10" height="7" rx="1" fill={a?"#7eb87d":"#555"} opacity={o}/>
-    <rect x="28" y="38" width="10" height="7" rx="1" fill={a?"#7eb87d":"#555"} opacity={o}/>
-    <rect x="24" y="48" width="12" height="10" rx="1" fill={a?"#b0ccb0":"#555"} opacity={o}/>
-    <polygon points="2,14 30,-4 58,14" fill={a?"#065f46":"#3a3a3a"} opacity={o}/>
-    {a&&<rect x="28" y="-8" width="4" height="8" fill="#5a8a5a" opacity={0.8}/>}
-    {a&&<polygon points="26,-8 30,-16 34,-8" fill="#7eb87d" opacity={0.7}/>}
-  </>),
-  Freelance: ({ a, o }) => (<>
-    <rect x="6" y="18" width="48" height="30" rx="3" fill={a?"#5b21b6":"#444"} opacity={o}/>
-    <rect x="10" y="22" width="40" height="22" rx="2" fill={a?"#6b5ab4":"#555"} opacity={o}/>
-    {a&&<><text x="30" y="37" textAnchor="middle" fill="#c4b5fd" fontSize="8" fontFamily="monospace" opacity={0.9}>{"< / >"}</text>
-    <rect x="14" y="27" width="16" height="2" rx="1" fill="#9b8ad4" opacity={0.4}/>
-    <rect x="14" y="31" width="12" height="2" rx="1" fill="#9b8ad4" opacity={0.3}/></>}
-    <path d="M2,48 L58,48 L54,52 Q30,56 6,52 Z" fill={a?"#4c1d95":"#3a3a3a"} opacity={o}/>
-    {a&&<circle cx="30" cy="54" r="2" fill="#6b5ab4" opacity={0.5}/>}
-  </>),
-  Investments: ({ a, o }) => (<>
-    <rect x="8" y="50" width="44" height="8" rx="2" fill={a?"#6b5020":"#444"} opacity={o}/>
-    <line x1="14" y1="50" x2="14" y2="40" stroke={a?"#5a8a5a":"#555"} strokeWidth="3" opacity={o}/>
-    <ellipse cx="14" cy="36" rx="6" ry="5" fill={a?"#7eb87d":"#555"} opacity={o}/>
-    {a&&<ellipse cx="11" cy="34" rx="4" ry="3" fill="#a3d4a2" opacity={0.5}/>}
-    <line x1="30" y1="50" x2="30" y2="28" stroke={a?"#5a8a5a":"#555"} strokeWidth="3" opacity={o}/>
-    <ellipse cx="30" cy="24" rx="8" ry="6" fill={a?"#6b9c6b":"#555"} opacity={o}/>
-    {a&&<ellipse cx="27" cy="22" rx="5" ry="4" fill="#a3d4a2" opacity={0.4}/>}
-    <line x1="46" y1="50" x2="46" y2="16" stroke={a?"#5a8a5a":"#555"} strokeWidth="4" opacity={o}/>
-    <ellipse cx="46" cy="12" rx="10" ry="7" fill={a?"#7eb87d":"#555"} opacity={o}/>
-    {a&&<><ellipse cx="42" cy="10" rx="6" ry="5" fill="#a3d4a2" opacity={0.4}/>
-    <circle cx="46" cy="8" r="3" fill="#d4b85c" opacity={0.8}/>
-    <text x="46" y="10" textAnchor="middle" fill="#6b5020" fontSize="4" fontWeight="700">$</text></>}
-  </>),
-  Bonus: ({ a, o }) => (<>
-    <rect x="14" y="28" width="32" height="28" rx="3" fill={a?"#b04848":"#444"} opacity={o}/>
-    <rect x="10" y="22" width="40" height="10" rx="3" fill={a?"#c45c5c":"#555"} opacity={o}/>
-    <rect x="27" y="22" width="6" height="34" fill={a?"#fecdd3":"#555"} opacity={o}/>
-    <rect x="10" y="33" width="40" height="4" fill={a?"#fecdd3":"#555"} opacity={o}/>
-    <path d="M30,22 Q20,6 12,16" stroke={a?"#d4b85c":"#555"} strokeWidth="3" fill="none" opacity={o}/>
-    <path d="M30,22 Q40,6 48,16" stroke={a?"#d4b85c":"#555"} strokeWidth="3" fill="none" opacity={o}/>
-    {a&&<><circle cx="12" cy="14" r="3" fill="#d4b85c" opacity={0.8}/>
-    <circle cx="48" cy="14" r="3" fill="#d4b85c" opacity={0.8}/></>}
-  </>),
-  "Side Hustle": ({ a, o }) => (<>
-    <path d="M16,20 L16,52 Q16,56 20,56 L40,56 Q44,56 44,52 L44,20 Q44,16 40,16 L20,16 Q16,16 16,20 Z" fill={a?"#ea580c":"#444"} opacity={o}/>
-    <path d="M44,30 Q56,30 56,40 Q56,50 44,50" stroke={a?"#fb923c":"#555"} strokeWidth="3" fill="none" opacity={o}/>
-    <ellipse cx="30" cy="58" rx="16" ry="3" fill={a?"#9a3412":"#3a3a3a"} opacity={o}/>
-    {a&&<><path d="M24,12 Q24,4 28,8" stroke="#fdba74" strokeWidth="2" fill="none" opacity={0.7}/>
-    <path d="M30,10 Q30,2 34,6" stroke="#fed7aa" strokeWidth="2" fill="none" opacity={0.6}/>
-    <path d="M36,12 Q36,6 40,10" stroke="#fdba74" strokeWidth="1.5" fill="none" opacity={0.5}/></>}
-  </>),
-  Gifts: ({ a, o }) => (<>
-    <path d="M30,56 L8,34 Q2,20 16,16 Q26,13 30,28 Q34,13 44,16 Q58,20 52,34 Z" fill={a?"#e11d48":"#444"} opacity={o}/>
-    {a&&<><path d="M30,56 L8,34 Q2,20 16,16 Q26,13 30,28 Q34,13 44,16 Q58,20 52,34 Z" fill="none" stroke="#fda4af" strokeWidth="1.5" opacity={0.5}/>
-    <path d="M20,22 Q24,28 30,28" stroke="#fecdd3" strokeWidth="1" fill="none" opacity={0.6}/>
-    <path d="M40,22 Q36,28 30,28" stroke="#fecdd3" strokeWidth="1" fill="none" opacity={0.6}/></>}
-  </>),
-  Other: ({ a, o }) => (<>
-    <circle cx="30" cy="32" r="20" fill={a?"#0e7490":"#444"} opacity={o}/>
-    <circle cx="30" cy="32" r="14" fill={a?"#06b6d4":"#555"} opacity={o} strokeWidth="0"/>
-    <text x="30" y="37" textAnchor="middle" fill={a?"#ecfeff":"#777"} fontSize="18" fontWeight="700" opacity={o}>+</text>
-    {a&&<circle cx="30" cy="32" r="20" fill="none" stroke="#9cc8a0" strokeWidth="1.5" opacity={0.3} strokeDasharray="4 3"/>}
-  </>),
-};
 
-// ─── EXPENSE ICONS (Cityscape / Life theme) ───
-const ExpIcons = {
-  Food: ({ a, o }) => (<>
-    <circle cx="30" cy="34" r="20" fill={a?"#991b1b":"#444"} opacity={o}/>
-    <circle cx="30" cy="34" r="16" fill={a?"#fecaca":"#555"} opacity={o}/>
-    <circle cx="30" cy="34" r="10" fill={a?"#dba097":"#555"} opacity={o}/>
-    {a&&<><circle cx="26" cy="32" r="3" fill="#c45c5c" opacity={0.7}/>
-    <circle cx="34" cy="30" r="2" fill="#b04848" opacity={0.6}/>
-    <circle cx="30" cy="38" r="2.5" fill="#d4776a" opacity={0.5}/>
-    <rect x="6" y="14" width="2.5" height="22" rx="1" fill="#d4b85c" opacity={0.9}/>
-    <rect x="2" y="14" width="2" height="14" rx="1" fill="#d4b85c" opacity={0.8}/>
-    <rect x="10" y="14" width="2" height="14" rx="1" fill="#d4b85c" opacity={0.8}/>
-    <rect x="6" y="12" width="2.5" height="4" rx="1" fill="#c9a84c" opacity={0.9}/></>}
-  </>),
-  Transport: ({ a, o }) => (<>
-    <rect x="4" y="30" width="52" height="20" rx="5" fill={a?"#1e40af":"#444"} opacity={o}/>
-    <path d="M12,30 L18,14 L42,14 L48,30" fill={a?"#2563eb":"#555"} opacity={o}/>
-    <rect x="20" y="16" width="8" height="12" rx="2" fill={a?"#93c5fd":"#666"} opacity={o}/>
-    <rect x="32" y="16" width="8" height="12" rx="2" fill={a?"#93c5fd":"#666"} opacity={o}/>
-    <circle cx="16" cy="50" r="6" fill={a?"#1e3a8a":"#3a3a3a"} opacity={o}/>
-    <circle cx="16" cy="50" r="3" fill={a?"#6b6580":"#555"} opacity={o}/>
-    <circle cx="44" cy="50" r="6" fill={a?"#1e3a8a":"#3a3a3a"} opacity={o}/>
-    <circle cx="44" cy="50" r="3" fill={a?"#6b6580":"#555"} opacity={o}/>
-    {a&&<><rect x="4" y="38" width="12" height="3" rx="1" fill="#d4b85c" opacity={0.9}/>
-    <rect x="44" y="38" width="12" height="3" rx="1" fill="#d4776a" opacity={0.8}/></>}
-  </>),
-  Housing: ({ a, o }) => (<>
-    <rect x="10" y="28" width="40" height="30" fill={a?"#6b5020":"#444"} opacity={o}/>
-    <polygon points="-2,30 30,4 62,30" fill={a?"#b45309":"#555"} opacity={o}/>
-    <rect x="24" y="40" width="12" height="18" rx="1" fill={a?"#d4b85c":"#555"} opacity={o}/>
-    {a&&<circle cx="33" cy="50" r="1.5" fill="#6b5020"/>}
-    <rect x="14" y="32" width="8" height="8" rx="1" fill={a?"#fde68a":"#555"} opacity={o}/>
-    <rect x="38" y="32" width="8" height="8" rx="1" fill={a?"#fde68a":"#555"} opacity={o}/>
-    {a&&<><line x1="18" y1="32" x2="18" y2="40" stroke="#d97706" strokeWidth="0.8" opacity={0.5}/>
-    <line x1="14" y1="36" x2="22" y2="36" stroke="#d97706" strokeWidth="0.8" opacity={0.5}/>
-    <rect x="42" y="14" width="6" height="16" rx="1" fill="#78716c" opacity={0.7}/>
-    <rect x="44" y="10" width="2" height="6" fill="#a8a29e" opacity={0.6}/></>}
-  </>),
-  Entertainment: ({ a, o }) => (<>
-    <rect x="4" y="22" width="52" height="26" rx="13" fill={a?"#5b21b6":"#444"} opacity={o}/>
-    <circle cx="18" cy="33" r="4" fill={a?"#c4b5fd":"#555"} opacity={o}/>
-    <rect x="14" y="31" width="8" height="2.5" rx="1" fill={a?"#ddd6fe":"#555"} opacity={o}/>
-    <rect x="16.5" y="28" width="2.5" height="8" rx="1" fill={a?"#ddd6fe":"#555"} opacity={o}/>
-    <circle cx="40" cy="29" r="3" fill={a?"#9b8ad4":"#555"} opacity={o}/>
-    <circle cx="46" cy="35" r="3" fill={a?"#c4b5fd":"#555"} opacity={o}/>
-    <circle cx="40" cy="39" r="2.5" fill={a?"#7c6bc4":"#555"} opacity={o}/>
-    <circle cx="34" cy="35" r="2.5" fill={a?"#ddd6fe":"#555"} opacity={o}/>
-    <path d="M12,48 Q8,58 16,58 L22,58 Q16,48 12,48" fill={a?"#4c1d95":"#3a3a3a"} opacity={o}/>
-    <path d="M48,48 Q52,58 44,58 L38,58 Q44,48 48,48" fill={a?"#4c1d95":"#3a3a3a"} opacity={o}/>
-    {a&&<><circle cx="40" cy="29" r="1.2" fill="#ede9fe"/>
-    <circle cx="46" cy="35" r="1.2" fill="#ede9fe"/></>}
-  </>),
-  Utilities: ({ a, o }) => (<>
-    <polygon points="34,4 16,32 26,32 22,58 46,26 34,26" fill={a?"#ca8a04":"#444"} opacity={o}/>
-    {a&&<><polygon points="34,4 16,32 26,32 22,58 46,26 34,26" fill="none" stroke="#fde68a" strokeWidth="2" opacity={0.3}/>
-    <polygon points="34,12 22,30 28,30 26,48 40,28 34,28" fill="#fef08a" opacity={0.25}/></>}
-  </>),
-  Healthcare: ({ a, o }) => (<>
-    <circle cx="30" cy="32" r="22" fill={a?"#991b1b":"#444"} opacity={o}/>
-    <circle cx="30" cy="32" r="18" fill={a?"#b04848":"#555"} opacity={o}/>
-    <rect x="24" y="18" width="12" height="28" rx="3" fill={a?"#fef2f2":"#666"} opacity={o}/>
-    <rect x="16" y="26" width="28" height="12" rx="3" fill={a?"#fef2f2":"#666"} opacity={o}/>
-    {a&&<circle cx="30" cy="32" r="18" fill="none" stroke="#fecaca" strokeWidth="1" opacity={0.4} strokeDasharray="3 2"/>}
-  </>),
-  Shopping: ({ a, o }) => (<>
-    <path d="M12,22 L10,56 Q10,58 12,58 L48,58 Q50,58 50,56 L48,22 Z" fill={a?"#be123c":"#444"} opacity={o}/>
-    <path d="M20,22 Q20,8 30,8 Q40,8 40,22" stroke={a?"#fda4af":"#555"} strokeWidth="3" fill="none" opacity={o}/>
-    {a&&<><path d="M20,22 Q20,8 30,8 Q40,8 40,22" stroke="#fecdd3" strokeWidth="1.5" fill="none" opacity={0.3}/>
-    <circle cx="30" cy="38" r="6" fill="#fecdd3" opacity={0.9}/>
-    <circle cx="30" cy="38" r="3" fill="#be123c" opacity={0.8}/>
-    <rect x="16" y="46" width="28" height="1" fill="#fda4af" opacity={0.3}/></>}
-    {!a&&<circle cx="30" cy="38" r="5" fill="#555" opacity={o}/>}
-  </>),
-  Education: ({ a, o }) => (<>
-    <polygon points="30,12 2,28 30,44 58,28" fill={a?"#1e40af":"#444"} opacity={o}/>
-    <polygon points="30,16 8,28 30,40 52,28" fill={a?"#2563eb":"#555"} opacity={o}/>
-    <path d="M18,32 L18,48 Q18,52 30,54 Q42,52 42,48 L42,32" fill={a?"#1d4ed8":"#555"} opacity={o}/>
-    {a&&<path d="M18,32 L18,48 Q18,52 30,54 Q42,52 42,48 L42,32" fill="none" stroke="#60a5fa" strokeWidth="1" opacity={0.4}/>}
-    <line x1="52" y1="28" x2="52" y2="54" stroke={a?"#d4b85c":"#555"} strokeWidth="2.5" opacity={o}/>
-    <circle cx="52" cy="56" r="3.5" fill={a?"#d4b85c":"#555"} opacity={o}/>
-    {a&&<circle cx="52" cy="56" r="1.5" fill="#c9a84c" opacity={0.8}/>}
-  </>),
-  Other: ({ a, o }) => (<>
-    <circle cx="30" cy="32" r="20" fill={a?"#4a4460":"#444"} opacity={o}/>
-    <circle cx="30" cy="32" r="15" fill={a?"#68627a":"#555"} opacity={o}/>
-    <circle cx="22" cy="30" r="2.5" fill={a?"#d1d5db":"#666"} opacity={o}/>
-    <circle cx="30" cy="30" r="2.5" fill={a?"#d1d5db":"#666"} opacity={o}/>
-    <circle cx="38" cy="30" r="2.5" fill={a?"#d1d5db":"#666"} opacity={o}/>
-    {a&&<circle cx="30" cy="32" r="20" fill="none" stroke="#9ca3af" strokeWidth="1" opacity={0.3} strokeDasharray="4 3"/>}
-  </>),
-};
-
-// ─── SCENE COMPONENT ───
-function FinancialScene({ type, data, categories, Icons, t, catNames, mode }) {
-  const total = data.reduce((s, e) => s + e.amount, 0);
-  const catData = {};
-  categories.forEach(c => { catData[c] = 0; });
-  data.forEach(e => {
-    const cat = e.category || "Other";
+// ─── EMOJI-BASED FINANCIAL BREAKDOWN ───
+function FinancialScene({ type, data, categories, catEmojis, t, catNames, mode }) {
+  var isE = type === "earning";
+  var dk = mode === "dark";
+  var total = data.reduce(function(s, e) { return s + e.amount; }, 0);
+  var catData = {};
+  categories.forEach(function(c) { catData[c] = 0; });
+  data.forEach(function(e) {
+    var cat = e.category || "Other";
     if (catData[cat] !== undefined) catData[cat] += e.amount;
-    else catData["Other"] += e.amount;
+    else if (catData["Other"] !== undefined) catData["Other"] += e.amount;
   });
-  const catList = categories.map(c => ({
-    name: c, amount: catData[c],
-    pct: total > 0 ? (catData[c] / total) * 100 : 0,
-    active: catData[c] > 0,
-  }));
-
-  const isE = type === "earning";
-  const dk = mode === "dark";
-  const cols = categories.length;
-  const spacing = 680 / cols;
-  const fmt = (n) => n.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-
-  // Generate scene-specific particles
-  const particles = useMemo(() => Array.from({ length: 35 }, (_, i) => ({
-    x: (i * 19.4 + 7) % 680,
-    y: 6 + ((i * 13 + 5) % 80),
-    r: 0.6 + (i % 4) * 0.5,
-    delay: (i * 0.3) % 4,
-    speed: 2 + (i % 3),
-  })), []);
-
-  const sceneCSS = "@keyframes float-" + type + " { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-4px)} } " +
-    "@keyframes twinkle-" + type + " { 0%,100%{opacity:0.15} 50%{opacity:0.8} } " +
-    ".scene-icon-" + type + " { transition: filter 0.6s ease, opacity 0.6s ease; } " +
-    ".scene-icon-" + type + ".inactive { filter: grayscale(100%) brightness(0.5); } " +
-    ".scene-icon-" + type + ".active { filter: none; }";
+  var catList = categories.map(function(c) {
+    return { name: c, amount: catData[c] || 0, pct: total > 0 ? ((catData[c] || 0) / total) * 100 : 0, active: (catData[c] || 0) > 0 };
+  }).sort(function(a, b) { return b.amount - a.amount; });
+  var fmt = function(n) { return n.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 }); };
+  var accentColor = isE ? "var(--earn)" : "var(--spend)";
 
   return (
     <div style={{
-      borderRadius: 14, overflow: "hidden", border: "1px solid #2a2440",
-      marginBottom: 16, background: "var(--bg3)", position: "relative",
+      borderRadius: 14, overflow: "hidden", border: "1px solid var(--border)",
+      marginBottom: 16, background: "var(--bg2)", position: "relative",
     }}>
-      <style>{sceneCSS}</style>
-      <div style={{ padding: "12px 16px 0", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <h3 style={{ margin: 0, fontSize: 15, fontWeight: 700, color: isE ? "#7eb87d" : "#d4776a" }}>
-          {isE ? "↗ " + t.earningsBreakdown : "↘ " + t.expensesBreakdown}
+      <div style={{ padding: "16px 16px 8px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <h3 style={{ margin: 0, fontSize: 15, fontWeight: 700, color: accentColor }}>
+          {isE ? t.earningsBreakdown : t.expensesBreakdown}
         </h3>
         <span style={{ fontSize: 13, color: "var(--textMuted)", fontFamily: "'Space Mono', monospace" }}>
           {t.total}: ${fmt(total)}
         </span>
       </div>
 
-      <svg viewBox="0 0 680 245" style={{ width: "100%", display: "block" }}>
-        <defs>
-          <linearGradient id={"sky-" + type} x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor={dk ? (isE ? "#0f1a0f" : "#0c0a1a") : (isE ? "#d8ece8" : "#f5e8ee")}/>
-            <stop offset="60%" stopColor={dk ? (isE ? "#2a4a2a" : "#1e1b4b") : (isE ? "#c0ddd8" : "#e8d0e0")}/>
-            <stop offset="100%" stopColor={dk ? (isE ? "#065f46" : "#312e81") : (isE ? "#a8d0c8" : "#d8b8d0")}/>
-          </linearGradient>
-          <radialGradient id={"moon-" + type}><stop offset="0%" stopColor={isE?"#c8dcc8":"#c7d2fe"}/><stop offset="100%" stopColor={isE?"#a3d4a2":"#c9a0dc"} stopOpacity="0"/></radialGradient>
-        </defs>
-        <rect width="680" height="245" fill={"url(#sky-" + type + ")"}/>
-
-        {/* Moon / Sun */}
-        <circle cx={isE ? 600 : 80} cy="40" r="16" fill={isE ? "#b0ccb0" : "#c7d2fe"} opacity={total > 0 ? 0.9 : 0.2} style={{ transition: "opacity 1s ease" }}/>
-        <circle cx={isE ? 600 : 80} cy="40" r="30" fill={"url(#moon-" + type + ")"} opacity={total > 0 ? 0.3 : 0.05} style={{ transition: "opacity 1s ease" }}/>
-
-        {/* Stars / particles */}
-        {particles.map((p, i) => (
-          <circle key={i} cx={p.x} cy={p.y} r={p.r}
-            fill={total > 0 ? (isE ? "#a3d4a2" : "#a8a0cc") : (dk ? "#2e2a3a" : "#e0d4c8")}
-            opacity={total > 0 ? 0.3 : 0.1}
-            style={{ animation: total > 0 ? "twinkle-" + type + " " + p.speed + "s ease-in-out " + p.delay + "s infinite" : "none", transition: "fill 1s ease" }}
-          />
-        ))}
-
-        {/* Hills / background landscape */}
-        <ellipse cx="120" cy="180" rx="160" ry="30" fill={dk ? (isE ? "#053b2e" : "#1a1640") : (isE ? "#b8d8d0" : "#e0c8d8")} opacity={total > 0 ? 0.6 : 0.2} style={{ transition: "opacity 0.8s ease" }}/>
-        <ellipse cx="480" cy="182" rx="200" ry="25" fill={dk ? (isE ? "#042f26" : "#171340") : (isE ? "#c0ddd4" : "#e8d0dc")} opacity={total > 0 ? 0.5 : 0.15} style={{ transition: "opacity 0.8s ease" }}/>
-        <ellipse cx="340" cy="178" rx="280" ry="20" fill={dk ? (isE ? "#2a4a2a" : "#1e1b4b") : (isE ? "#d0e8e0" : "#f0d8e8")} opacity={total > 0 ? 0.4 : 0.1} style={{ transition: "opacity 0.8s ease" }}/>
-
-        {/* Ground plane */}
-        <rect x="0" y="175" width="680" height="70" fill={total > 0 ? (dk ? (isE ? "#2a4a2a" : "#1e1b4b") : (isE ? "#c8e0d8" : "#edd0e0")) : (dk ? "#151525" : "#e8ddd0")} style={{ transition: "fill 0.8s ease" }}/>
-        <rect x="0" y="175" width="680" height="2" fill={total > 0 ? (isE ? "#7eb87d" : "#c9a0dc") : (dk ? "#222" : "#e0d0c0")} opacity={total > 0 ? 0.15 : 0.05} style={{ transition: "opacity 0.8s ease" }}/>
-
-        {/* Category icons */}
-        {catList.map((cat, i) => {
-          const Icon = Icons[cat.name];
-          if (!Icon) return null;
-          const iconScale = 0.9;
-          const x = spacing * i + spacing / 2 - 30;
-          const y = 105;
-          const op = cat.active ? Math.max(0.7, Math.min(1, 0.6 + cat.pct / 100)) : 0.2;
-
+      <div style={{ padding: "8px 16px 16px" }}>
+        {catList.map(function(cat) {
+          var emoji = catEmojis[cat.name] || "📦";
+          var displayName = catNames[cat.name] || cat.name;
+          var barColor = cat.active ? accentColor : "var(--border)";
           return (
-            <g key={cat.name}>
-
-              {/* Floating animation wrapper */}
-              <g style={{
-                animation: cat.active ? "float-" + type + " " + (7 + i % 3) + "s ease-in-out " + (i * 0.5) + "s infinite" : "none",
-              }}>
-                <g
-                  className={"scene-icon-" + type + " " + (cat.active ? "active" : "inactive")}
-                  transform={"translate(" + x + ", " + y + ") scale(" + iconScale + ")"}
-                >
-                  <Icon a={cat.active} o={op}/>
-                </g>
-              </g>
-
-              {/* Label */}
-              <text x={x + 30} y={192} textAnchor="middle"
-                fill={cat.active ? (isE ? "#a3d4a2" : "#c7d2fe") : (dk ? "#3d3850" : "#c8b8c0")}
-                fontSize="9" fontWeight={cat.active ? "600" : "400"}
-                style={{ transition: "fill 0.5s ease" }}>
-                {catNames[cat.name] || cat.name}
-              </text>
-
-              {/* Percentage */}
-              <text x={x + 30} y={204} textAnchor="middle"
-                fill={cat.active ? (isE ? "#7eb87d" : "#c9a0dc") : (dk ? "#2a2834" : "#d0c0c8")}
-                fontSize={cat.active ? "11" : "9"} fontWeight="700" fontFamily="'Space Mono', monospace"
-                style={{ transition: "all 0.5s ease" }}>
-                {cat.active ? cat.pct.toFixed(1) + "%" : "0%"}
-              </text>
-
-              {/* Amount */}
-              <text x={x + 30} y={217} textAnchor="middle"
-                fill={cat.active ? "#9590a8" : "#2a2834"}
-                fontSize={cat.active ? "11" : "9"} fontWeight="500" fontFamily="'Space Mono', monospace"
-                style={{ transition: "all 0.5s ease" }}>
-                {cat.active ? "$" + fmt(cat.amount) : ""}
-              </text>
-            </g>
+            <div key={cat.name} style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 10, opacity: cat.active ? 1 : 0.35, transition: "opacity 0.5s ease" }}>
+              <div style={{
+                width: 36, height: 36, borderRadius: 10, display: "flex", alignItems: "center", justifyContent: "center",
+                fontSize: 18, background: cat.active ? (dk ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.04)") : "transparent",
+                transition: "background 0.3s ease",
+              }}>{emoji}</div>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 3 }}>
+                  <span style={{ fontSize: 12, fontWeight: 600, color: "var(--text)" }}>{displayName}</span>
+                  <div style={{ textAlign: "right" }}>
+                    <span style={{ fontSize: 12, fontFamily: "'Space Mono', monospace", fontWeight: 600, color: cat.active ? accentColor : "var(--textMuted)" }}>
+                      ${fmt(cat.amount)}
+                    </span>
+                    <span style={{ fontSize: 10, color: "var(--textMuted)", marginLeft: 6 }}>
+                      {cat.pct.toFixed(1)}%
+                    </span>
+                  </div>
+                </div>
+                <div style={{ width: "100%", height: 5, borderRadius: 3, background: dk ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.06)", overflow: "hidden" }}>
+                  <div style={{
+                    width: cat.pct + "%", height: "100%", borderRadius: 3,
+                    background: cat.active ? (isE ? "var(--gradEarn)" : "var(--gradAccent)") : "transparent",
+                    transition: "width 0.8s ease",
+                  }}/>
+                </div>
+              </div>
+            </div>
           );
         })}
-      </svg>
+      </div>
     </div>
   );
 }
+
 
 
 // ─── MAIN APP ───
@@ -745,19 +572,60 @@ export default function ExpenseTracker() {
 
   const [earnAmount, setEarnAmount] = useState("");
   const [earnLabel, setEarnLabel] = useState("");
-  const [earnCategory, setEarnCategory] = useState(EARN_CATEGORIES[0]);
+  const [earnCategory, setEarnCategory] = useState(earnCatNames[0] || "Salary");
   const todayStr = new Date().toISOString().split("T")[0];
   const [earnDate, setEarnDate] = useState(todayStr);
 
   const [expAmount, setExpAmount] = useState("");
-  const [expCategory, setExpCategory] = useState(EXP_CATEGORIES[0]);
+  const [expCategory, setExpCategory] = useState(expCatNames[0] || "Food");
   const [expLabel, setExpLabel] = useState("");
   const [expDate, setExpDate] = useState(todayStr);
 
   // Budgets
+  const [customEarnCats, setCustomEarnCats] = useState(() => loadData("earnCats", DEFAULT_EARN_CATS));
+  const [customExpCats, setCustomExpCats] = useState(() => loadData("expCats", DEFAULT_EXP_CATS));
+  const [newCatName, setNewCatName] = useState("");
+  const [newCatType, setNewCatType] = useState("expense");
+  const [showCatManager, setShowCatManager] = useState(false);
+  const earnCatNames = customEarnCats.map(function(c) { return c.name; });
+  const expCatNames = customExpCats.map(function(c) { return c.name; });
+  const earnCatEmoji = {};
+  customEarnCats.forEach(function(c) { earnCatEmoji[c.name] = c.emoji; });
+  const expCatEmoji = {};
+  customExpCats.forEach(function(c) { expCatEmoji[c.name] = c.emoji; });
+
+  const addCustomCat = () => {
+    if (!newCatName.trim()) return;
+    var emoji = matchCatEmoji(newCatName) || "📌";
+    var cat = { name: newCatName.trim(), emoji: emoji };
+    if (newCatType === "earning") {
+      var next = [].concat(customEarnCats, [cat]);
+      setCustomEarnCats(next);
+      saveData("earnCats", next);
+    } else {
+      var next2 = [].concat(customExpCats, [cat]);
+      setCustomExpCats(next2);
+      saveData("expCats", next2);
+    }
+    setNewCatName("");
+  };
+
+  const removeCustomCat = (type, name) => {
+    if (name === "Other" || name === "Adjustment") return;
+    if (type === "earning") {
+      var next = customEarnCats.filter(function(c) { return c.name !== name; });
+      setCustomEarnCats(next);
+      saveData("earnCats", next);
+    } else {
+      var next2 = customExpCats.filter(function(c) { return c.name !== name; });
+      setCustomExpCats(next2);
+      saveData("expCats", next2);
+    }
+  };
+
   const [budgetEntries, setBudgetEntries] = useState(() => loadData("budgets", []));
   const [budgetLabel, setBudgetLabel] = useState("");
-  const [budgetCategory, setBudgetCategory] = useState(EXP_CATEGORIES[0]);
+  const [budgetCategory, setBudgetCategory] = useState(expCatNames[0] || "Food");
   const [budgetAmount, setBudgetAmount] = useState("");
   const [budgetScope, setBudgetScope] = useState("current"); // "current" or "all"
   const [editingBudgetId, setEditingBudgetId] = useState(null);
@@ -1176,9 +1044,11 @@ export default function ExpenseTracker() {
     setStartingBalance(""); setEditingBalance(false); setOnboarded(false);
     setAllYearData({ [CURRENT_YEAR]: defaultYearData() });
     setBudgetEntries([]); setGoals([]); setFroggyBalance(0); setFroggyHistory([]);
+    setCustomEarnCats(DEFAULT_EARN_CATS); setCustomExpCats(DEFAULT_EXP_CATS);
     setUndoStack([]);
     saveData("balance", ""); saveData("onboarded", false); saveData("yearData", { [CURRENT_YEAR]: defaultYearData() });
     saveData("budgets", []); saveData("goals", []); saveData("froggy", 0); saveData("froggyHistory", []);
+    saveData("earnCats", DEFAULT_EARN_CATS); saveData("expCats", DEFAULT_EXP_CATS);
     setShowResetConfirm(false);
     setUndoMessage(lang === "zh" ? "已重置所有数据" : "All data has been reset");
     if (undoTimerRef.current) clearTimeout(undoTimerRef.current);
@@ -1250,7 +1120,7 @@ export default function ExpenseTracker() {
       return { ...prev, [targetYear]: yd };
     });
     if (targetYear !== selectedYear) setSelectedYear(targetYear);
-    setExpAmount(""); setExpLabel(""); setExpCategory(EXP_CATEGORIES[0]); setExpDate(todayStr);
+    setExpAmount(""); setExpLabel(""); setExpCategory(expCatNames[0] || "Food"); setExpDate(todayStr);
   };
 
   const removeEarning = (id) => {
@@ -1446,7 +1316,7 @@ export default function ExpenseTracker() {
                         <div style={{ display: "flex", gap: 4, flexWrap: "wrap" }}>
                           <input type="text" placeholder={t.earningLabel} value={earnLabel} onChange={e => setEarnLabel(e.target.value)} style={{ flex: "1 1 80px", padding: "7px 8px", borderRadius: 6, border: "1px solid var(--border)", background: "var(--bg3)", color: "var(--text)", fontSize: 11 }} />
                           <select value={earnCategory} onChange={e => setEarnCategory(e.target.value)} style={{ padding: "7px 4px", borderRadius: 6, border: "1px solid var(--border)", background: "var(--bg3)", color: "var(--text)", fontSize: 11 }}>
-                            {EARN_CATEGORIES.map(c => <option key={c} value={c}>{eCat[c] || c}</option>)}
+                            {earnCatNames.map(c => <option key={c} value={c}>{eCat[c] || c}</option>)}
                           </select>
                           <input type="number" placeholder="$" value={earnAmount} onChange={e => setEarnAmount(e.target.value)} style={{ width: 55, padding: "7px 6px", borderRadius: 6, border: "1px solid var(--border)", background: "var(--bg3)", color: "var(--text)", fontSize: 11, fontFamily: "'Space Mono', monospace" }} />
                           <input type="date" value={earnDate} onChange={e => setEarnDate(e.target.value)} style={{ padding: "7px 4px", borderRadius: 6, border: "1px solid var(--border)", background: "var(--bg3)", color: "var(--text)", fontSize: 10 }} />
@@ -1459,7 +1329,7 @@ export default function ExpenseTracker() {
                         <div style={{ display: "flex", gap: 4, flexWrap: "wrap" }}>
                           <input type="text" placeholder={t.expenseLabel} value={expLabel} onChange={e => setExpLabel(e.target.value)} style={{ flex: "1 1 80px", padding: "7px 8px", borderRadius: 6, border: "1px solid var(--border)", background: "var(--bg3)", color: "var(--text)", fontSize: 11 }} />
                           <select value={expCategory} onChange={e => setExpCategory(e.target.value)} style={{ padding: "7px 4px", borderRadius: 6, border: "1px solid var(--border)", background: "var(--bg3)", color: "var(--text)", fontSize: 11 }}>
-                            {EXP_CATEGORIES.map(c => <option key={c} value={c}>{xCat[c] || c}</option>)}
+                            {expCatNames.map(c => <option key={c} value={c}>{xCat[c] || c}</option>)}
                           </select>
                           <input type="number" placeholder="$" value={expAmount} onChange={e => setExpAmount(e.target.value)} style={{ width: 55, padding: "7px 6px", borderRadius: 6, border: "1px solid var(--border)", background: "var(--bg3)", color: "var(--text)", fontSize: 11, fontFamily: "'Space Mono', monospace" }} />
                           <input type="date" value={expDate} onChange={e => setExpDate(e.target.value)} style={{ padding: "7px 4px", borderRadius: 6, border: "1px solid var(--border)", background: "var(--bg3)", color: "var(--text)", fontSize: 10 }} />
@@ -1681,6 +1551,90 @@ export default function ExpenseTracker() {
           </div>
         )}
 
+        {/* ─── CATEGORY MANAGER ─── */}
+        <div style={{ padding: 14, borderRadius: 14, background: "var(--bg2)", border: "1px solid var(--border)", marginBottom: 16 }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", cursor: "pointer" }} onClick={() => setShowCatManager(!showCatManager)}>
+            <h3 style={{ margin: 0, fontSize: 14, fontWeight: 700, color: "var(--lav)", display: "flex", alignItems: "center", gap: 8 }}>
+              <span style={{ fontSize: 16 }}>🏷️</span> {t.manageCategories}
+            </h3>
+            <span style={{ fontSize: 14, color: "var(--textMuted)", transform: showCatManager ? "rotate(180deg)" : "none", transition: "transform 0.2s ease" }}>▼</span>
+          </div>
+
+          {showCatManager && (
+            <div style={{ marginTop: 14 }}>
+              {/* Add new category */}
+              <div style={{ display: "flex", gap: 6, marginBottom: 14, flexWrap: "wrap" }}>
+                <input type="text" placeholder={t.categoryName} value={newCatName}
+                  onChange={e => setNewCatName(e.target.value)}
+                  onKeyDown={e => { if (e.key === "Enter") addCustomCat(); }}
+                  style={{ flex: "1 1 120px", padding: "8px 10px", borderRadius: 6, border: "1px solid var(--border)", background: "var(--bg3)", color: "var(--text)", fontSize: 12 }} />
+                <select value={newCatType} onChange={e => setNewCatType(e.target.value)}
+                  style={{ padding: "8px 8px", borderRadius: 6, border: "1px solid var(--border)", background: "var(--bg3)", color: "var(--text)", fontSize: 12 }}>
+                  <option value="expense">{t.expenseCat}</option>
+                  <option value="earning">{t.earningCat}</option>
+                </select>
+                {newCatName && (
+                  <span style={{ padding: "8px 0", fontSize: 11, color: "var(--textSub)" }}>
+                    {matchCatEmoji(newCatName) || "📌"}
+                  </span>
+                )}
+                <button onClick={addCustomCat} style={{
+                  padding: "8px 14px", borderRadius: 6, border: "none", cursor: "pointer",
+                  background: "var(--gradAccent)", color: "var(--btnText)", fontSize: 12, fontWeight: 700,
+                }}>+ {t.addCategory}</button>
+              </div>
+
+              {/* Earning categories */}
+              <div style={{ marginBottom: 12 }}>
+                <div style={{ fontSize: 11, fontWeight: 600, color: "var(--earn)", marginBottom: 6 }}>↗ {t.earningCat}</div>
+                <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+                  {customEarnCats.map(function(cat) {
+                    var isDefault = DEFAULT_EARN_CATS.some(function(d) { return d.name === cat.name; });
+                    return (
+                      <div key={cat.name} style={{
+                        display: "flex", alignItems: "center", gap: 4, padding: "4px 10px",
+                        borderRadius: 6, background: "var(--bg3)", border: "1px solid var(--border)",
+                        fontSize: 11, color: "var(--text)",
+                      }}>
+                        <span>{cat.emoji}</span>
+                        <span>{eCat[cat.name] || cat.name}</span>
+                        {!isDefault && (
+                          <button onClick={() => removeCustomCat("earning", cat.name)}
+                            style={{ background: "none", border: "none", color: "var(--textMuted)", cursor: "pointer", fontSize: 12, padding: "0 2px" }}>×</button>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Expense categories */}
+              <div>
+                <div style={{ fontSize: 11, fontWeight: 600, color: "var(--spend)", marginBottom: 6 }}>↘ {t.expenseCat}</div>
+                <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+                  {customExpCats.map(function(cat) {
+                    var isDefault = DEFAULT_EXP_CATS.some(function(d) { return d.name === cat.name; });
+                    return (
+                      <div key={cat.name} style={{
+                        display: "flex", alignItems: "center", gap: 4, padding: "4px 10px",
+                        borderRadius: 6, background: "var(--bg3)", border: "1px solid var(--border)",
+                        fontSize: 11, color: "var(--text)",
+                      }}>
+                        <span>{cat.emoji}</span>
+                        <span>{xCat[cat.name] || cat.name}</span>
+                        {!isDefault && (
+                          <button onClick={() => removeCustomCat("expense", cat.name)}
+                            style={{ background: "none", border: "none", color: "var(--textMuted)", cursor: "pointer", fontSize: 12, padding: "0 2px" }}>×</button>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+
         {/* ─── BUDGET CONTROL ─── */}
         <div style={{ padding: 16, borderRadius: 14, background: "var(--bg2)", border: "1px solid var(--border)", marginBottom: 20 }}>
           <h3 style={{ margin: "0 0 14px", fontSize: 15, fontWeight: 700, color: "var(--lav)", display: "flex", alignItems: "center", gap: 8 }}>
@@ -1694,7 +1648,7 @@ export default function ExpenseTracker() {
               style={{ flex: "1 1 160px", padding: "9px 12px", borderRadius: 8, border: "1px solid var(--border)", background: "var(--bg3)", color: "var(--text)", fontSize: 13 }} />
             <select value={budgetCategory} onChange={e => setBudgetCategory(e.target.value)}
               style={{ flex: "1 1 130px", padding: "9px 12px", borderRadius: 8, border: "1px solid var(--border)", background: "var(--bg3)", color: "var(--text)", fontSize: 13 }}>
-              {EXP_CATEGORIES.map(c => <option key={c} value={c}>{xCat[c] || c}</option>)}
+              {expCatNames.map(c => <option key={c} value={c}>{xCat[c] || c}</option>)}
             </select>
             <input type="number" placeholder={t.budgetLimit} value={budgetAmount} onChange={e => setBudgetAmount(e.target.value)}
               onKeyDown={e => { if (e.key === "Enter") addBudget(); }}
@@ -1746,20 +1700,22 @@ export default function ExpenseTracker() {
                   const isEditing = editingBudgetId === b.id;
 
                   return (
-                    <tr key={b.id + "-" + budgetMonth} style={{ borderBottom: "1px solid var(--border2)", background: i % 2 === 0 ? "transparent" : "rgba(51,65,85,0.3)", opacity: isLocked ? 0.7 : 1, transition: "opacity 0.3s ease" }}>
-                      <td className="status-cell" style={{ padding: "8px 10px", fontWeight: 500, verticalAlign: "middle" }}>
-                        {b.label}
-                        {isLocked && <span style={{ marginLeft: 6, fontSize: 10 }}>🔒</span>}
+                    <tr key={b.id + "-" + budgetMonth} style={{ borderBottom: "1px solid var(--border2)", background: i % 2 === 0 ? "transparent" : "var(--bgAlt)", opacity: isLocked ? 0.7 : 1, transition: "opacity 0.3s ease" }}>
+                      <td style={{ padding: "8px 10px", verticalAlign: "middle" }}>
+                        <div style={{ fontWeight: 500, whiteSpace: "nowrap" }}>
+                          {b.label}
+                          {isLocked && <span style={{ marginLeft: 6, fontSize: 10 }}>🔒</span>}
+                        </div>
                         <span style={{
-                          marginLeft: 6, padding: "1px 6px", borderRadius: 3, fontSize: 9, fontWeight: 600,
+                          display: "inline-block", marginTop: 3, padding: "1px 6px", borderRadius: 3, fontSize: 9, fontWeight: 600,
                           background: b.scope === "all" ? "rgba(201,168,76,0.15)" : "rgba(107,90,180,0.15)",
                           color: b.scope === "all" ? "#d4b85c" : "#a8a0cc",
                         }}>{b.scope === "all" ? t.allMonthsScope : (MONTHS_EN[b.scope] !== undefined ? MONTHS[b.scope] : MONTHS[budgetMonth])} {b.scopeYear || selectedYear}</span>
                       </td>
-                      <td style={{ padding: "8px 10px" }}>
-                        <span style={{ padding: "2px 8px", borderRadius: 4, fontSize: 11, fontWeight: 600, background: "rgba(155,126,200,0.15)", color: "#c9a0dc" }}>{xCat[b.category] || b.category}</span>
+                      <td style={{ padding: "8px 10px", verticalAlign: "middle" }}>
+                        <span style={{ padding: "2px 8px", borderRadius: 4, fontSize: 11, fontWeight: 600, background: "rgba(155,126,200,0.15)", color: "#c9a0dc" }}>{expCatEmoji[b.category] || ""} {xCat[b.category] || b.category}</span>
                       </td>
-                      <td style={{ padding: "8px 10px", fontFamily: "'Space Mono', monospace" }}>
+                      <td style={{ padding: "8px 10px", fontFamily: "'Space Mono', monospace", verticalAlign: "middle" }}>
                         {isEditing && !isLocked ? (
                           <div style={{ display: "flex", gap: 4 }}>
                             <input type="number" value={editingBudgetAmount} autoFocus
@@ -1776,10 +1732,10 @@ export default function ExpenseTracker() {
                           </span>
                         )}
                       </td>
-                      <td style={{ padding: "8px 10px", fontFamily: "'Space Mono', monospace", color: isOver ? "#d4776a" : "#9590a8", whiteSpace: "nowrap" }}>
+                      <td style={{ padding: "8px 10px", fontFamily: "'Space Mono', monospace", color: isOver ? "#d4776a" : "#9590a8", whiteSpace: "nowrap", verticalAlign: "middle" }}>
                         ${fmt(spent)}
                       </td>
-                      <td className="status-cell" style={{ padding: "8px 10px", minWidth: 160 }}>
+                      <td className="status-cell" style={{ padding: "8px 10px", minWidth: 160, verticalAlign: "middle" }}>
                         <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 3 }}>
                           <span style={{ fontSize: 9, color: "var(--textMuted)" }}>${fmt(spent)} {t.of} ${fmt(b.amount)} {t.spentWord}</span>
                           <span style={{ fontSize: 9, color: isOver ? "#d4776a" : "#7eb87d" }}>
@@ -1799,7 +1755,7 @@ export default function ExpenseTracker() {
                           {isLocked && <span style={{ fontSize: 9, color: "var(--gold)", fontWeight: 600 }}>{t.locked}</span>}
                         </div>
                       </td>
-                      <td style={{ padding: "8px 10px" }}>
+                      <td style={{ padding: "8px 10px", verticalAlign: "middle" }}>
                         <div style={{ display: "flex", gap: 4, alignItems: "center" }}>
                           <button onClick={() => toggleLockBudget(b.id)}
                             title={isLocked ? t.unlockResume : t.lockStop}
@@ -1820,11 +1776,11 @@ export default function ExpenseTracker() {
                 })}
                 {visibleBudgets.length > 0 && (
                   <tr style={{ borderTop: "2px solid var(--border)", fontWeight: 700 }}>
-                    <td style={{ padding: "10px 10px" }}>{t.total}</td>
+                    <td style={{ padding: "10px 10px", verticalAlign: "middle" }}>{t.total}</td>
                     <td></td>
-                    <td style={{ padding: "10px 10px", fontFamily: "'Space Mono', monospace", color: "var(--lav)" }}>${fmt(totalBudget)}</td>
-                    <td style={{ padding: "10px 10px", fontFamily: "'Space Mono', monospace", color: totalSpentInMonth > totalBudget ? "#d4776a" : "#9590a8" }}>${fmt(totalSpentInMonth)}</td>
-                    <td style={{ padding: "10px 10px" }}>
+                    <td style={{ padding: "10px 10px", fontFamily: "'Space Mono', monospace", color: "var(--lav)", verticalAlign: "middle" }}>${fmt(totalBudget)}</td>
+                    <td style={{ padding: "10px 10px", fontFamily: "'Space Mono', monospace", color: totalSpentInMonth > totalBudget ? "#d4776a" : "#9590a8", verticalAlign: "middle" }}>${fmt(totalSpentInMonth)}</td>
+                    <td style={{ padding: "10px 10px", verticalAlign: "middle" }}>
                       <span style={{
                         padding: "2px 8px", borderRadius: 4, fontSize: 10, fontWeight: 700,
                         background: totalSpentInMonth > totalBudget ? "rgba(231,100,163,0.15)" : "rgba(126,184,125,0.15)",
@@ -1842,8 +1798,8 @@ export default function ExpenseTracker() {
         </div>
 
         {/* Visual Scenes */}
-        <FinancialScene type="earning" data={currentTableData.earnings} categories={EARN_CATEGORIES} Icons={EarnIcons} t={t} catNames={eCat} mode={mode} />
-        <FinancialScene type="expense" data={currentTableData.expenses} categories={EXP_CATEGORIES} Icons={ExpIcons} t={t} catNames={xCat} mode={mode} />
+        <FinancialScene type="earning" data={currentTableData.earnings} categories={earnCatNames} catEmojis={earnCatEmoji} t={t} catNames={eCat} mode={mode} />
+        <FinancialScene type="expense" data={currentTableData.expenses} categories={expCatNames} catEmojis={expCatEmoji} t={t} catNames={xCat} mode={mode} />
 
         {/* ─── GOALS & FROGGY BANK ─── */}
         <div className="mobile-stack" style={{ display: "flex", flexWrap: "wrap", gap: 16, marginBottom: 20, alignItems: "start" }}>
@@ -2424,7 +2380,7 @@ export default function ExpenseTracker() {
           <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 14 }}>
             <input placeholder={t.earningLabel} value={earnLabel} onChange={e => setEarnLabel(e.target.value)} style={{ flex: "1 1 140px", padding: "9px 12px", borderRadius: 8, border: "1px solid var(--border)", background: "var(--bg3)", color: "var(--text)", fontSize: 13 }} />
             <select value={earnCategory} onChange={e => setEarnCategory(e.target.value)} style={{ flex: "1 1 120px", padding: "9px 12px", borderRadius: 8, border: "1px solid var(--border)", background: "var(--bg3)", color: "var(--text)", fontSize: 13 }}>
-              {EARN_CATEGORIES.map(c => <option key={c} value={c}>{eCat[c] || c}</option>)}
+              {earnCatNames.map(c => <option key={c} value={c}>{eCat[c] || c}</option>)}
             </select>
             <input type="number" placeholder={t.amountDollar} value={earnAmount} onChange={e => setEarnAmount(e.target.value)} style={{ flex: "1 1 120px", padding: "9px 12px", borderRadius: 8, border: "1px solid var(--border)", background: "var(--bg3)", color: "var(--text)", fontSize: 13, fontFamily: "'Space Mono', monospace" }} />
             <input type="date" value={earnDate} max={todayStr} onChange={e => setEarnDate(e.target.value)} style={{ flex: "1 1 130px", padding: "9px 12px", borderRadius: 8, border: "1px solid var(--border)", background: "var(--bg3)", color: "var(--text)", fontSize: 13, fontFamily: "'Space Mono', monospace" }} />
@@ -2444,7 +2400,7 @@ export default function ExpenseTracker() {
                   <tr key={e.id} style={{ borderBottom: "1px solid var(--border2)", background: i % 2 === 0 ? "transparent" : "rgba(51,65,85,0.3)" }}>
                     <td style={{ padding: "8px 10px", fontFamily: "'Space Mono', monospace", fontSize: 12, color: "var(--textSub)", verticalAlign: "middle", whiteSpace: "nowrap" }}>{e.date || "—"}</td>
                     <td style={{ padding: "8px 10px", fontWeight: 500, verticalAlign: "middle" }}>{e.label}</td>
-                    <td style={{ padding: "8px 10px" }}><span style={{ padding: "2px 8px", borderRadius: 4, fontSize: 11, fontWeight: 600, background: "rgba(126,184,125,0.15)", color: "var(--pos)" }}>{xCat[e.category] || eCat[e.category] || e.category}</span></td>
+                    <td style={{ padding: "8px 10px" }}><span style={{ padding: "2px 8px", borderRadius: 4, fontSize: 11, fontWeight: 600, background: "rgba(126,184,125,0.15)", color: "var(--pos)" }}>{earnCatEmoji[e.category] || expCatEmoji[e.category] || ""} {xCat[e.category] || eCat[e.category] || e.category}</span></td>
                     <td style={{ padding: "8px 10px", fontFamily: "'Space Mono', monospace", color: "var(--pos)", whiteSpace: "nowrap" }}>+${fmt(e.amount)}</td>
                     <td style={{ padding: "8px 10px" }}><button onClick={() => removeEarning(e.id)} style={{ background: "none", border: "none", color: "var(--textMuted)", cursor: "pointer", fontSize: 16 }}>×</button></td>
                   </tr>
@@ -2468,7 +2424,7 @@ export default function ExpenseTracker() {
           <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 14 }}>
             <input placeholder={t.expenseLabel} value={expLabel} onChange={e => setExpLabel(e.target.value)} style={{ flex: "1 1 140px", padding: "9px 12px", borderRadius: 8, border: "1px solid var(--border)", background: "var(--bg3)", color: "var(--text)", fontSize: 13 }} />
             <select value={expCategory} onChange={e => setExpCategory(e.target.value)} style={{ flex: "1 1 120px", padding: "9px 12px", borderRadius: 8, border: "1px solid var(--border)", background: "var(--bg3)", color: "var(--text)", fontSize: 13 }}>
-              {EXP_CATEGORIES.map(c => <option key={c} value={c}>{xCat[c] || c}</option>)}
+              {expCatNames.map(c => <option key={c} value={c}>{xCat[c] || c}</option>)}
             </select>
             <input type="number" placeholder={t.amountDollar} value={expAmount} onChange={e => setExpAmount(e.target.value)} style={{ flex: "1 1 120px", padding: "9px 12px", borderRadius: 8, border: "1px solid var(--border)", background: "var(--bg3)", color: "var(--text)", fontSize: 13, fontFamily: "'Space Mono', monospace" }} />
             <input type="date" value={expDate} max={todayStr} onChange={e => setExpDate(e.target.value)} style={{ flex: "1 1 130px", padding: "9px 12px", borderRadius: 8, border: "1px solid var(--border)", background: "var(--bg3)", color: "var(--text)", fontSize: 13, fontFamily: "'Space Mono', monospace" }} />
@@ -2488,7 +2444,7 @@ export default function ExpenseTracker() {
                   <tr key={e.id} style={{ borderBottom: "1px solid var(--border2)", background: i % 2 === 0 ? "transparent" : "rgba(51,65,85,0.3)" }}>
                     <td style={{ padding: "8px 10px", fontFamily: "'Space Mono', monospace", fontSize: 12, color: "var(--textSub)", verticalAlign: "middle", whiteSpace: "nowrap" }}>{e.date || "—"}</td>
                     <td style={{ padding: "8px 10px", fontWeight: 500, verticalAlign: "middle" }}>{e.label}</td>
-                    <td style={{ padding: "8px 10px" }}><span style={{ padding: "2px 8px", borderRadius: 4, fontSize: 11, fontWeight: 600, background: "rgba(107,90,180,0.15)", color: "#a8a0cc" }}>{xCat[e.category] || eCat[e.category] || e.category}</span></td>
+                    <td style={{ padding: "8px 10px" }}><span style={{ padding: "2px 8px", borderRadius: 4, fontSize: 11, fontWeight: 600, background: "rgba(107,90,180,0.15)", color: "#a8a0cc" }}>{expCatEmoji[e.category] || earnCatEmoji[e.category] || ""} {xCat[e.category] || eCat[e.category] || e.category}</span></td>
                     <td style={{ padding: "8px 10px", fontFamily: "'Space Mono', monospace", color: "var(--err)", whiteSpace: "nowrap" }}>-${fmt(e.amount)}</td>
                     <td style={{ padding: "8px 10px" }}><button onClick={() => removeExpense(e.id)} style={{ background: "none", border: "none", color: "var(--textMuted)", cursor: "pointer", fontSize: 16 }}>×</button></td>
                   </tr>
