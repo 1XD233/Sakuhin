@@ -148,6 +148,11 @@ const T = {
     addCorrection: "+ Correction",
     correctionHint: "Adjust if your calculated balance doesn't match reality",
     calculatedBalance: "Calculated Balance",
+    tabDashboard: "Dashboard",
+    tabBudget: "Budget",
+    tabBreakdown: "Breakdown",
+    tabGoals: "Goals",
+    tabRecords: "Records",
     manageCategories: "Manage Categories",
     addCategory: "Add Category",
     categoryName: "Category name",
@@ -298,6 +303,11 @@ const T = {
     addCorrection: "+ 校正",
     correctionHint: "当计算余额与实际不符时进行调整",
     calculatedBalance: "计算余额",
+    tabDashboard: "概览",
+    tabBudget: "预算",
+    tabBreakdown: "分析",
+    tabGoals: "目标",
+    tabRecords: "记录",
     manageCategories: "管理类别",
     addCategory: "添加类别",
     categoryName: "类别名称",
@@ -596,6 +606,8 @@ export default function ExpenseTracker() {
   const [newCatName, setNewCatName] = useState("");
   const [newCatType, setNewCatType] = useState("expense");
   const [showCatManager, setShowCatManager] = useState(false);
+  const [activeTab, setActiveTab] = useState("dashboard");
+  const [recordsSubTab, setRecordsSubTab] = useState("earning");
   const earnCatNames = customEarnCats.map(function(c) { return c.name; });
   const expCatNames = customExpCats.map(function(c) { return c.name; });
   const earnCatEmoji = {};
@@ -1224,7 +1236,16 @@ export default function ExpenseTracker() {
     "::-webkit-scrollbar { width: 6px; }",
     "::-webkit-scrollbar-track { background: transparent; }",
     "::-webkit-scrollbar-thumb { background: var(--scrollThumb); border-radius: 3px; }",
-    "@media (max-width: 600px) { .mobile-stack { flex-direction: column !important; } .mobile-full { flex: 1 1 100% !important; max-width: 100% !important; min-width: 0 !important; width: 100% !important; } }"
+    "@media (max-width: 600px) { .mobile-stack { flex-direction: column !important; } .mobile-full { flex: 1 1 100% !important; max-width: 100% !important; min-width: 0 !important; width: 100% !important; } }",
+    ".tab-bar { display: flex; gap: 2px; padding: 4px; border-radius: 12px; background: var(--bg3); overflow-x: auto; -webkit-overflow-scrolling: touch; }",
+    ".tab-bar::-webkit-scrollbar { display: none; }",
+    ".tab-btn { flex: 1; padding: 10px 6px; border: none; border-radius: 10px; cursor: pointer; font-size: 11px; font-weight: 600; white-space: nowrap; text-align: center; transition: all 0.25s ease; font-family: 'Noto Sans JP', sans-serif; }",
+    ".tab-btn-active { background: var(--gradAccent); color: var(--btnText); box-shadow: 0 2px 8px rgba(231,100,163,0.2); }",
+    ".tab-btn-inactive { background: transparent; color: var(--textMuted); }",
+    ".sub-tab { padding: 8px 20px; border: none; border-radius: 8px; cursor: pointer; font-size: 12px; font-weight: 600; transition: all 0.2s ease; font-family: 'Noto Sans JP', sans-serif; }",
+    ".sub-tab-active { background: var(--monthActive); color: var(--monthActiveText); }",
+    ".sub-tab-inactive { background: var(--monthInactive); color: var(--monthInactiveText); }",
+    ".tab-content { animation: fadeInUp 0.25s ease; }"
   ].join(" ");
 
   return (
@@ -1388,50 +1409,42 @@ export default function ExpenseTracker() {
       <div style={{ maxWidth: 1100, margin: "0 auto", width: "100%", minWidth: 0, position: "relative" }}>
         {/* Header */}
         <div style={{ marginBottom: 8 }}>
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 8 }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-              <div style={{ width: 36, height: 36, borderRadius: 9, background: "var(--gradAccent)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16, fontWeight: 700, color: "var(--btnText)", flexShrink: 0 }}>作</div>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 10, flexShrink: 0 }}>
+              <div style={{ width: 34, height: 34, borderRadius: 9, background: "var(--gradAccent)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 15, fontWeight: 700, color: "var(--btnText)", flexShrink: 0 }}>作</div>
               <div>
-                <h1 style={{ margin: 0, fontSize: 20, fontWeight: 700, fontFamily: "'Space Mono', monospace", letterSpacing: "-0.5px" }}>{t.moneyTracker}</h1>
-                <p style={{ margin: 0, fontSize: 10, color: "var(--textMuted)" }}>{lang === "zh" ? "个人财务追踪" : "Personal Finance Tracker"} · {selectedYear} · {isAll ? t.fullYear : MONTHS[selectedMonth]}</p>
+                <h1 style={{ margin: 0, fontSize: 18, fontWeight: 700, fontFamily: "'Space Mono', monospace", letterSpacing: "-0.5px" }}>{t.moneyTracker}</h1>
+                <p style={{ margin: 0, fontSize: 9, color: "var(--textMuted)" }}>{lang === "zh" ? "个人财务追踪" : "Personal Finance Tracker"}</p>
               </div>
             </div>
-            <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 4, flexWrap: "wrap", justifyContent: "flex-end" }}>
+              {/* Date picker */}
+              <input type="number" placeholder="Year" value={selectedYear} onChange={e => handleYearChange(e.target.value)}
+                style={{ width: 56, padding: "5px 4px", borderRadius: 6, border: "1px solid var(--border)", background: "var(--bg3)", color: "var(--text)", fontSize: 11, fontFamily: "'Space Mono', monospace", textAlign: "center" }} />
+              <select value={selectedMonth === "all" ? "all" : selectedMonth} onChange={e => setSelectedMonth(e.target.value === "all" ? "all" : parseInt(e.target.value))}
+                style={{ padding: "5px 4px", borderRadius: 6, border: "1px solid var(--border)", background: "var(--bg3)", color: "var(--text)", fontSize: 11 }}>
+                <option value="all">{t.all}</option>
+                {MONTHS.map((m, i) => <option key={i} value={i}>{m}</option>)}
+              </select>
               <button onClick={toggleMode} style={{
-                padding: "6px 10px", borderRadius: 6, border: "none", cursor: "pointer",
-                background: "var(--gradBtn)", color: "var(--spend)",
-                fontSize: 10, fontWeight: 600,
-              }}>
-                {mode === "dark" ? "🌸 Kanmei" : "🌙 Akana"}
-              </button>
-              <button onClick={() => setShowResetConfirm(true)} style={{
-                padding: "6px 10px", borderRadius: 6, border: "none", cursor: "pointer",
-                background: "var(--gradBtn)", color: "var(--textSub)", fontSize: 10, fontWeight: 600,
-              }}>
-                {lang === "zh" ? "重置" : "Reset"}
-              </button>
+                padding: "5px 8px", borderRadius: 6, border: "none", cursor: "pointer",
+                background: "var(--gradBtn)", color: "var(--spend)", fontSize: 10, fontWeight: 600,
+              }}>{mode === "dark" ? "🌸" : "🌙"}</button>
               <button onClick={() => updateLang(lang === "en" ? "zh" : "en")} style={{
-                padding: "6px 10px", borderRadius: 6, border: "none", cursor: "pointer",
-                background: "var(--gradGold)", color: "#fff",
-                fontSize: 10, fontWeight: 700,
-              }}>
-                {lang === "en" ? "中文" : "EN"}
-              </button>
+                padding: "5px 8px", borderRadius: 6, border: "none", cursor: "pointer",
+                background: "var(--gradBtn)", color: "var(--textSub)", fontSize: 10, fontWeight: 600,
+              }}>{lang === "en" ? "中" : "EN"}</button>
               {undoStack.length > 0 && (
                 <button onClick={undo} style={{
-                  padding: "6px 10px", borderRadius: 6,
-                  border: "none", cursor: "pointer",
-                  background: "var(--gradBtn)",
-                  color: "var(--text)", fontSize: 11, fontWeight: 700,
-                  display: "flex", alignItems: "center", gap: 4,
-                }}>
-                  ↩ {t.undo}
-                  <span style={{
-                    padding: "1px 5px", borderRadius: 4, background: "rgba(255,255,255,0.08)",
-                    fontSize: 10, fontFamily: "'Space Mono', monospace",
-                  }}>{undoStack.length}</span>
-                </button>
+                  padding: "5px 8px", borderRadius: 6, border: "none", cursor: "pointer",
+                  background: "var(--gradBtn)", color: "var(--text)", fontSize: 10, fontWeight: 600,
+                  display: "flex", alignItems: "center", gap: 3,
+                }}>↩ <span style={{ padding: "0 4px", borderRadius: 3, background: "rgba(255,255,255,0.08)", fontSize: 9 }}>{undoStack.length}</span></button>
               )}
+              <button onClick={() => setShowResetConfirm(true)} style={{
+                padding: "5px 8px", borderRadius: 6, border: "none", cursor: "pointer",
+                background: "var(--gradBtn)", color: "var(--textMuted)", fontSize: 10,
+              }}>✕</button>
             </div>
           </div>
         </div>
@@ -1464,8 +1477,49 @@ export default function ExpenseTracker() {
           </div>
         )}
 
+        {/* ═══ COMPACT BALANCE BAR (non-dashboard tabs only) ═══ */}
+        {activeTab !== "dashboard" && (
+        <div style={{ padding: "10px 16px", borderRadius: 10, background: "linear-gradient(135deg, var(--bg2) 0%, var(--bg3) 100%)", border: "1px solid var(--border)", marginBottom: 10, display: "flex", justifyContent: "space-between", alignItems: "center", gap: 8 }}>
+          <div>
+            <div style={{ fontSize: 8, color: "var(--textMuted)", textTransform: "uppercase", letterSpacing: 1 }}>{t.calculatedBalance}</div>
+            <div style={{ fontSize: 20, fontWeight: 700, fontFamily: "'Space Mono', monospace", color: balanceColor }}>{currentBalance < 0 ? "-" : ""}${fmt(Math.abs(currentBalance))}</div>
+          </div>
+          <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
+            <div style={{ textAlign: "center" }}>
+              <div style={{ fontSize: 8, color: "var(--textMuted)", textTransform: "uppercase" }}>{t.totalEarnings}</div>
+              <div style={{ fontSize: 12, fontWeight: 600, fontFamily: "'Space Mono', monospace", color: "var(--earn)" }}>+${fmt(totals.earnings)}</div>
+            </div>
+            <div style={{ textAlign: "center" }}>
+              <div style={{ fontSize: 8, color: "var(--textMuted)", textTransform: "uppercase" }}>{t.totalExpenses}</div>
+              <div style={{ fontSize: 12, fontWeight: 600, fontFamily: "'Space Mono', monospace", color: "var(--spend)" }}>-${fmt(totals.expenses)}</div>
+            </div>
+          </div>
+        </div>
+        )}
+
+        {/* ═══ TAB NAVIGATION ═══ */}
+        <div className="tab-bar" style={{ marginBottom: 14 }}>
+          {[
+            { key: "dashboard", label: t.tabDashboard, icon: "💰" },
+            { key: "budget", label: t.tabBudget, icon: "📊" },
+            { key: "breakdown", label: t.tabBreakdown, icon: "📈" },
+            { key: "goals", label: t.tabGoals, icon: "🎯" },
+            { key: "records", label: t.tabRecords, icon: "📋" },
+          ].map(function(tab) {
+            return (
+              <button key={tab.key} onClick={() => setActiveTab(tab.key)}
+                className={activeTab === tab.key ? "tab-btn tab-btn-active" : "tab-btn tab-btn-inactive"}>
+                {tab.icon} {tab.label}
+              </button>
+            );
+          })}
+        </div>
+
+        {/* ═══ TAB: DASHBOARD ═══ */}
+        {activeTab === "dashboard" && (
+        <div className="tab-content">
         {/* Balance */}
-        <div style={{ marginTop: 20, marginBottom: 20, padding: "28px 24px", background: "linear-gradient(135deg, var(--bg2) 0%, var(--bg3) 100%)", borderRadius: 16, border: "1px solid " + (currentBalance >= 0 ? "rgba(52,211,153,0.3)" : "rgba(248,113,113,0.3)"), textAlign: "center" }}>
+        <div style={{ marginTop: 0, marginBottom: 20, padding: "28px 24px", background: "linear-gradient(135deg, var(--bg2) 0%, var(--bg3) 100%)", borderRadius: 16, border: "1px solid " + (currentBalance >= 0 ? "rgba(52,211,153,0.3)" : "rgba(248,113,113,0.3)"), textAlign: "center" }}>
           <div style={{ fontSize: 11, color: "var(--textSub)", textTransform: "uppercase", letterSpacing: 2, marginBottom: 8 }}>
             {t.calculatedBalance}
           </div>
@@ -1548,29 +1602,12 @@ export default function ExpenseTracker() {
           </div>
         </div>
 
-        {/* Controls */}
-        <div style={{ display: "flex", flexDirection: "column", gap: 14, marginBottom: 24, padding: 16, background: "var(--bg2)", borderRadius: 12, border: "1px solid var(--border)" }}>
-          <div>
-            <label style={{ fontSize: 11, color: "var(--textSub)", textTransform: "uppercase", letterSpacing: 1, display: "block", marginBottom: 6 }}>{t.enterYear}</label>
-            <input type="number" placeholder="e.g. 2026" value={selectedYear} onChange={e => handleYearChange(e.target.value)}
-              style={{ width: "100%", maxWidth: 160, padding: "10px 12px", borderRadius: 8, border: "1px solid var(--border)", background: "var(--bg3)", color: "var(--text)", fontSize: 15, fontFamily: "'Space Mono', monospace" }} />
-          </div>
-          <div>
-            <label style={{ fontSize: 11, color: "var(--textSub)", textTransform: "uppercase", letterSpacing: 1, display: "block", marginBottom: 6 }}>{t.selectMonth}</label>
-            <div style={{ display: "flex", flexWrap: "wrap", gap: 4 }}>
-              <button onClick={() => setSelectedMonth("all")} style={{ padding: "7px 14px", borderRadius: 6, border: "none", cursor: "pointer", fontSize: 12, fontWeight: isAll ? 700 : 500, background: isAll ? "var(--monthAllActive)" : "var(--monthInactive)", color: isAll ? "var(--monthActiveText)" : "var(--monthInactiveText)" }}>{t.all}</button>
-              {MONTHS.map((m, i) => (
-                <button key={m} onClick={() => setSelectedMonth(i)} style={{ padding: "7px 10px", borderRadius: 6, border: "none", cursor: "pointer", fontSize: 12, fontWeight: selectedMonth === i ? 700 : 500, background: selectedMonth === i ? "var(--monthActive)" : "var(--monthInactive)", color: selectedMonth === i ? "var(--monthActiveText)" : "var(--monthInactiveText)" }}>{m}</button>
-              ))}
-            </div>
-          </div>
         </div>
-
-        {isAll && (
-          <div style={{ padding: "10px 14px", borderRadius: 8, marginBottom: 16, background: "rgba(251,191,36,0.1)", border: "1px solid rgba(251,191,36,0.3)", fontSize: 12, color: "var(--gold)" }}>
-            📌 {t.viewingAllMonths}
-          </div>
         )}
+
+        {/* ═══ TAB: BUDGET ═══ */}
+        {activeTab === "budget" && (
+        <div className="tab-content">
 
         {/* ─── CATEGORY MANAGER ─── */}
         <div style={{ padding: 14, borderRadius: 14, background: "var(--bg2)", border: "1px solid var(--border)", marginBottom: 16 }}>
@@ -1819,9 +1856,35 @@ export default function ExpenseTracker() {
         </div>
 
         {/* Visual Scenes */}
-        <FinancialScene type="earning" data={currentTableData.earnings} categories={earnCatNames} catEmojis={earnCatEmoji} t={t} catNames={eCat} mode={mode} />
-        <FinancialScene type="expense" data={currentTableData.expenses} categories={expCatNames} catEmojis={expCatEmoji} t={t} catNames={xCat} mode={mode} />
+        </div>
+        )}
 
+        {/* ═══ TAB: BREAKDOWN ═══ */}
+        {activeTab === "breakdown" && (
+        <div className="tab-content">
+        {/* Sub-tabs for Earnings/Expenses */}
+        <div style={{ display: "flex", gap: 6, marginBottom: 14 }}>
+          <button onClick={() => setRecordsSubTab("earning")}
+            className={recordsSubTab === "earning" ? "sub-tab sub-tab-active" : "sub-tab sub-tab-inactive"}>
+            {"↗ " + t.earnings}
+          </button>
+          <button onClick={() => setRecordsSubTab("expense")}
+            className={recordsSubTab === "expense" ? "sub-tab sub-tab-active" : "sub-tab sub-tab-inactive"}>
+            {"↘ " + t.expenses}
+          </button>
+        </div>
+        {recordsSubTab === "earning" && (
+        <FinancialScene type="earning" data={currentTableData.earnings} categories={earnCatNames} catEmojis={earnCatEmoji} t={t} catNames={eCat} mode={mode} />
+        )}
+        {recordsSubTab === "expense" && (
+        <FinancialScene type="expense" data={currentTableData.expenses} categories={expCatNames} catEmojis={expCatEmoji} t={t} catNames={xCat} mode={mode} />
+        )}
+        </div>
+        )}
+
+        {/* ═══ TAB: GOALS ═══ */}
+        {activeTab === "goals" && (
+        <div className="tab-content">
         {/* ─── GOALS & FROGGY BANK ─── */}
         <div className="mobile-stack" style={{ display: "flex", flexWrap: "wrap", gap: 16, marginBottom: 20, alignItems: "start" }}>
 
@@ -2392,7 +2455,25 @@ export default function ExpenseTracker() {
         </div>
 
         </div> {/* end goals & froggy grid */}
+        </div>
+        )}
 
+        {/* ═══ TAB: RECORDS ═══ */}
+        {activeTab === "records" && (
+        <div className="tab-content">
+        <div style={{ display: "flex", gap: 6, marginBottom: 14 }}>
+          <button onClick={() => setRecordsSubTab("earning")}
+            className={recordsSubTab === "earning" ? "sub-tab sub-tab-active" : "sub-tab sub-tab-inactive"}>
+            {"↗ " + t.earnings}
+          </button>
+          <button onClick={() => setRecordsSubTab("expense")}
+            className={recordsSubTab === "expense" ? "sub-tab sub-tab-active" : "sub-tab sub-tab-inactive"}>
+            {"↘ " + t.expenses}
+          </button>
+        </div>
+
+        {recordsSubTab === "earning" && (
+        <div>
         {/* Earnings Table */}
         <div style={{ padding: 16, borderRadius: 12, background: "var(--bg2)", border: "1px solid var(--border)", marginBottom: 16 }}>
           <h3 style={{ margin: "0 0 14px", fontSize: 15, fontWeight: 700, color: "var(--pos)", display: "flex", alignItems: "center", gap: 8 }}>
@@ -2437,6 +2518,11 @@ export default function ExpenseTracker() {
           </div>
         </div>
 
+        </div>
+        )}
+
+        {recordsSubTab === "expense" && (
+        <div>
         {/* Expenses Table */}
         <div style={{ padding: 16, borderRadius: 12, background: "var(--bg2)", border: "1px solid var(--border)", marginBottom: 24 }}>
           <h3 style={{ margin: "0 0 14px", fontSize: 15, fontWeight: 700, color: "var(--err)", display: "flex", alignItems: "center", gap: 8 }}>
@@ -2480,6 +2566,11 @@ export default function ExpenseTracker() {
             </table>
           </div>
         </div>
+
+        </div>
+        )}
+        </div>
+        )}
 
         <div style={{ textAlign: "center", fontSize: 10, color: "var(--textDark)", paddingTop: 12, paddingBottom: 20, letterSpacing: 1 }}>
           © 2026 1XD233 · Sakuhin · 作品 · MIT License
