@@ -606,8 +606,9 @@ export default function ExpenseTracker() {
   const [newCatName, setNewCatName] = useState("");
   const [newCatType, setNewCatType] = useState("expense");
   const [showCatManager, setShowCatManager] = useState(false);
-  const [activeTab, setActiveTab] = useState("dashboard");
+  const [activeTab, setActiveTab] = useState("budget");
   const [recordsSubTab, setRecordsSubTab] = useState("earning");
+  const [showDashboard, setShowDashboard] = useState(false);
   const earnCatNames = customEarnCats.map(function(c) { return c.name; });
   const expCatNames = customExpCats.map(function(c) { return c.name; });
   const earnCatEmoji = {};
@@ -1521,9 +1522,8 @@ export default function ExpenseTracker() {
           </div>
         )}
 
-        {/* ═══ COMPACT BALANCE BAR (non-dashboard tabs only) ═══ */}
-        {activeTab !== "dashboard" && (
-        <div style={{ padding: "10px 16px", borderRadius: 10, background: "linear-gradient(135deg, var(--bg2) 0%, var(--bg3) 100%)", border: "1px solid var(--border)", marginBottom: 10, display: "flex", justifyContent: "space-between", alignItems: "center", gap: 8 }}>
+        {/* ═══ COMPACT BALANCE BAR (always visible, tap to open dashboard) ═══ */}
+        <div onClick={() => setShowDashboard(true)} style={{ padding: "10px 16px", borderRadius: 10, background: "linear-gradient(135deg, var(--bg2) 0%, var(--bg3) 100%)", border: "1px solid var(--border)", marginBottom: 10, display: "flex", justifyContent: "space-between", alignItems: "center", gap: 8, cursor: "pointer", transition: "box-shadow 0.2s ease" }}>
           <div>
             <div style={{ fontSize: 8, color: "var(--textMuted)", textTransform: "uppercase", letterSpacing: 1 }}>{t.calculatedBalance}</div>
             <div style={{ fontSize: 20, fontWeight: 700, fontFamily: "'Space Mono', monospace", color: balanceColor }}>{currentBalance < 0 ? "-" : ""}${fmt(Math.abs(currentBalance))}</div>
@@ -1538,13 +1538,12 @@ export default function ExpenseTracker() {
               <div style={{ fontSize: 12, fontWeight: 600, fontFamily: "'Space Mono', monospace", color: "var(--spend)" }}>-${fmt(totals.expenses)}</div>
             </div>
           </div>
+          <div style={{ fontSize: 16, color: "var(--textMuted)" }}>▸</div>
         </div>
-        )}
 
         {/* ═══ TAB NAVIGATION ═══ */}
         <div className="tab-bar" style={{ marginBottom: 14 }}>
           {[
-            { key: "dashboard", label: t.tabDashboard, icon: "💰" },
             { key: "budget", label: t.tabBudget, icon: "📊" },
             { key: "breakdown", label: t.tabBreakdown, icon: "📈" },
             { key: "goals", label: t.tabGoals, icon: "🎯" },
@@ -1559,9 +1558,18 @@ export default function ExpenseTracker() {
           })}
         </div>
 
-        {/* ═══ TAB: DASHBOARD ═══ */}
-        {activeTab === "dashboard" && (
-        <div className="tab-content">
+        {/* ═══ DASHBOARD MODAL ═══ */}
+        {showDashboard && (
+        <div style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0, zIndex: 1000, background: "var(--gradBg)", overflowY: "auto", padding: "20px 16px", animation: "fadeInUp 0.2s ease" }}>
+          <div style={{ maxWidth: 600, margin: "0 auto" }}>
+            {/* Modal header */}
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
+              <h2 style={{ margin: 0, fontSize: 18, fontWeight: 700, color: "var(--text)" }}>💰 {t.tabDashboard}</h2>
+              <button onClick={() => setShowDashboard(false)} style={{
+                padding: "8px 16px", borderRadius: 8, border: "none", cursor: "pointer",
+                background: "var(--gradBtn)", color: "var(--textSub)", fontSize: 12, fontWeight: 600,
+              }}>{lang === "zh" ? "关闭" : "Close"}</button>
+            </div>
         {/* Balance */}
         <div style={{ marginTop: 0, marginBottom: 20, padding: "28px 24px", background: "linear-gradient(135deg, var(--bg2) 0%, var(--bg3) 100%)", borderRadius: 16, border: "1px solid " + (currentBalance >= 0 ? "rgba(52,211,153,0.3)" : "rgba(248,113,113,0.3)"), textAlign: "center" }}>
           <div style={{ fontSize: 11, color: "var(--textSub)", textTransform: "uppercase", letterSpacing: 2, marginBottom: 8 }}>
@@ -1646,6 +1654,7 @@ export default function ExpenseTracker() {
           </div>
         </div>
 
+        </div>
         </div>
         )}
 
@@ -1837,24 +1846,19 @@ export default function ExpenseTracker() {
                       <td style={{ padding: "8px 10px", fontFamily: "'Space Mono', monospace", color: isOver ? "var(--err)" : "var(--textSub)", whiteSpace: "nowrap", verticalAlign: "middle" }}>
                         ${fmt(spent)}
                       </td>
-                      <td className="status-cell" style={{ padding: "8px 10px", minWidth: 160, verticalAlign: "middle" }}>
-                        <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 3 }}>
-                          <span style={{ fontSize: 9, color: "var(--textMuted)" }}>${fmt(spent)} {t.of} ${fmt(b.amount)} {t.spentWord}</span>
-                          <span style={{ fontSize: 9, color: isOver ? "#d4776a" : "#7eb87d" }}>
-                            {isOver ? t.over + " $" + fmt(Math.abs(remaining)) : t.remaining + " $" + fmt(remaining)}
-                          </span>
+                      <td className="status-cell" style={{ padding: "8px 10px", minWidth: 120, verticalAlign: "middle" }}>
+                        <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 4 }}>
+                          <div style={{ flex: 1, height: 6, borderRadius: 3, background: "var(--bg3)", overflow: "hidden" }}>
+                            <div style={{ width: Math.min(100, spentPct) + "%", height: "100%", borderRadius: 3,
+                              background: isOver ? "linear-gradient(90deg, #c45c5c, #d4776a)" : isClose ? "linear-gradient(90deg, #c9a84c, #d4b85c)" : "linear-gradient(90deg, #7c6bc4, #9b8ad4)",
+                              transition: "width 0.6s ease",
+                            }}/>
+                          </div>
+                          <span style={{ fontSize: 10, fontWeight: 700, fontFamily: "'Space Mono', monospace", color: isOver ? "var(--err)" : "var(--textSub)", whiteSpace: "nowrap" }}>{spentPct.toFixed(0)}%</span>
+                          {isLocked && <span style={{ fontSize: 10 }}>🔒</span>}
                         </div>
-                        <div style={{ width: "100%", height: 6, borderRadius: 3, background: "var(--bg3)", overflow: "hidden", marginBottom: 4 }}>
-                          <div style={{ width: Math.min(100, spentPct) + "%", height: "100%", borderRadius: 3,
-                            background: isOver ? "linear-gradient(90deg, #c45c5c, #d4776a)" : isClose ? "linear-gradient(90deg, #c9a84c, #d4b85c)" : "linear-gradient(90deg, #7c6bc4, #9b8ad4)",
-                            transition: "width 0.6s ease",
-                          }}/>
-                        </div>
-                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                          <span style={{ fontSize: 9, color: isOver ? "#d4776a" : "#504a60" }}>
-                            {spentPct.toFixed(0)}% {t.ofBudgetLimit}
-                          </span>
-                          {isLocked && <span style={{ fontSize: 9, color: "var(--gold)", fontWeight: 600 }}>{t.locked}</span>}
+                        <div style={{ fontSize: 10, color: isOver ? "var(--err)" : "var(--pos)", fontWeight: 600 }}>
+                          {isOver ? "↑ $" + fmt(Math.abs(remaining)) + " " + t.over : "$" + fmt(remaining) + " " + t.remaining}
                         </div>
                       </td>
                       <td style={{ padding: "8px 10px", verticalAlign: "middle" }}>
