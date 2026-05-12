@@ -570,20 +570,29 @@ export default function ExpenseTracker() {
     setCorrectionAmount(""); setCorrectionNote("");
   };
 
-  const [earnAmount, setEarnAmount] = useState("");
-  const [earnLabel, setEarnLabel] = useState("");
-  const [earnCategory, setEarnCategory] = useState(earnCatNames[0] || "Salary");
-  const todayStr = new Date().toISOString().split("T")[0];
-  const [earnDate, setEarnDate] = useState(todayStr);
-
-  const [expAmount, setExpAmount] = useState("");
-  const [expCategory, setExpCategory] = useState(expCatNames[0] || "Food");
-  const [expLabel, setExpLabel] = useState("");
-  const [expDate, setExpDate] = useState(todayStr);
-
-  // Budgets
-  const [customEarnCats, setCustomEarnCats] = useState(() => loadData("earnCats", DEFAULT_EARN_CATS));
-  const [customExpCats, setCustomExpCats] = useState(() => loadData("expCats", DEFAULT_EXP_CATS));
+  // Custom categories - safe load with migration
+  const [customEarnCats, setCustomEarnCats] = useState(function() {
+    var stored = loadData("earnCats", null);
+    if (!stored || !Array.isArray(stored)) return DEFAULT_EARN_CATS;
+    if (stored.length > 0 && typeof stored[0] === "string") {
+      return stored.map(function(name) { return { name: name, emoji: matchCatEmoji(name) || "📌" }; });
+    }
+    return stored.map(function(c) {
+      if (typeof c === "string") return { name: c, emoji: matchCatEmoji(c) || "📌" };
+      return { name: c.name || "Other", emoji: c.emoji || matchCatEmoji(c.name) || "📌" };
+    });
+  });
+  const [customExpCats, setCustomExpCats] = useState(function() {
+    var stored = loadData("expCats", null);
+    if (!stored || !Array.isArray(stored)) return DEFAULT_EXP_CATS;
+    if (stored.length > 0 && typeof stored[0] === "string") {
+      return stored.map(function(name) { return { name: name, emoji: matchCatEmoji(name) || "📌" }; });
+    }
+    return stored.map(function(c) {
+      if (typeof c === "string") return { name: c, emoji: matchCatEmoji(c) || "📌" };
+      return { name: c.name || "Other", emoji: c.emoji || matchCatEmoji(c.name) || "📌" };
+    });
+  });
   const [newCatName, setNewCatName] = useState("");
   const [newCatType, setNewCatType] = useState("expense");
   const [showCatManager, setShowCatManager] = useState(false);
@@ -623,9 +632,21 @@ export default function ExpenseTracker() {
     }
   };
 
+  const [earnAmount, setEarnAmount] = useState("");
+  const [earnLabel, setEarnLabel] = useState("");
+  const [earnCategory, setEarnCategory] = useState("Salary");
+  const todayStr = new Date().toISOString().split("T")[0];
+  const [earnDate, setEarnDate] = useState(todayStr);
+
+  const [expAmount, setExpAmount] = useState("");
+  const [expCategory, setExpCategory] = useState("Food");
+  const [expLabel, setExpLabel] = useState("");
+  const [expDate, setExpDate] = useState(todayStr);
+
+  // Budgets
   const [budgetEntries, setBudgetEntries] = useState(() => loadData("budgets", []));
   const [budgetLabel, setBudgetLabel] = useState("");
-  const [budgetCategory, setBudgetCategory] = useState(expCatNames[0] || "Food");
+  const [budgetCategory, setBudgetCategory] = useState("Food");
   const [budgetAmount, setBudgetAmount] = useState("");
   const [budgetScope, setBudgetScope] = useState("current"); // "current" or "all"
   const [editingBudgetId, setEditingBudgetId] = useState(null);
@@ -1120,7 +1141,7 @@ export default function ExpenseTracker() {
       return { ...prev, [targetYear]: yd };
     });
     if (targetYear !== selectedYear) setSelectedYear(targetYear);
-    setExpAmount(""); setExpLabel(""); setExpCategory(expCatNames[0] || "Food"); setExpDate(todayStr);
+    setExpAmount(""); setExpLabel(""); setExpCategory("Food"); setExpDate(todayStr);
   };
 
   const removeEarning = (id) => {
@@ -1181,8 +1202,8 @@ export default function ExpenseTracker() {
   const fmt = (n) => n.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   const balanceColor = currentBalance >= 0 ? "#7eb87d" : "#d4776a";
 
-  var darkVars = ":root { --bg: #110e1a; --bg2: #1a1626; --bg3: #13101e; --bgAlt: rgba(30,26,42,0.3); --border: #2a2440; --border2: #221e34; --text: #e8e0f0; --textSub: #9890a8; --textMuted: #6b6580; --textDark: #504a60; --earn: #6adcea; --spend: #e764a3; --pos: #7eb87d; --gold: #d4b85c; --lav: #9b7ec8; --err: #d4776a; --gradBg: linear-gradient(145deg, #110e1a 0%, #1a1626 50%, #110e1a 100%); --gradAccent: linear-gradient(135deg, #e764a3, #9b7ec8); --gradBtn: linear-gradient(135deg, #2a2440, #3d3850); --gradGold: linear-gradient(135deg, #d4b85c, #e764a3); --scrollThumb: #2a2440; --btnText: #13101e; --earnBtn: #6adcea; --spendBtn: #e764a3; --gradEarn: linear-gradient(135deg, #6adcea, #9b7ec8); --gradSpend: linear-gradient(135deg, #e764a3, #fb923c); --gradScene1: linear-gradient(180deg, #0e1a20, #0a1218); --gradScene2: linear-gradient(180deg, #1a1626, #110e1a); --gradFrog: linear-gradient(180deg, #1a1626 0%, #162018 100%); --sceneBorder: #2a2440; --lavBtn: #7c6bc4; --balanceBtn: #8b7ec8; --progressWarn: linear-gradient(90deg, #fbbf24, #f59e0b); --posBtn: rgba(52,211,153,0.9); }";
-  var lightVars = ":root { --bg: #f9f5f0; --bg2: #fff9f4; --bg3: #f4efe9; --bgAlt: rgba(240,220,210,0.25); --border: #e8dcd0; --border2: #f0e8de; --text: #3a2838; --textSub: #7a5a78; --textMuted: #a890a8; --textDark: #d0c0d0; --earn: #2a9da8; --spend: #d4538a; --pos: #5a9858; --gold: #b8982c; --lav: #7860a8; --err: #c85a4a; --gradBg: linear-gradient(145deg, #f9f5f0 0%, #f5ede5 50%, #f9f5f0 100%); --gradAccent: linear-gradient(135deg, #e764a3, #c87ec8); --gradBtn: linear-gradient(135deg, #f5ede5, #ecddd0); --gradGold: linear-gradient(135deg, #c8a040, #d4538a); --scrollThumb: #ddd0c4; --btnText: #fff9f4; --earnBtn: #2a9da8; --spendBtn: #d4538a; --gradEarn: linear-gradient(135deg, #2a9da8, #7860a8); --gradSpend: linear-gradient(135deg, #d4538a, #e8946a); --gradScene1: linear-gradient(180deg, #eaf5f4, #d8ece8); --gradScene2: linear-gradient(180deg, #f5eaee, #fce8f0); --gradFrog: linear-gradient(180deg, #eef5ee 0%, #e0ede0 100%); --sceneBorder: #e0d4c8; --lavBtn: #7860a8; --balanceBtn: #9870b8; --progressWarn: linear-gradient(90deg, #d4a830, #c89828); --posBtn: rgba(90,152,88,0.9); }";
+  var darkVars = ":root { --bg: #110e1a; --bg2: #1a1626; --bg3: #13101e; --bgAlt: rgba(30,26,42,0.3); --border: #2a2440; --border2: #221e34; --text: #e8e0f0; --textSub: #9890a8; --textMuted: #6b6580; --textDark: #504a60; --earn: #6adcea; --spend: #e764a3; --pos: #7eb87d; --gold: #d4b85c; --lav: #9b7ec8; --err: #d4776a; --gradBg: linear-gradient(145deg, #110e1a 0%, #1a1626 50%, #110e1a 100%); --gradAccent: linear-gradient(135deg, #e764a3, #9b7ec8); --gradBtn: linear-gradient(135deg, #2a2440, #3d3850); --gradGold: linear-gradient(135deg, #d4b85c, #e764a3); --scrollThumb: #2a2440; --btnText: #13101e; --earnBtn: #6adcea; --spendBtn: #e764a3; --gradEarn: linear-gradient(135deg, #6adcea, #9b7ec8); --gradSpend: linear-gradient(135deg, #e764a3, #fb923c); --gradScene1: linear-gradient(180deg, #0e1a20, #0a1218); --gradScene2: linear-gradient(180deg, #1a1626, #110e1a); --gradFrog: linear-gradient(180deg, #1a1626 0%, #162018 100%); --sceneBorder: #2a2440; --lavBtn: #7c6bc4; --balanceBtn: #8b7ec8; --progressWarn: linear-gradient(90deg, #fbbf24, #f59e0b); --posBtn: rgba(52,211,153,0.9); --monthActive: linear-gradient(135deg, #8b7ec8, #c9a0dc); --monthAllActive: linear-gradient(135deg, #fbbf24, #f59e0b); --monthInactive: #2e2a3a; --monthActiveText: #13101e; --monthInactiveText: #9590a8; --scopeActive: linear-gradient(135deg, #9b8ad4, #7c6bc4); --scopeGoldActive: linear-gradient(135deg, #fbbf24, #f59e0b); --scopeInactive: #2e2a3a; --scopeActiveText: #13101e; --scopeInactiveText: #9590a8; }";
+  var lightVars = ":root { --bg: #f9f5f0; --bg2: #fff9f4; --bg3: #f4efe9; --bgAlt: rgba(240,220,210,0.25); --border: #e8dcd0; --border2: #f0e8de; --text: #3a2838; --textSub: #7a5a78; --textMuted: #a890a8; --textDark: #d0c0d0; --earn: #2a9da8; --spend: #d4538a; --pos: #5a9858; --gold: #b8982c; --lav: #7860a8; --err: #c85a4a; --gradBg: linear-gradient(145deg, #f9f5f0 0%, #f5ede5 50%, #f9f5f0 100%); --gradAccent: linear-gradient(135deg, #e764a3, #c87ec8); --gradBtn: linear-gradient(135deg, #f5ede5, #ecddd0); --gradGold: linear-gradient(135deg, #c8a040, #d4538a); --scrollThumb: #ddd0c4; --btnText: #fff9f4; --earnBtn: #2a9da8; --spendBtn: #d4538a; --gradEarn: linear-gradient(135deg, #2a9da8, #7860a8); --gradSpend: linear-gradient(135deg, #d4538a, #e8946a); --gradScene1: linear-gradient(180deg, #eaf5f4, #d8ece8); --gradScene2: linear-gradient(180deg, #f5eaee, #fce8f0); --gradFrog: linear-gradient(180deg, #eef5ee 0%, #e0ede0 100%); --sceneBorder: #e0d4c8; --lavBtn: #7860a8; --balanceBtn: #9870b8; --progressWarn: linear-gradient(90deg, #d4a830, #c89828); --posBtn: rgba(90,152,88,0.9); --monthActive: linear-gradient(135deg, #7860a8, #a080c0); --monthAllActive: linear-gradient(135deg, #d4538a, #e880a8); --monthInactive: #f0e8e0; --monthActiveText: #ffffff; --monthInactiveText: #7a5a78; --scopeActive: linear-gradient(135deg, #7860a8, #a080c0); --scopeGoldActive: linear-gradient(135deg, #d4538a, #e880a8); --scopeInactive: #f0e8e0; --scopeActiveText: #ffffff; --scopeInactiveText: #7a5a78; }";
   var themeVars = mode === "dark" ? darkVars : lightVars;
   const mainCSS = [
     themeVars,
@@ -1274,7 +1295,7 @@ export default function ExpenseTracker() {
                 </div>
               )}
               <button onClick={completeOnboarding} disabled={!startingBalance}
-                style={{ width: "100%", padding: "14px 0", borderRadius: 10, border: "none", cursor: startingBalance ? "pointer" : "default", background: startingBalance ? "linear-gradient(135deg, #8b7ec8, #c9a0dc)" : "#2e2a3a", color: startingBalance ? "#14121e" : "#6b6580", fontSize: 15, fontWeight: 700, opacity: startingBalance ? 1 : 0.6 }}>
+                style={{ width: "100%", padding: "14px 0", borderRadius: 10, border: "none", cursor: startingBalance ? "pointer" : "default", background: startingBalance ? "var(--gradAccent)" : "var(--monthInactive)", color: startingBalance ? "var(--monthActiveText)" : "var(--textMuted)", fontSize: 15, fontWeight: 700, opacity: startingBalance ? 1 : 0.6 }}>
                 {t.onboardStart}
               </button>
             </div>
@@ -1297,7 +1318,7 @@ export default function ExpenseTracker() {
                     </div>
                   </div>
                   <button onClick={() => setOnboardStep(2)} disabled={!onboardCurrentBal}
-                    style={{ width: "100%", padding: "14px 0", borderRadius: 10, border: "none", cursor: onboardCurrentBal ? "pointer" : "default", background: onboardCurrentBal ? "linear-gradient(135deg, #7eb87d, #a3d4a2)" : "#2e2a3a", color: onboardCurrentBal ? "#14121e" : "#6b6580", fontSize: 15, fontWeight: 700, opacity: onboardCurrentBal ? 1 : 0.6 }}>
+                    style={{ width: "100%", padding: "14px 0", borderRadius: 10, border: "none", cursor: onboardCurrentBal ? "pointer" : "default", background: onboardCurrentBal ? "var(--gradEarn)" : "var(--monthInactive)", color: onboardCurrentBal ? "var(--monthActiveText)" : "var(--textMuted)", fontSize: 15, fontWeight: 700, opacity: onboardCurrentBal ? 1 : 0.6 }}>
                     {lang === "zh" ? "下一步 →" : "Next →"}
                   </button>
                 </div>
@@ -1518,8 +1539,8 @@ export default function ExpenseTracker() {
               <button onClick={addCorrection} disabled={!correctionAmount || parseFloat(correctionAmount) === 0}
                 style={{
                   padding: "7px 14px", borderRadius: 6, border: "none", cursor: correctionAmount ? "pointer" : "default",
-                  background: correctionAmount ? "linear-gradient(135deg, #c9a84c, #d4776a)" : "#2e2a3a",
-                  color: correctionAmount ? "#14121e" : "#6b6580",
+                  background: correctionAmount ? "var(--gradGold)" : "var(--monthInactive)",
+                  color: correctionAmount ? "var(--monthActiveText)" : "var(--textMuted)",
                   fontSize: 11, fontWeight: 700, whiteSpace: "nowrap",
                   opacity: correctionAmount ? 1 : 0.5,
                 }}>{t.addCorrection}</button>
@@ -1537,9 +1558,9 @@ export default function ExpenseTracker() {
           <div>
             <label style={{ fontSize: 11, color: "var(--textSub)", textTransform: "uppercase", letterSpacing: 1, display: "block", marginBottom: 6 }}>{t.selectMonth}</label>
             <div style={{ display: "flex", flexWrap: "wrap", gap: 4 }}>
-              <button onClick={() => setSelectedMonth("all")} style={{ padding: "7px 14px", borderRadius: 6, border: "none", cursor: "pointer", fontSize: 12, fontWeight: isAll ? 700 : 500, background: isAll ? "linear-gradient(135deg, #fbbf24, #f59e0b)" : "#2e2a3a", color: isAll ? "#14121e" : "#9590a8" }}>{t.all}</button>
+              <button onClick={() => setSelectedMonth("all")} style={{ padding: "7px 14px", borderRadius: 6, border: "none", cursor: "pointer", fontSize: 12, fontWeight: isAll ? 700 : 500, background: isAll ? "var(--monthAllActive)" : "var(--monthInactive)", color: isAll ? "var(--monthActiveText)" : "var(--monthInactiveText)" }}>{t.all}</button>
               {MONTHS.map((m, i) => (
-                <button key={m} onClick={() => setSelectedMonth(i)} style={{ padding: "7px 10px", borderRadius: 6, border: "none", cursor: "pointer", fontSize: 12, fontWeight: selectedMonth === i ? 700 : 500, background: selectedMonth === i ? "linear-gradient(135deg, #8b7ec8, #c9a0dc)" : "#2e2a3a", color: selectedMonth === i ? "#14121e" : "#9590a8" }}>{m}</button>
+                <button key={m} onClick={() => setSelectedMonth(i)} style={{ padding: "7px 10px", borderRadius: 6, border: "none", cursor: "pointer", fontSize: 12, fontWeight: selectedMonth === i ? 700 : 500, background: selectedMonth === i ? "var(--monthActive)" : "var(--monthInactive)", color: selectedMonth === i ? "var(--monthActiveText)" : "var(--monthInactiveText)" }}>{m}</button>
               ))}
             </div>
           </div>
@@ -1663,14 +1684,14 @@ export default function ExpenseTracker() {
             <button onClick={() => setBudgetScope("current")} style={{
               padding: "6px 14px", borderRadius: 6, border: "none", cursor: "pointer",
               fontSize: 11, fontWeight: budgetScope === "current" ? 700 : 500,
-              background: budgetScope === "current" ? "linear-gradient(135deg, #9b8ad4, #7c6bc4)" : "#2e2a3a",
-              color: budgetScope === "current" ? "#14121e" : "#9590a8",
+              background: budgetScope === "current" ? "var(--scopeActive)" : "var(--scopeInactive)",
+              color: budgetScope === "current" ? "var(--scopeActiveText)" : "var(--scopeInactiveText)",
             }}>{t.thisMonth} ({MONTHS[budgetMonth]})</button>
             <button onClick={() => setBudgetScope("all")} style={{
               padding: "6px 14px", borderRadius: 6, border: "none", cursor: "pointer",
               fontSize: 11, fontWeight: budgetScope === "all" ? 700 : 500,
-              background: budgetScope === "all" ? "linear-gradient(135deg, #fbbf24, #f59e0b)" : "#2e2a3a",
-              color: budgetScope === "all" ? "#14121e" : "#9590a8",
+              background: budgetScope === "all" ? "var(--scopeGoldActive)" : "var(--scopeInactive)",
+              color: budgetScope === "all" ? "var(--scopeActiveText)" : "var(--scopeInactiveText)",
             }}>{t.allMonthsScope}</button>
           </div>
 
@@ -1732,7 +1753,7 @@ export default function ExpenseTracker() {
                           </span>
                         )}
                       </td>
-                      <td style={{ padding: "8px 10px", fontFamily: "'Space Mono', monospace", color: isOver ? "#d4776a" : "#9590a8", whiteSpace: "nowrap", verticalAlign: "middle" }}>
+                      <td style={{ padding: "8px 10px", fontFamily: "'Space Mono', monospace", color: isOver ? "var(--err)" : "var(--textSub)", whiteSpace: "nowrap", verticalAlign: "middle" }}>
                         ${fmt(spent)}
                       </td>
                       <td className="status-cell" style={{ padding: "8px 10px", minWidth: 160, verticalAlign: "middle" }}>
@@ -1779,7 +1800,7 @@ export default function ExpenseTracker() {
                     <td style={{ padding: "10px 10px", verticalAlign: "middle" }}>{t.total}</td>
                     <td></td>
                     <td style={{ padding: "10px 10px", fontFamily: "'Space Mono', monospace", color: "var(--lav)", verticalAlign: "middle" }}>${fmt(totalBudget)}</td>
-                    <td style={{ padding: "10px 10px", fontFamily: "'Space Mono', monospace", color: totalSpentInMonth > totalBudget ? "#d4776a" : "#9590a8", verticalAlign: "middle" }}>${fmt(totalSpentInMonth)}</td>
+                    <td style={{ padding: "10px 10px", fontFamily: "'Space Mono', monospace", color: totalSpentInMonth > totalBudget ? "var(--err)" : "var(--textSub)", verticalAlign: "middle" }}>${fmt(totalSpentInMonth)}</td>
                     <td style={{ padding: "10px 10px", verticalAlign: "middle" }}>
                       <span style={{
                         padding: "2px 8px", borderRadius: 4, fontSize: 10, fontWeight: 700,
@@ -1812,8 +1833,8 @@ export default function ExpenseTracker() {
             </h3>
             <button onClick={() => setShowGoalForm(!showGoalForm)} style={{
               padding: "7px 16px", borderRadius: 8, border: "none", cursor: "pointer",
-              background: showGoalForm ? "#2e2a3a" : "linear-gradient(135deg, #fbbf24, #f59e0b)",
-              color: showGoalForm ? "#9590a8" : "#14121e", fontSize: 13, fontWeight: 700,
+              background: showGoalForm ? "var(--monthInactive)" : "var(--monthAllActive)",
+              color: showGoalForm ? "var(--monthInactiveText)" : "var(--monthActiveText)", fontSize: 13, fontWeight: 700,
             }}>{showGoalForm ? t.cancel : t.addGoal}</button>
           </div>
 
@@ -1842,8 +1863,8 @@ export default function ExpenseTracker() {
                       style={{
                         padding: "6px 14px", borderRadius: 6, border: "none", cursor: "pointer",
                         fontSize: 11, fontWeight: goalImageType === tab.key ? 700 : 500,
-                        background: goalImageType === tab.key ? "linear-gradient(135deg, #fbbf24, #f59e0b)" : "#2e2a3a",
-                        color: goalImageType === tab.key ? "#14121e" : "#9590a8",
+                        background: goalImageType === tab.key ? "var(--monthAllActive)" : "var(--monthInactive)",
+                        color: goalImageType === tab.key ? "var(--monthActiveText)" : "var(--monthInactiveText)",
                       }}>{tab.label}</button>
                   ))}
                 </div>
