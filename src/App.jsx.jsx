@@ -1353,6 +1353,44 @@ export default function ExpenseTracker() {
                   <div>
                     <div style={{ padding: 20, borderRadius: 14, background: "var(--bg2)", border: "1px solid var(--border)", marginBottom: 16 }}>
                       <div style={{ fontSize: 15, fontWeight: 600, marginBottom: 12 }}>{t.addRecordsFirst}</div>
+
+                      {/* Inline Category Manager */}
+                      <div style={{ marginBottom: 14, padding: 10, borderRadius: 10, background: "var(--bg3)", border: "1px solid var(--border)" }}>
+                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", cursor: "pointer", marginBottom: showCatManager ? 10 : 0 }} onClick={() => setShowCatManager(!showCatManager)}>
+                          <span style={{ fontSize: 11, fontWeight: 600, color: "var(--lav)" }}>🏷️ {t.manageCategories}</span>
+                          <span style={{ fontSize: 12, color: "var(--textMuted)", transform: showCatManager ? "rotate(180deg)" : "none", transition: "transform 0.2s ease" }}>▼</span>
+                        </div>
+                        {showCatManager && (
+                          <div>
+                            <div style={{ display: "flex", gap: 4, marginBottom: 10, flexWrap: "wrap" }}>
+                              <input type="text" placeholder={t.categoryName} value={newCatName}
+                                onChange={e => setNewCatName(e.target.value)}
+                                onKeyDown={e => { if (e.key === "Enter") addCustomCat(); }}
+                                style={{ flex: "1 1 80px", padding: "6px 8px", borderRadius: 6, border: "1px solid var(--border)", background: "var(--bg)", color: "var(--text)", fontSize: 11 }} />
+                              <select value={newCatType} onChange={e => setNewCatType(e.target.value)}
+                                style={{ padding: "6px 6px", borderRadius: 6, border: "1px solid var(--border)", background: "var(--bg)", color: "var(--text)", fontSize: 11 }}>
+                                <option value="expense">{t.expenseCat}</option>
+                                <option value="earning">{t.earningCat}</option>
+                              </select>
+                              {newCatName && <span style={{ padding: "6px 0", fontSize: 11 }}>{matchCatEmoji(newCatName) || "📌"}</span>}
+                              <button onClick={addCustomCat} style={{ padding: "6px 10px", borderRadius: 6, border: "none", cursor: "pointer", background: "var(--gradAccent)", color: "var(--btnText)", fontSize: 10, fontWeight: 700 }}>+</button>
+                            </div>
+                            <div style={{ display: "flex", flexWrap: "wrap", gap: 4 }}>
+                              {customEarnCats.concat(customExpCats).map(function(cat) {
+                                var isEarn = customEarnCats.some(function(c) { return c.name === cat.name; });
+                                var isDefault = (isEarn ? DEFAULT_EARN_CATS : DEFAULT_EXP_CATS).some(function(d) { return d.name === cat.name; });
+                                return (
+                                  <span key={(isEarn ? "e-" : "x-") + cat.name} style={{ display: "inline-flex", alignItems: "center", gap: 3, padding: "2px 8px", borderRadius: 5, fontSize: 10, background: "var(--bg)", border: "1px solid var(--border)", color: "var(--text)" }}>
+                                    {cat.emoji} {cat.name}
+                                    {!isDefault && <button onClick={() => removeCustomCat(isEarn ? "earning" : "expense", cat.name)} style={{ background: "none", border: "none", color: "var(--textMuted)", cursor: "pointer", fontSize: 11, padding: "0 2px" }}>×</button>}
+                                  </span>
+                                );
+                              })}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+
                       <div style={{ marginBottom: 12 }}>
                         <div style={{ fontSize: 11, color: "var(--pos)", fontWeight: 600, marginBottom: 6 }}>↗ {t.earnings}</div>
                         <div style={{ display: "flex", gap: 4, flexWrap: "wrap" }}>
