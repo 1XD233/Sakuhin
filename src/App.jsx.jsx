@@ -1058,12 +1058,18 @@ export default function ExpenseTracker() {
   const availableBalance = currentBalance - totalAllocated;
 
   const currentTableData = useMemo(() => {
-    if (tableMonth !== null) return yearData[tableMonth];
+    var dateSorter = function(a, b) { return (b.date || "").localeCompare(a.date || ""); };
+    if (tableMonth !== null) {
+      var md = yearData[tableMonth];
+      return { earnings: [].concat(md.earnings).sort(dateSorter), expenses: [].concat(md.expenses).sort(dateSorter) };
+    }
     const combined = { earnings: [], expenses: [] };
     MONTHS_EN.forEach((_, i) => {
       yearData[i].earnings.forEach(e => combined.earnings.push({ ...e, month: MONTHS[i] }));
       yearData[i].expenses.forEach(e => combined.expenses.push({ ...e, month: MONTHS[i] }));
     });
+    combined.earnings.sort(dateSorter);
+    combined.expenses.sort(dateSorter);
     return combined;
   }, [yearData, tableMonth]);
 
@@ -1207,15 +1213,15 @@ export default function ExpenseTracker() {
       return true;
     }
     return b.scope === budgetMonth || b.scope === undefined;
-  });
+  }).sort(function(a, b) { return b.amount - a.amount; });
   const totalBudget = visibleBudgets.reduce((s, b) => s + b.amount, 0);
   const totalSpentInMonth = visibleBudgets.reduce((s, b) => s + (spendingByCategory[b.category] || 0), 0);
 
   const fmt = (n) => n.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   const balanceColor = currentBalance >= 0 ? "#7eb87d" : "#d4776a";
 
-  var darkVars = ":root { --bg: #110e1a; --bg2: #1a1626; --bg3: #13101e; --bgAlt: rgba(30,26,42,0.3); --border: #2a2440; --border2: #221e34; --text: #e8e0f0; --textSub: #9890a8; --textMuted: #6b6580; --textDark: #504a60; --earn: #6adcea; --spend: #e764a3; --pos: #7eb87d; --gold: #d4b85c; --lav: #9b7ec8; --err: #d4776a; --gradBg: linear-gradient(145deg, #110e1a 0%, #1a1626 50%, #110e1a 100%); --gradAccent: linear-gradient(135deg, #e764a3, #9b7ec8); --gradBtn: linear-gradient(135deg, #2a2440, #3d3850); --gradGold: linear-gradient(135deg, #d4b85c, #e764a3); --scrollThumb: #2a2440; --btnText: #13101e; --earnBtn: #6adcea; --spendBtn: #e764a3; --gradEarn: linear-gradient(135deg, #6adcea, #9b7ec8); --gradSpend: linear-gradient(135deg, #e764a3, #fb923c); --gradScene1: linear-gradient(180deg, #0e1a20, #0a1218); --gradScene2: linear-gradient(180deg, #1a1626, #110e1a); --gradFrog: linear-gradient(180deg, #1a1626 0%, #162018 100%); --sceneBorder: #2a2440; --lavBtn: #7c6bc4; --balanceBtn: #8b7ec8; --progressWarn: linear-gradient(90deg, #fbbf24, #f59e0b); --posBtn: rgba(52,211,153,0.9); --monthActive: linear-gradient(135deg, #8b7ec8, #c9a0dc); --monthAllActive: linear-gradient(135deg, #fbbf24, #f59e0b); --monthInactive: #2e2a3a; --monthActiveText: #13101e; --monthInactiveText: #9590a8; --scopeActive: linear-gradient(135deg, #9b8ad4, #7c6bc4); --scopeGoldActive: linear-gradient(135deg, #fbbf24, #f59e0b); --scopeInactive: #2e2a3a; --scopeActiveText: #13101e; --scopeInactiveText: #9590a8; }";
-  var lightVars = ":root { --bg: #f9f5f0; --bg2: #fff9f4; --bg3: #f4efe9; --bgAlt: rgba(240,220,210,0.25); --border: #e8dcd0; --border2: #f0e8de; --text: #3a2838; --textSub: #7a5a78; --textMuted: #a890a8; --textDark: #d0c0d0; --earn: #2a9da8; --spend: #d4538a; --pos: #5a9858; --gold: #b8982c; --lav: #7860a8; --err: #c85a4a; --gradBg: linear-gradient(145deg, #f9f5f0 0%, #f5ede5 50%, #f9f5f0 100%); --gradAccent: linear-gradient(135deg, #e764a3, #c87ec8); --gradBtn: linear-gradient(135deg, #f5ede5, #ecddd0); --gradGold: linear-gradient(135deg, #c8a040, #d4538a); --scrollThumb: #ddd0c4; --btnText: #fff9f4; --earnBtn: #2a9da8; --spendBtn: #d4538a; --gradEarn: linear-gradient(135deg, #2a9da8, #7860a8); --gradSpend: linear-gradient(135deg, #d4538a, #e8946a); --gradScene1: linear-gradient(180deg, #eaf5f4, #d8ece8); --gradScene2: linear-gradient(180deg, #f5eaee, #fce8f0); --gradFrog: linear-gradient(180deg, #eef5ee 0%, #e0ede0 100%); --sceneBorder: #e0d4c8; --lavBtn: #7860a8; --balanceBtn: #9870b8; --progressWarn: linear-gradient(90deg, #d4a830, #c89828); --posBtn: rgba(90,152,88,0.9); --monthActive: linear-gradient(135deg, #7860a8, #a080c0); --monthAllActive: linear-gradient(135deg, #d4538a, #e880a8); --monthInactive: #f0e8e0; --monthActiveText: #ffffff; --monthInactiveText: #7a5a78; --scopeActive: linear-gradient(135deg, #7860a8, #a080c0); --scopeGoldActive: linear-gradient(135deg, #d4538a, #e880a8); --scopeInactive: #f0e8e0; --scopeActiveText: #ffffff; --scopeInactiveText: #7a5a78; }";
+  var darkVars = ":root { --bg: #110e1a; --bg2: #1a1626; --bg3: #13101e; --bgAlt: rgba(30,26,42,0.3); --border: #2a2440; --border2: #221e34; --text: #e8e0f0; --textSub: #9890a8; --textMuted: #6b6580; --textDark: #504a60; --earn: #6adcea; --spend: #e764a3; --pos: #7eb87d; --gold: #d4b85c; --lav: #9b7ec8; --err: #d4776a; --gradBg: linear-gradient(145deg, #110e1a 0%, #1a1626 50%, #110e1a 100%); --gradAccent: linear-gradient(135deg, #e764a3, #9b7ec8); --gradBtn: linear-gradient(135deg, #2a2440, #3d3850); --gradGold: linear-gradient(135deg, #d4b85c, #e764a3); --scrollThumb: #2a2440; --btnText: #13101e; --earnBtn: #6adcea; --spendBtn: #e764a3; --gradEarn: linear-gradient(135deg, #6adcea, #9b7ec8); --gradSpend: linear-gradient(135deg, #e764a3, #fb923c); --gradScene1: linear-gradient(180deg, #0e1a20, #0a1218); --gradScene2: linear-gradient(180deg, #1a1626, #110e1a); --gradFrog: linear-gradient(180deg, #1a1626 0%, #162018 100%); --sceneBorder: #2a2440; --lavBtn: #7c6bc4; --balanceBtn: #8b7ec8; --progressWarn: linear-gradient(90deg, #fbbf24, #f59e0b); --posBtn: rgba(52,211,153,0.9); --monthActive: linear-gradient(135deg, #8b7ec8, #c9a0dc); --monthAllActive: linear-gradient(135deg, #fbbf24, #f59e0b); --monthInactive: #2e2a3a; --monthActiveText: #13101e; --monthInactiveText: #9590a8; --scopeActive: linear-gradient(135deg, #9b8ad4, #7c6bc4); --scopeGoldActive: linear-gradient(135deg, #fbbf24, #f59e0b); --scopeInactive: #2e2a3a; --scopeActiveText: #13101e; --scopeInactiveText: #9590a8; --iconBg: #1f1c2a; --iconBgSelected: rgba(251,191,36,0.1); --iconBorderSelected: #fbbf24; --iconLabelActive: #d4b85c; --iconLabelInactive: #6b6580; --uploadBg: #1c1b28; --uploadBorder: #2e2a3a; --fundInactive: #14121e; --fundBalanceBg: rgba(139,126,200,0.15); --fundBalanceBorder: #8b7ec8; --fundBalanceText: #8b7ec8; --fundBalanceVal: #a594d4; --fundFrogBg: rgba(163,212,162,0.15); --fundFrogBorder: #6ee7b7; --fundFrogText: #a3d4a2; --fundFrogVal: #7eb87d; --fundInactiveText: #6b6580; --fundInactiveVal: #504a60; }";
+  var lightVars = ":root { --bg: #f9f5f0; --bg2: #fff9f4; --bg3: #f4efe9; --bgAlt: rgba(240,220,210,0.25); --border: #e8dcd0; --border2: #f0e8de; --text: #3a2838; --textSub: #7a5a78; --textMuted: #a890a8; --textDark: #d0c0d0; --earn: #2a9da8; --spend: #d4538a; --pos: #5a9858; --gold: #b8982c; --lav: #7860a8; --err: #c85a4a; --gradBg: linear-gradient(145deg, #f9f5f0 0%, #f5ede5 50%, #f9f5f0 100%); --gradAccent: linear-gradient(135deg, #e764a3, #c87ec8); --gradBtn: linear-gradient(135deg, #f5ede5, #ecddd0); --gradGold: linear-gradient(135deg, #c8a040, #d4538a); --scrollThumb: #ddd0c4; --btnText: #fff9f4; --earnBtn: #2a9da8; --spendBtn: #d4538a; --gradEarn: linear-gradient(135deg, #2a9da8, #7860a8); --gradSpend: linear-gradient(135deg, #d4538a, #e8946a); --gradScene1: linear-gradient(180deg, #eaf5f4, #d8ece8); --gradScene2: linear-gradient(180deg, #f5eaee, #fce8f0); --gradFrog: linear-gradient(180deg, #eef5ee 0%, #e0ede0 100%); --sceneBorder: #e0d4c8; --lavBtn: #7860a8; --balanceBtn: #9870b8; --progressWarn: linear-gradient(90deg, #d4a830, #c89828); --posBtn: rgba(90,152,88,0.9); --monthActive: linear-gradient(135deg, #7860a8, #a080c0); --monthAllActive: linear-gradient(135deg, #d4538a, #e880a8); --monthInactive: #f0e8e0; --monthActiveText: #ffffff; --monthInactiveText: #7a5a78; --scopeActive: linear-gradient(135deg, #7860a8, #a080c0); --scopeGoldActive: linear-gradient(135deg, #d4538a, #e880a8); --scopeInactive: #f0e8e0; --scopeActiveText: #ffffff; --scopeInactiveText: #7a5a78; --iconBg: #fff5f8; --iconBgSelected: #fce7f3; --iconBorderSelected: #e764a3; --iconLabelActive: #d4538a; --iconLabelInactive: #a890a8; --uploadBg: #fdf2f8; --uploadBorder: #f0c8d8; --fundInactive: #fdf2f8; --fundBalanceBg: #fce7f3; --fundBalanceBorder: #d4538a; --fundBalanceText: #9860a8; --fundBalanceVal: #7860a8; --fundFrogBg: #e8f5e8; --fundFrogBorder: #5a9858; --fundFrogText: #5a9858; --fundFrogVal: #4a8048; --fundInactiveText: #a890a8; --fundInactiveVal: #c0b0c8; }";
   var themeVars = mode === "dark" ? darkVars : lightVars;
   const mainCSS = [
     themeVars,
@@ -1976,13 +1982,13 @@ export default function ExpenseTracker() {
                     {GOAL_PRESETS.map(p => (
                       <button key={p.label} onClick={() => { setGoalImage(p.emoji); setAutoMatched(false); setAiSource(""); }}
                         style={{
-                          width: 56, height: 56, borderRadius: 10, border: goalImage === p.emoji ? "2px solid #fbbf24" : "1px solid var(--sceneBorder)",
-                          background: goalImage === p.emoji ? "rgba(251,191,36,0.1)" : "#1f1c2a",
+                          width: 56, height: 56, borderRadius: 10, border: goalImage === p.emoji ? "2px solid var(--iconBorderSelected)" : "1px solid var(--border)",
+                          background: goalImage === p.emoji ? "var(--iconBgSelected)" : "var(--iconBg)",
                           cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 2,
                           transition: "all 0.15s",
                         }}>
                         <span style={{ fontSize: 22 }}>{p.emoji}</span>
-                        <span style={{ fontSize: 8, color: goalImage === p.emoji ? "#d4b85c" : "#6b6580" }}>{p.label}</span>
+                        <span style={{ fontSize: 8, color: goalImage === p.emoji ? "var(--iconLabelActive)" : "var(--iconLabelInactive)" }}>{p.label}</span>
                       </button>
                     ))}
                   </div>
@@ -2004,15 +2010,15 @@ export default function ExpenseTracker() {
                   <div>
                     <label style={{
                       display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
-                      padding: "24px 16px", borderRadius: 10, border: "2px dashed #2e2a3a",
-                      background: goalImage ? "transparent" : "#1c1b28", cursor: "pointer",
+                      padding: "24px 16px", borderRadius: 10, border: "2px dashed var(--uploadBorder)",
+                      background: goalImage ? "transparent" : "var(--uploadBg)", cursor: "pointer",
                       transition: "border-color 0.2s ease",
                     }}
-                      onDragOver={e => { e.preventDefault(); e.currentTarget.style.borderColor = "#d4b85c"; }}
-                      onDragLeave={e => { e.currentTarget.style.borderColor = "#2e2a3a"; }}
+                      onDragOver={e => { e.preventDefault(); e.currentTarget.style.borderColor = "var(--gold)"; }}
+                      onDragLeave={e => { e.currentTarget.style.borderColor = "var(--uploadBorder)"; }}
                       onDrop={e => {
                         e.preventDefault();
-                        e.currentTarget.style.borderColor = "#2e2a3a";
+                        e.currentTarget.style.borderColor = "var(--uploadBorder)";
                         const file = e.dataTransfer.files[0];
                         if (file && file.type.startsWith("image/")) {
                           const reader = new FileReader();
@@ -2123,7 +2129,7 @@ export default function ExpenseTracker() {
                 }}>
                   {/* Image */}
                   <div style={{
-                    width: "100%", height: 160, background: "#1c1b28",
+                    width: "100%", height: 160, background: "var(--iconBg)",
                     display: "flex", alignItems: "center", justifyContent: "center",
                     overflow: "hidden", position: "relative",
                   }}>
@@ -2138,7 +2144,6 @@ export default function ExpenseTracker() {
                     ) : goal.image ? (
                       <div style={{
                         fontSize: 72,
-                        filter: isComplete ? "none" : "grayscale(" + (100 - progress) + "%) brightness(" + (0.5 + progress * 0.005) + ")",
                         transition: "filter 0.8s ease",
                         lineHeight: 1,
                       }}>{goal.image}</div>
@@ -2210,27 +2215,27 @@ export default function ExpenseTracker() {
                           <button onClick={() => setGoalFundSource(prev => ({ ...prev, [goal.id]: "balance" }))}
                             style={{
                               flex: 1, padding: "8px 6px", borderRadius: 8, cursor: "pointer",
-                              background: (goalFundSource[goal.id] || "balance") === "balance" ? "rgba(139,126,200,0.15)" : "#14121e",
-                              border: (goalFundSource[goal.id] || "balance") === "balance" ? "2px solid #38bdf8" : "1px solid var(--sceneBorder)",
+                              background: (goalFundSource[goal.id] || "balance") === "balance" ? "var(--fundBalanceBg)" : "var(--fundInactive)",
+                              border: (goalFundSource[goal.id] || "balance") === "balance" ? "2px solid var(--fundBalanceBorder)" : "1px solid var(--border)",
                               textAlign: "center", transition: "all 0.2s ease",
                             }}>
                             <div style={{ fontSize: 14, marginBottom: 2 }}>💰</div>
-                            <div style={{ fontSize: 9, fontWeight: 600, color: (goalFundSource[goal.id] || "balance") === "balance" ? "#8b7ec8" : "#6b6580" }}>{t.fromBalance}</div>
-                            <div style={{ fontSize: 10, fontFamily: "'Space Mono', monospace", color: (goalFundSource[goal.id] || "balance") === "balance" ? "#a594d4" : "#504a60", marginTop: 2 }}>
+                            <div style={{ fontSize: 9, fontWeight: 600, color: (goalFundSource[goal.id] || "balance") === "balance" ? "var(--fundBalanceText)" : "var(--fundInactiveText)" }}>{t.fromBalance}</div>
+                            <div style={{ fontSize: 10, fontFamily: "'Space Mono', monospace", color: (goalFundSource[goal.id] || "balance") === "balance" ? "var(--fundBalanceVal)" : "var(--fundInactiveVal)", marginTop: 2 }}>
                               ${fmt(availableBalance)}
                             </div>
                           </button>
                           <button onClick={() => setGoalFundSource(prev => ({ ...prev, [goal.id]: "froggy" }))}
                             style={{
                               flex: 1, padding: "8px 6px", borderRadius: 8, cursor: froggyBank > 0 ? "pointer" : "default",
-                              background: (goalFundSource[goal.id]) === "froggy" ? "rgba(163,212,162,0.15)" : "#14121e",
-                              border: (goalFundSource[goal.id]) === "froggy" ? "2px solid #6ee7b7" : "1px solid var(--sceneBorder)",
+                              background: (goalFundSource[goal.id]) === "froggy" ? "var(--fundFrogBg)" : "var(--fundInactive)",
+                              border: (goalFundSource[goal.id]) === "froggy" ? "2px solid var(--fundFrogBorder)" : "1px solid var(--border)",
                               textAlign: "center", transition: "all 0.2s ease",
                               opacity: froggyBank > 0 ? 1 : 0.4,
                             }}>
                             <div style={{ fontSize: 14, marginBottom: 2 }}>🐸</div>
-                            <div style={{ fontSize: 9, fontWeight: 600, color: (goalFundSource[goal.id]) === "froggy" ? "#a3d4a2" : "#6b6580" }}>{t.fromFroggy}</div>
-                            <div style={{ fontSize: 10, fontFamily: "'Space Mono', monospace", color: (goalFundSource[goal.id]) === "froggy" ? "#7eb87d" : "#504a60", marginTop: 2 }}>
+                            <div style={{ fontSize: 9, fontWeight: 600, color: (goalFundSource[goal.id]) === "froggy" ? "var(--fundFrogText)" : "var(--fundInactiveText)" }}>{t.fromFroggy}</div>
+                            <div style={{ fontSize: 10, fontFamily: "'Space Mono', monospace", color: (goalFundSource[goal.id]) === "froggy" ? "var(--fundFrogVal)" : "var(--fundInactiveVal)", marginTop: 2 }}>
                               ${fmt(froggyBank)}
                             </div>
                           </button>
@@ -2268,20 +2273,20 @@ export default function ExpenseTracker() {
                               <button onClick={() => setGoalWithdrawDest(prev => ({ ...prev, [goal.id]: "balance" }))}
                                 style={{
                                   flex: 1, padding: "6px 4px", borderRadius: 6, cursor: "pointer",
-                                  background: (goalWithdrawDest[goal.id] || "balance") === "balance" ? "rgba(139,126,200,0.1)" : "#14121e",
-                                  border: (goalWithdrawDest[goal.id] || "balance") === "balance" ? "1.5px solid #38bdf8" : "1px solid var(--sceneBorder)",
+                                  background: (goalWithdrawDest[goal.id] || "balance") === "balance" ? "var(--fundBalanceBg)" : "var(--fundInactive)",
+                                  border: (goalWithdrawDest[goal.id] || "balance") === "balance" ? "1.5px solid var(--fundBalanceBorder)" : "1px solid var(--border)",
                                   textAlign: "center", transition: "all 0.2s ease",
                                 }}>
-                                <div style={{ fontSize: 9, fontWeight: 600, color: (goalWithdrawDest[goal.id] || "balance") === "balance" ? "#8b7ec8" : "#6b6580" }}>💰 {t.toBalance}</div>
+                                <div style={{ fontSize: 9, fontWeight: 600, color: (goalWithdrawDest[goal.id] || "balance") === "balance" ? "var(--fundBalanceText)" : "var(--fundInactiveText)" }}>💰 {t.toBalance}</div>
                               </button>
                               <button onClick={() => setGoalWithdrawDest(prev => ({ ...prev, [goal.id]: "froggy" }))}
                                 style={{
                                   flex: 1, padding: "6px 4px", borderRadius: 6, cursor: "pointer",
-                                  background: (goalWithdrawDest[goal.id]) === "froggy" ? "rgba(163,212,162,0.1)" : "#14121e",
-                                  border: (goalWithdrawDest[goal.id]) === "froggy" ? "1.5px solid #6ee7b7" : "1px solid var(--sceneBorder)",
+                                  background: (goalWithdrawDest[goal.id]) === "froggy" ? "var(--fundFrogBg)" : "var(--fundInactive)",
+                                  border: (goalWithdrawDest[goal.id]) === "froggy" ? "1.5px solid var(--fundFrogBorder)" : "1px solid var(--border)",
                                   textAlign: "center", transition: "all 0.2s ease",
                                 }}>
-                                <div style={{ fontSize: 9, fontWeight: 600, color: (goalWithdrawDest[goal.id]) === "froggy" ? "#a3d4a2" : "#6b6580" }}>🐸 {t.toFroggy}</div>
+                                <div style={{ fontSize: 9, fontWeight: 600, color: (goalWithdrawDest[goal.id]) === "froggy" ? "var(--fundFrogText)" : "var(--fundInactiveText)" }}>🐸 {t.toFroggy}</div>
                               </button>
                             </div>
                             <div style={{ display: "flex", gap: 6 }}>
@@ -2321,20 +2326,20 @@ export default function ExpenseTracker() {
                           <button onClick={() => setGoalWithdrawDest(prev => ({ ...prev, [goal.id]: "balance" }))}
                             style={{
                               flex: 1, padding: "6px 4px", borderRadius: 6, cursor: "pointer",
-                              background: (goalWithdrawDest[goal.id] || "balance") === "balance" ? "rgba(139,126,200,0.1)" : "#14121e",
-                              border: (goalWithdrawDest[goal.id] || "balance") === "balance" ? "1.5px solid #38bdf8" : "1px solid var(--sceneBorder)",
+                              background: (goalWithdrawDest[goal.id] || "balance") === "balance" ? "var(--fundBalanceBg)" : "var(--fundInactive)",
+                              border: (goalWithdrawDest[goal.id] || "balance") === "balance" ? "1.5px solid var(--fundBalanceBorder)" : "1px solid var(--border)",
                               textAlign: "center",
                             }}>
-                            <div style={{ fontSize: 9, fontWeight: 600, color: (goalWithdrawDest[goal.id] || "balance") === "balance" ? "#8b7ec8" : "#6b6580" }}>💰 {t.toBalance}</div>
+                            <div style={{ fontSize: 9, fontWeight: 600, color: (goalWithdrawDest[goal.id] || "balance") === "balance" ? "var(--fundBalanceText)" : "var(--fundInactiveText)" }}>💰 {t.toBalance}</div>
                           </button>
                           <button onClick={() => setGoalWithdrawDest(prev => ({ ...prev, [goal.id]: "froggy" }))}
                             style={{
                               flex: 1, padding: "6px 4px", borderRadius: 6, cursor: "pointer",
-                              background: (goalWithdrawDest[goal.id]) === "froggy" ? "rgba(163,212,162,0.1)" : "#14121e",
-                              border: (goalWithdrawDest[goal.id]) === "froggy" ? "1.5px solid #6ee7b7" : "1px solid var(--sceneBorder)",
+                              background: (goalWithdrawDest[goal.id]) === "froggy" ? "var(--fundFrogBg)" : "var(--fundInactive)",
+                              border: (goalWithdrawDest[goal.id]) === "froggy" ? "1.5px solid var(--fundFrogBorder)" : "1px solid var(--border)",
                               textAlign: "center",
                             }}>
-                            <div style={{ fontSize: 9, fontWeight: 600, color: (goalWithdrawDest[goal.id]) === "froggy" ? "#a3d4a2" : "#6b6580" }}>🐸 {t.toFroggy}</div>
+                            <div style={{ fontSize: 9, fontWeight: 600, color: (goalWithdrawDest[goal.id]) === "froggy" ? "var(--fundFrogText)" : "var(--fundInactiveText)" }}>🐸 {t.toFroggy}</div>
                           </button>
                         </div>
                         <div style={{ display: "flex", gap: 6 }}>
@@ -2537,7 +2542,7 @@ export default function ExpenseTracker() {
                 {currentTableData.earnings.length === 0 ? (
                   <tr><td colSpan={5} style={{ padding: 20, textAlign: "center", color: "var(--textDark)", fontStyle: "italic" }}>{t.noEarnings}</td></tr>
                 ) : currentTableData.earnings.map((e, i) => (
-                  <tr key={e.id} style={{ borderBottom: "1px solid var(--border2)", background: i % 2 === 0 ? "transparent" : "rgba(51,65,85,0.3)" }}>
+                  <tr key={e.id} style={{ borderBottom: "1px solid var(--border2)", background: i % 2 === 0 ? "transparent" : "var(--bgAlt)" }}>
                     <td style={{ padding: "8px 10px", fontFamily: "'Space Mono', monospace", fontSize: 12, color: "var(--textSub)", verticalAlign: "middle", whiteSpace: "nowrap" }}>{e.date || "—"}</td>
                     <td style={{ padding: "8px 10px", fontWeight: 500, verticalAlign: "middle" }}>{e.label}</td>
                     <td style={{ padding: "8px 10px" }}><span style={{ padding: "2px 8px", borderRadius: 4, fontSize: 11, fontWeight: 600, background: "rgba(126,184,125,0.15)", color: "var(--pos)" }}>{earnCatEmoji[e.category] || expCatEmoji[e.category] || ""} {xCat[e.category] || eCat[e.category] || e.category}</span></td>
@@ -2586,7 +2591,7 @@ export default function ExpenseTracker() {
                 {currentTableData.expenses.length === 0 ? (
                   <tr><td colSpan={5} style={{ padding: 20, textAlign: "center", color: "var(--textDark)", fontStyle: "italic" }}>{t.noExpenses}</td></tr>
                 ) : currentTableData.expenses.map((e, i) => (
-                  <tr key={e.id} style={{ borderBottom: "1px solid var(--border2)", background: i % 2 === 0 ? "transparent" : "rgba(51,65,85,0.3)" }}>
+                  <tr key={e.id} style={{ borderBottom: "1px solid var(--border2)", background: i % 2 === 0 ? "transparent" : "var(--bgAlt)" }}>
                     <td style={{ padding: "8px 10px", fontFamily: "'Space Mono', monospace", fontSize: 12, color: "var(--textSub)", verticalAlign: "middle", whiteSpace: "nowrap" }}>{e.date || "—"}</td>
                     <td style={{ padding: "8px 10px", fontWeight: 500, verticalAlign: "middle" }}>{e.label}</td>
                     <td style={{ padding: "8px 10px" }}><span style={{ padding: "2px 8px", borderRadius: 4, fontSize: 11, fontWeight: 600, background: "rgba(107,90,180,0.15)", color: "#a8a0cc" }}>{expCatEmoji[e.category] || earnCatEmoji[e.category] || ""} {xCat[e.category] || eCat[e.category] || e.category}</span></td>
