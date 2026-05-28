@@ -606,8 +606,10 @@ export default function ExpenseTracker() {
   const [newCatName, setNewCatName] = useState("");
   const [newCatType, setNewCatType] = useState("expense");
   const [showCatManager, setShowCatManager] = useState(false);
-  const [activeTab, setActiveTab] = useState("budget");
-  const [recordsSubTab, setRecordsSubTab] = useState("earning");
+  const [activeTab, setActiveTabRaw] = useState(() => loadData("activeTab", "budget"));
+  const setActiveTab = (tab) => { setActiveTabRaw(tab); saveData("activeTab", tab); };
+  const [recordsSubTab, setRecordsSubTabRaw] = useState(() => loadData("recordsSubTab", "earning"));
+  const setRecordsSubTab = (tab) => { setRecordsSubTabRaw(tab); saveData("recordsSubTab", tab); };
   const [showDashboard, setShowDashboard] = useState(false);
   const earnCatNames = customEarnCats.map(function(c) { return c.name; });
   const expCatNames = customExpCats.map(function(c) { return c.name; });
@@ -1096,19 +1098,29 @@ export default function ExpenseTracker() {
   };
 
   const saveSnapshot = (label) => {
-    setUndoStack(prev => {
-      const snapshot = {
-        label,
-        startingBalance,
-        allYearData: JSON.parse(JSON.stringify(allYearData)),
-        budgetEntries: JSON.parse(JSON.stringify(budgetEntries)),
-        goals: JSON.parse(JSON.stringify(goals)),
-        froggyBalance,
-        froggyHistory: JSON.parse(JSON.stringify(froggyHistory)),
-      };
-      const next = [...prev, snapshot];
-      return next.length > MAX_UNDO ? next.slice(next.length - MAX_UNDO) : next;
-    });
+    // Capture current state references synchronously
+    var snapBalance = startingBalance;
+    var snapYear = allYearData;
+    var snapBudgets = budgetEntries;
+    var snapGoals = goals;
+    var snapFroggy = froggyBalance;
+    var snapHistory = froggyHistory;
+    // Defer the expensive deep clone so UI updates first
+    setTimeout(function() {
+      setUndoStack(prev => {
+        var snapshot = {
+          label: label,
+          startingBalance: snapBalance,
+          allYearData: JSON.parse(JSON.stringify(snapYear)),
+          budgetEntries: JSON.parse(JSON.stringify(snapBudgets)),
+          goals: JSON.parse(JSON.stringify(snapGoals)),
+          froggyBalance: snapFroggy,
+          froggyHistory: JSON.parse(JSON.stringify(snapHistory)),
+        };
+        var next = [].concat(prev, [snapshot]);
+        return next.length > MAX_UNDO ? next.slice(next.length - MAX_UNDO) : next;
+      });
+    }, 0);
   };
 
   const undo = () => {
