@@ -1098,29 +1098,19 @@ export default function ExpenseTracker() {
   };
 
   const saveSnapshot = (label) => {
-    // Capture current state references synchronously
-    var snapBalance = startingBalance;
-    var snapYear = allYearData;
-    var snapBudgets = budgetEntries;
-    var snapGoals = goals;
-    var snapFroggy = froggyBalance;
-    var snapHistory = froggyHistory;
-    // Defer the expensive deep clone so UI updates first
-    setTimeout(function() {
-      setUndoStack(prev => {
-        var snapshot = {
-          label: label,
-          startingBalance: snapBalance,
-          allYearData: JSON.parse(JSON.stringify(snapYear)),
-          budgetEntries: JSON.parse(JSON.stringify(snapBudgets)),
-          goals: JSON.parse(JSON.stringify(snapGoals)),
-          froggyBalance: snapFroggy,
-          froggyHistory: JSON.parse(JSON.stringify(snapHistory)),
-        };
-        var next = [].concat(prev, [snapshot]);
-        return next.length > MAX_UNDO ? next.slice(next.length - MAX_UNDO) : next;
-      });
-    }, 0);
+    setUndoStack(prev => {
+      var snapshot = {
+        label: label,
+        startingBalance: startingBalance,
+        allYearData: JSON.parse(JSON.stringify(allYearData)),
+        budgetEntries: JSON.parse(JSON.stringify(budgetEntries)),
+        goals: JSON.parse(JSON.stringify(goals)),
+        froggyBalance: froggyBalance,
+        froggyHistory: JSON.parse(JSON.stringify(froggyHistory)),
+      };
+      var next = [].concat(prev, [snapshot]);
+      return next.length > MAX_UNDO ? next.slice(next.length - MAX_UNDO) : next;
+    });
   };
 
   const undo = () => {
