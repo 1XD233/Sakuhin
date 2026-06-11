@@ -1,4 +1,4 @@
-import { useState, useMemo, useRef } from "react";
+import { useState, useMemo, useRef, useEffect } from "react";
 
 const MONTHS_EN = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
 const MONTHS_ZH = ["1月","2月","3月","4月","5月","6月","7月","8月","9月","10月","11月","12月"];
@@ -48,7 +48,7 @@ function matchCatEmoji(name) {
 // Keep flat arrays for backward compat
 var EARN_CATEGORIES = DEFAULT_EARN_CATS.map(function(c) { return c.name; });
 var EXP_CATEGORIES = DEFAULT_EXP_CATS.map(function(c) { return c.name; });
-const MAX_UNDO = 30;
+const MAX_UNDO = 15;
 
 
 
@@ -607,6 +607,19 @@ export default function ExpenseTracker() {
   const [newCatType, setNewCatType] = useState("expense");
   const [showCatManager, setShowCatManager] = useState(false);
   const [activeTab, setActiveTabRaw] = useState(() => loadData("activeTab", "budget"));
+
+  // iOS suspends tabs and restores them from back-forward cache with a degraded
+  // JS environment, causing UI freezes. Detect restoration and do a clean reload.
+  // All data is in localStorage so nothing is lost.
+  useEffect(() => {
+    const onPageShow = (event) => {
+      if (event.persisted) {
+        window.location.reload();
+      }
+    };
+    window.addEventListener("pageshow", onPageShow);
+    return () => window.removeEventListener("pageshow", onPageShow);
+  }, []);
   const setActiveTab = (tab) => { setActiveTabRaw(tab); saveData("activeTab", tab); };
   const [recordsSubTab, setRecordsSubTabRaw] = useState(() => loadData("recordsSubTab", "earning"));
   const setRecordsSubTab = (tab) => { setRecordsSubTabRaw(tab); saveData("recordsSubTab", tab); };
