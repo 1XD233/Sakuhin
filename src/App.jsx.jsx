@@ -378,7 +378,8 @@ const defaultYearData = () => {
   MONTHS_EN.forEach((_, i) => { d[i] = { earnings: [], expenses: [] }; });
   return d;
 };
-let nextId = 1;
+let idCounter = 0;
+const genId = () => Date.now() * 1000 + (idCounter++ % 1000);
 
 
 // ─── EMOJI-BASED FINANCIAL BREAKDOWN ───
@@ -518,7 +519,7 @@ export default function ExpenseTracker() {
   };
   const addFroggyLog = (label, category, amount, month, year) => {
     setFroggyHistory(prev => {
-      const next = [...prev, { id: nextId++, label, category, amount, month, year, timestamp: Date.now() }];
+      const next = [...prev, { id: genId(), label, category, amount, month, year, timestamp: Date.now() }];
       saveData("froggyHistory", next);
       return next;
     });
@@ -567,13 +568,13 @@ export default function ExpenseTracker() {
     if (amt > 0) {
       updateYearData(prev => {
         const yd = { ...(prev[targetYear] || defaultYearData()) };
-        yd[targetMonth] = { ...yd[targetMonth], earnings: [...yd[targetMonth].earnings, { id: nextId++, label, amount: amt, category: "Adjustment", date: todayStr }] };
+        yd[targetMonth] = { ...yd[targetMonth], earnings: [...yd[targetMonth].earnings, { id: genId(), label, amount: amt, category: "Adjustment", date: todayStr }] };
         return { ...prev, [targetYear]: yd };
       });
     } else {
       updateYearData(prev => {
         const yd = { ...(prev[targetYear] || defaultYearData()) };
-        yd[targetMonth] = { ...yd[targetMonth], expenses: [...yd[targetMonth].expenses, { id: nextId++, label, amount: Math.abs(amt), category: "Adjustment", date: todayStr }] };
+        yd[targetMonth] = { ...yd[targetMonth], expenses: [...yd[targetMonth].expenses, { id: genId(), label, amount: Math.abs(amt), category: "Adjustment", date: todayStr }] };
         return { ...prev, [targetYear]: yd };
       });
     }
@@ -685,7 +686,7 @@ export default function ExpenseTracker() {
     saveSnapshot(t.addBudgetAction);
     const targetMonth = budgetScope === "all" ? "all" : budgetMonth;
     updateBudgets(prev => [...prev, {
-      id: nextId++, label: budgetLabel || "Budget " + (prev.length + 1),
+      id: genId(), label: budgetLabel || "Budget " + (prev.length + 1),
       category: budgetCategory, amount: parseFloat(budgetAmount) || 0,
       scope: targetMonth, scopeYear: selectedYear,
       // For single-month: simple lock state
@@ -966,7 +967,7 @@ export default function ExpenseTracker() {
   const addGoal = () => {
     if (!goalName || !goalValue) return;
     saveSnapshot(t.addGoalAction);
-    updateGoals(prev => [...prev, { id: nextId++, name: goalName, value: parseFloat(goalValue) || 0, image: goalImage || "", imageType: goalImageType, saved: 0 }]);
+    updateGoals(prev => [...prev, { id: genId(), name: goalName, value: parseFloat(goalValue) || 0, image: goalImage || "", imageType: goalImageType, saved: 0 }]);
     setGoalName(""); setGoalValue(""); setGoalImage(""); setGoalImageType("preset"); setAutoMatched(false); setAiSource(""); setShowGoalForm(false);
   };
   const removeGoal = (id) => { saveSnapshot(t.removeGoalAction); updateGoals(prev => prev.filter(g => g.id !== id)); };
@@ -1155,7 +1156,7 @@ export default function ExpenseTracker() {
     const targetYear = dateObj.getFullYear();
     updateYearData(prev => {
       const yd = { ...(prev[targetYear] || defaultYearData()) };
-      yd[targetMonth] = { ...yd[targetMonth], earnings: [...yd[targetMonth].earnings, { id: nextId++, label: earnLabel || "Earning " + (yd[targetMonth].earnings.length + 1), amount: parseFloat(earnAmount) || 0, category: earnCategory, date: earnDate }] };
+      yd[targetMonth] = { ...yd[targetMonth], earnings: [...yd[targetMonth].earnings, { id: genId(), label: earnLabel || "Earning " + (yd[targetMonth].earnings.length + 1), amount: parseFloat(earnAmount) || 0, category: earnCategory, date: earnDate }] };
       return { ...prev, [targetYear]: yd };
     });
     if (targetYear !== selectedYear) setSelectedYear(targetYear);
@@ -1171,7 +1172,7 @@ export default function ExpenseTracker() {
     const targetYear = dateObj.getFullYear();
     updateYearData(prev => {
       const yd = { ...(prev[targetYear] || defaultYearData()) };
-      yd[targetMonth] = { ...yd[targetMonth], expenses: [...yd[targetMonth].expenses, { id: nextId++, label: expLabel || "Expense " + (yd[targetMonth].expenses.length + 1), amount: amt, category: expCategory, date: expDate }] };
+      yd[targetMonth] = { ...yd[targetMonth], expenses: [...yd[targetMonth].expenses, { id: genId(), label: expLabel || "Expense " + (yd[targetMonth].expenses.length + 1), amount: amt, category: expCategory, date: expDate }] };
       return { ...prev, [targetYear]: yd };
     });
     if (targetYear !== selectedYear) setSelectedYear(targetYear);
