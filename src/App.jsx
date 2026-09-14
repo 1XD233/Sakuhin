@@ -1,4 +1,7 @@
 import { useState, useMemo, useRef, useEffect } from "react";
+import RecordsPanel from "./RecordsPanel.jsx";
+import { RECORDS_COPY } from "./records-copy.js";
+import { localDateString, validateRecord, recordsForPeriod, writeRecord, removeRecord } from "./records.js";
 
 const MONTHS_EN = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
 const MONTHS_ZH = ["1月","2月","3月","4月","5月","6月","7月","8月","9月","10月","11月","12月"];
@@ -469,6 +472,7 @@ export default function ExpenseTracker() {
   const [lang, setLang] = useState(() => loadData("lang", "en"));
   const [mode, setMode] = useState(() => loadData("mode", "dark"));
   const t = T[lang];
+  const recordCopy = RECORDS_COPY[lang];
   const MONTHS = t.months;
   const eCat = T.earnCat[lang];
   const xCat = T.expCat[lang];
@@ -559,7 +563,7 @@ export default function ExpenseTracker() {
     const amt = parseFloat(correctionAmount);
     if (!amt || amt === 0) return;
     saveSnapshot(lang === "zh" ? "余额校正" : "Balance correction");
-    const todayStr = new Date().toISOString().split("T")[0];
+    const todayStr = localDateString();
     const dateObj = new Date(todayStr + "T00:00:00");
     const targetMonth = dateObj.getMonth();
     const targetYear = dateObj.getFullYear();
@@ -664,7 +668,7 @@ export default function ExpenseTracker() {
   const [earnAmount, setEarnAmount] = useState("");
   const [earnLabel, setEarnLabel] = useState("");
   const [earnCategory, setEarnCategory] = useState("Salary");
-  const todayStr = new Date().toISOString().split("T")[0];
+  const todayStr = localDateString();
   const [earnDate, setEarnDate] = useState(todayStr);
 
   const [expAmount, setExpAmount] = useState("");
@@ -1046,7 +1050,6 @@ export default function ExpenseTracker() {
 
   const yearData = allYearData[selectedYear] || defaultYearData();
   const isAll = selectedMonth === "all";
-  const tableMonth = isAll ? null : selectedMonth;
 
   const currentBalance = useMemo(() => {
     const start = parseFloat(startingBalance) || 0;
@@ -1074,27 +1077,28 @@ export default function ExpenseTracker() {
   const totalAllocated = useMemo(() => goals.reduce((s, g) => s + g.saved, 0) + froggyBank, [goals, froggyBank]);
   const availableBalance = currentBalance - totalAllocated;
 
-  const currentTableData = useMemo(() => {
-    var dateSorter = function(a, b) { return (b.date || "").localeCompare(a.date || ""); };
-    if (tableMonth !== null) {
-      var md = yearData[tableMonth];
-      return { earnings: [].concat(md.earnings).sort(dateSorter), expenses: [].concat(md.expenses).sort(dateSorter) };
-    }
-    const combined = { earnings: [], expenses: [] };
-    MONTHS_EN.forEach((_, i) => {
-      yearData[i].earnings.forEach(e => combined.earnings.push({ ...e, month: MONTHS[i] }));
-      yearData[i].expenses.forEach(e => combined.expenses.push({ ...e, month: MONTHS[i] }));
-    });
-    combined.earnings.sort(dateSorter);
-    combined.expenses.sort(dateSorter);
-    return combined;
-  }, [yearData, tableMonth]);
+  const currentTableData = useMemo(() => ({
+    earnings: recordsForPeriod(allYearData, selectedYear, selectedMonth, "earning"),
+    expenses: recordsForPeriod(allYearData, selectedYear, selectedMonth, "expense"),
+  }), [allYearData, selectedYear, selectedMonth]);
 
   // ─── UNDO SYSTEM ───
   const [undoStack, setUndoStack] = useState([]);
   const [undoMessage, setUndoMessage] = useState("");
   const undoTimerRef = useRef(null);
   const [showResetConfirm, setShowResetConfirm] = useState(false);
+  const [recordFocusRequest, setRecordFocusRequest] = useState(0);
+  const [recordStorageError, setRecordStorageError] = useState(false);
+  const [onboardRecordError, setOnboardRecordError] = useState("");
+
+  useEffect(() => {
+    document.documentElement.lang = lang === "zh" ? "zh-CN" : "en";
+  }, [lang]);
+
+  useEffect(() => () => {
+    clearTimeout(undoTimerRef.current);
+    clearTimeout(aiTimerRef.current);
+  }, []);
 
   const resetAll = () => {
     setStartingBalance(""); setEditingBalance(false); setOnboarded(false);
@@ -1148,53 +1152,73 @@ export default function ExpenseTracker() {
     undoTimerRef.current = setTimeout(() => setUndoMessage(""), 2500);
   };
 
+  const notifyRecord = message => {
+    setUndoMessage(message);
+    clearTimeout(undoTimerRef.current);
+    undoTimerRef.current = setTimeout(() => setUndoMessage(""), 6000);
+  };
+
+  // Commit the record only after storage succeeds, keeping the draft on failure.
+  const persistRecords = next => {
+    try {
+      localStorage.setItem("sakuhin_yearData", JSON.stringify(next));
+      setRecordStorageError(false);
+      return true;
+    } catch {
+      setRecordStorageError(true);
+      return false;
+    }
+  };
+
+  const saveRecord = (kind, draft, original = null) => {
+    const validation = validateRecord(draft);
+    if (validation.error) return validation;
+    const key = kind === "earning" ? "earnings" : "expenses";
+    if (original && !allYearData[original.sourceYear]?.[original.sourceMonth]?.[key]?.some(record => record.id === original.id)) {
+      return { error: "recordChanged" };
+    }
+    const names = kind === "earning" ? earnCatNames : expCatNames;
+    if (!names.includes(draft.category) && draft.category !== original?.category) return { error: "invalidCategory" };
+    const translations = kind === "earning" ? eCat : xCat;
+    const targetRows = allYearData[validation.year]?.[validation.month]?.[key] || [];
+    const sameBucket = original && original.sourceYear === validation.year && original.sourceMonth === validation.month;
+    const preserveId = original && (sameBucket || !targetRows.some(record => record.id === original.id));
+    const record = {
+      ...original,
+      id: preserveId ? original.id : genId(),
+      label: draft.label.trim() || translations[draft.category] || draft.category,
+      amount: validation.amount, category: draft.category, date: draft.date,
+    };
+    const next = writeRecord(allYearData, kind, record, original);
+    if (!persistRecords(next)) return { error: "storageError" };
+    saveSnapshot(original ? recordCopy.editRecord : kind === "earning" ? t.addEarningAction : t.addExpenseAction);
+    setAllYearData(next);
+    setSelectedYear(validation.year);
+    setSelectedMonth(previous => previous === "all" ? "all" : validation.month);
+    notifyRecord((original ? recordCopy.updated : recordCopy.saved) + " · " + record.date);
+    return { ok: true };
+  };
+
+  const deleteRecord = (kind, record) => {
+    const next = removeRecord(allYearData, kind, record);
+    if (!persistRecords(next)) return { error: "storageError" };
+    saveSnapshot(kind === "earning" ? t.removeEarningAction : t.removeExpenseAction);
+    setAllYearData(next);
+    notifyRecord(recordCopy.removed + " · " + record.label);
+    return { ok: true };
+  };
+
+  // Onboarding shares the same validation and calendar-date rules.
   const addEarning = () => {
-    if (!earnAmount) return;
-    saveSnapshot(t.addEarningAction);
-    const dateObj = new Date(earnDate + "T00:00:00");
-    const targetMonth = dateObj.getMonth();
-    const targetYear = dateObj.getFullYear();
-    updateYearData(prev => {
-      const yd = { ...(prev[targetYear] || defaultYearData()) };
-      yd[targetMonth] = { ...yd[targetMonth], earnings: [...yd[targetMonth].earnings, { id: genId(), label: earnLabel || "Earning " + (yd[targetMonth].earnings.length + 1), amount: parseFloat(earnAmount) || 0, category: earnCategory, date: earnDate }] };
-      return { ...prev, [targetYear]: yd };
-    });
-    if (targetYear !== selectedYear) setSelectedYear(targetYear);
-    setEarnAmount(""); setEarnLabel(""); setEarnDate(todayStr);
+    const result = saveRecord("earning", { amount: earnAmount, label: earnLabel, category: earnCategory, date: earnDate });
+    setOnboardRecordError(result.error || "");
+    if (result.ok) { setEarnAmount(""); setEarnLabel(""); setEarnDate(localDateString()); }
   };
 
   const addExpense = () => {
-    if (!expAmount) return;
-    saveSnapshot(t.addExpenseAction);
-    const amt = parseFloat(expAmount) || 0;
-    const dateObj = new Date(expDate + "T00:00:00");
-    const targetMonth = dateObj.getMonth();
-    const targetYear = dateObj.getFullYear();
-    updateYearData(prev => {
-      const yd = { ...(prev[targetYear] || defaultYearData()) };
-      yd[targetMonth] = { ...yd[targetMonth], expenses: [...yd[targetMonth].expenses, { id: genId(), label: expLabel || "Expense " + (yd[targetMonth].expenses.length + 1), amount: amt, category: expCategory, date: expDate }] };
-      return { ...prev, [targetYear]: yd };
-    });
-    if (targetYear !== selectedYear) setSelectedYear(targetYear);
-    setExpAmount(""); setExpLabel(""); setExpCategory("Food"); setExpDate(todayStr);
-  };
-
-  const removeEarning = (id) => {
-    saveSnapshot(t.removeEarningAction);
-    updateYearData(prev => {
-      const yd = { ...(prev[selectedYear] || defaultYearData()) };
-      MONTHS_EN.forEach((_, i) => { if (yd[i].earnings.some(e => e.id === id)) yd[i] = { ...yd[i], earnings: yd[i].earnings.filter(e => e.id !== id) }; });
-      return { ...prev, [selectedYear]: yd };
-    });
-  };
-
-  const removeExpense = (id) => {
-    saveSnapshot(t.removeExpenseAction);
-    updateYearData(prev => {
-      const yd = { ...(prev[selectedYear] || defaultYearData()) };
-      MONTHS_EN.forEach((_, i) => { if (yd[i].expenses.some(e => e.id === id)) yd[i] = { ...yd[i], expenses: yd[i].expenses.filter(e => e.id !== id) }; });
-      return { ...prev, [selectedYear]: yd };
-    });
+    const result = saveRecord("expense", { amount: expAmount, label: expLabel, category: expCategory, date: expDate });
+    setOnboardRecordError(result.error || "");
+    if (result.ok) { setExpAmount(""); setExpLabel(""); setExpDate(localDateString()); }
   };
 
   const totals = useMemo(() => ({
@@ -1274,6 +1298,8 @@ export default function ExpenseTracker() {
   return (
     <div style={{ minHeight: "100vh", fontFamily: "'Noto Sans JP', 'Segoe UI', sans-serif", background: "var(--gradBg)", color: "var(--text)", padding: "24px 16px", overflowX: "hidden" }}>
       <style>{mainCSS}</style>
+      {recordStorageError && <p role="alert" className="record-error">{recordCopy.storageError}</p>}
+      {!onboarded && onboardRecordError && <p role="alert" className="record-error">{recordCopy[onboardRecordError]}</p>}
 
       {/* ─── ONBOARDING ─── */}
       {!onboarded ? (
@@ -1480,9 +1506,9 @@ export default function ExpenseTracker() {
             </div>
             <div style={{ display: "flex", alignItems: "center", gap: 4, flexWrap: "wrap", justifyContent: "flex-end" }}>
               {/* Date picker */}
-              <input type="number" placeholder="Year" value={selectedYear} onChange={e => handleYearChange(e.target.value)}
+              <input type="number" aria-label={t.enterYear} placeholder="Year" value={selectedYear} onChange={e => handleYearChange(e.target.value)}
                 style={{ width: 56, padding: "5px 4px", borderRadius: 6, border: "1px solid var(--border)", background: "var(--bg3)", color: "var(--text)", fontSize: 11, fontFamily: "'Space Mono', monospace", textAlign: "center" }} />
-              <select value={selectedMonth === "all" ? "all" : selectedMonth} onChange={e => setSelectedMonth(e.target.value === "all" ? "all" : parseInt(e.target.value))}
+              <select aria-label={t.selectMonth} value={selectedMonth === "all" ? "all" : selectedMonth} onChange={e => setSelectedMonth(e.target.value === "all" ? "all" : parseInt(e.target.value))}
                 style={{ padding: "5px 4px", borderRadius: 6, border: "1px solid var(--border)", background: "var(--bg3)", color: "var(--text)", fontSize: 11 }}>
                 <option value="all">{t.all}</option>
                 {MONTHS.map((m, i) => <option key={i} value={i}>{m}</option>)}
@@ -1496,13 +1522,13 @@ export default function ExpenseTracker() {
                 background: "var(--gradBtn)", color: "var(--textSub)", fontSize: 10, fontWeight: 600,
               }}>{lang === "en" ? "中" : "EN"}</button>
               {undoStack.length > 0 && (
-                <button onClick={undo} style={{
+                <button aria-label={t.undo} title={t.undo} onClick={undo} style={{
                   padding: "5px 8px", borderRadius: 6, border: "none", cursor: "pointer",
                   background: "var(--gradBtn)", color: "var(--text)", fontSize: 10, fontWeight: 600,
                   display: "flex", alignItems: "center", gap: 3,
                 }}>↩ <span style={{ padding: "0 4px", borderRadius: 3, background: "rgba(255,255,255,0.08)", fontSize: 9 }}>{undoStack.length}</span></button>
               )}
-              <button onClick={() => setShowResetConfirm(true)} style={{
+              <button aria-label={lang === "zh" ? "重置所有数据" : "Reset all data"} title={lang === "zh" ? "重置所有数据" : "Reset all data"} onClick={() => setShowResetConfirm(true)} style={{
                 padding: "5px 8px", borderRadius: 6, border: "none", cursor: "pointer",
                 background: "var(--gradBtn)", color: "var(--textMuted)", fontSize: 10,
               }}>✕</button>
@@ -1557,6 +1583,15 @@ export default function ExpenseTracker() {
           <div style={{ fontSize: 16, color: "var(--textMuted)" }}>▸</div>
         </div>
 
+        <div className="quick-record-bar">
+          <p>{selectedYear} · {isAll ? t.allMonths : MONTHS[selectedMonth]}</p>
+          <button type="button" className="record-button record-primary" onClick={() => {
+            setActiveTab("records");
+            setRecordsSubTab("expense");
+            setRecordFocusRequest(previous => previous + 1);
+          }}>＋ {recordCopy.quickAdd}</button>
+        </div>
+
         {/* ═══ TAB NAVIGATION ═══ */}
         <div className="tab-bar" style={{ marginBottom: 14 }}>
           {[
@@ -1566,7 +1601,7 @@ export default function ExpenseTracker() {
             { key: "records", label: t.tabRecords, icon: "📋" },
           ].map(function(tab) {
             return (
-              <button key={tab.key} onClick={() => setActiveTab(tab.key)}
+              <button key={tab.key} aria-pressed={activeTab === tab.key} onClick={() => setActiveTab(tab.key)}
                 className={activeTab === tab.key ? "tab-btn tab-btn-active" : "tab-btn tab-btn-inactive"}>
                 {tab.icon} {tab.label}
               </button>
@@ -2521,138 +2556,31 @@ export default function ExpenseTracker() {
         </div>
         )}
 
-        {/* ═══ TAB: RECORDS ═══ */}
-        {activeTab === "records" && (
-        <div className="tab-content">
-        <div style={{ display: "flex", gap: 6, marginBottom: 14 }}>
-          <button onClick={() => setRecordsSubTab("earning")}
-            className={recordsSubTab === "earning" ? "sub-tab sub-tab-active" : "sub-tab sub-tab-inactive"}>
-            {"↗ " + t.earnings}
-          </button>
-          <button onClick={() => setRecordsSubTab("expense")}
-            className={recordsSubTab === "expense" ? "sub-tab sub-tab-active" : "sub-tab sub-tab-inactive"}>
-            {"↘ " + t.expenses}
-          </button>
+        {/* Keep drafts and searches when switching to budgets or goals. */}
+        <div hidden={activeTab !== "records"}>
+          <RecordsPanel
+            lang={lang} t={t} active={activeTab === "records"} kind={recordsSubTab}
+            onTypeChange={setRecordsSubTab}
+            records={{ earning: currentTableData.earnings, expense: currentTableData.expenses }}
+            categories={{ earning: earnCatNames, expense: expCatNames }}
+            categoryNames={{ earning: eCat, expense: xCat }}
+            categoryEmojis={{ earning: earnCatEmoji, expense: expCatEmoji }}
+            periodLabel={selectedYear + " · " + (isAll ? t.allMonths : MONTHS[selectedMonth])}
+            focusRequest={recordFocusRequest} onSave={saveRecord} onRemove={deleteRecord}
+          />
         </div>
-
-        {recordsSubTab === "earning" && (
-        <div>
-        {/* Earnings Table */}
-        <div style={{ padding: 16, borderRadius: 12, background: "var(--bg2)", border: "1px solid var(--border)", marginBottom: 16 }}>
-          <h3 style={{ margin: "0 0 14px", fontSize: 15, fontWeight: 700, color: "var(--pos)", display: "flex", alignItems: "center", gap: 8 }}>
-            <span style={{ fontSize: 18 }}>↗</span> {t.earnings} — {isAll ? selectedYear + " (" + t.allMonths + ")" : MONTHS[selectedMonth] + " " + selectedYear}
-          </h3>
-          <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 14 }}>
-            <input placeholder={t.earningLabel} value={earnLabel} onChange={e => setEarnLabel(e.target.value)} style={{ flex: "1 1 140px", padding: "9px 12px", borderRadius: 8, border: "1px solid var(--border)", background: "var(--bg3)", color: "var(--text)", fontSize: 13 }} />
-            <select value={earnCategory} onChange={e => setEarnCategory(e.target.value)} style={{ flex: "1 1 120px", padding: "9px 12px", borderRadius: 8, border: "1px solid var(--border)", background: "var(--bg3)", color: "var(--text)", fontSize: 13 }}>
-              {earnCatNames.map(c => <option key={c} value={c}>{eCat[c] || c}</option>)}
-            </select>
-            <input type="number" placeholder={t.amountDollar} value={earnAmount} onChange={e => setEarnAmount(e.target.value)} style={{ flex: "1 1 120px", padding: "9px 12px", borderRadius: 8, border: "1px solid var(--border)", background: "var(--bg3)", color: "var(--text)", fontSize: 13, fontFamily: "'Space Mono', monospace" }} />
-            <input type="date" value={earnDate} max={todayStr} onChange={e => setEarnDate(e.target.value)} style={{ flex: "1 1 130px", padding: "9px 12px", borderRadius: 8, border: "1px solid var(--border)", background: "var(--bg3)", color: "var(--text)", fontSize: 13, fontFamily: "'Space Mono', monospace" }} />
-            <button onClick={addEarning} style={{ padding: "9px 18px", borderRadius: 8, border: "none", cursor: "pointer", background: "var(--gradEarn)", color: "var(--btnText)", fontSize: 13, fontWeight: 700, whiteSpace: "nowrap" }}>{t.add}</button>
-          </div>
-          <div style={{ overflowX: "auto", WebkitOverflowScrolling: "touch" }}>
-            <table style={{ width: "100%", minWidth: 480, borderCollapse: "collapse", fontSize: 13 }}>
-              <thead><tr style={{ borderBottom: "2px solid var(--border)" }}>
-                {[t.date, t.source, t.category, t.amountDollar, ""].map((h, idx) => (
-                  <th key={idx} style={{ padding: "8px 10px", textAlign: "left", color: "var(--textMuted)", fontSize: 11, textTransform: "uppercase", letterSpacing: 1, whiteSpace: "nowrap" }}>{h}</th>
-                ))}
-              </tr></thead>
-              <tbody>
-                {currentTableData.earnings.length === 0 ? (
-                  <tr><td colSpan={5} style={{ padding: 20, textAlign: "center", color: "var(--textDark)", fontStyle: "italic" }}>{t.noEarnings}</td></tr>
-                ) : currentTableData.earnings.map((e, i) => (
-                  <tr key={e.id} style={{ borderBottom: "1px solid var(--border2)", background: i % 2 === 0 ? "transparent" : "var(--bgAlt)" }}>
-                    <td style={{ padding: "8px 10px", fontFamily: "'Space Mono', monospace", fontSize: 12, color: "var(--textSub)", verticalAlign: "middle", whiteSpace: "nowrap" }}>{e.date || "—"}</td>
-                    <td style={{ padding: "8px 10px", fontWeight: 500, verticalAlign: "middle" }}>{e.label}</td>
-                    <td style={{ padding: "8px 10px" }}><span style={{ padding: "2px 8px", borderRadius: 4, fontSize: 11, fontWeight: 600, background: "rgba(126,184,125,0.15)", color: "var(--pos)" }}>{earnCatEmoji[e.category] || expCatEmoji[e.category] || ""} {xCat[e.category] || eCat[e.category] || e.category}</span></td>
-                    <td style={{ padding: "8px 10px", fontFamily: "'Space Mono', monospace", color: "var(--pos)", whiteSpace: "nowrap" }}>+${fmt(e.amount)}</td>
-                    <td style={{ padding: "8px 10px" }}><button onClick={() => removeEarning(e.id)} style={{ background: "none", border: "none", color: "var(--textMuted)", cursor: "pointer", fontSize: 16 }}>×</button></td>
-                  </tr>
-                ))}
-                {currentTableData.earnings.length > 0 && (
-                  <tr style={{ borderTop: "2px solid var(--border)", fontWeight: 700 }}>
-                    <td></td><td style={{ padding: "10px 10px" }}>{t.total}</td><td></td>
-                    <td style={{ padding: "10px 10px", fontFamily: "'Space Mono', monospace", color: "var(--pos)", whiteSpace: "nowrap" }}>+${fmt(totals.earnings)}</td><td></td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        </div>
-        )}
-
-        {recordsSubTab === "expense" && (
-        <div>
-        {/* Expenses Table */}
-        <div style={{ padding: 16, borderRadius: 12, background: "var(--bg2)", border: "1px solid var(--border)", marginBottom: 24 }}>
-          <h3 style={{ margin: "0 0 14px", fontSize: 15, fontWeight: 700, color: "var(--err)", display: "flex", alignItems: "center", gap: 8 }}>
-            <span style={{ fontSize: 18 }}>↘</span> {t.expenses} — {isAll ? selectedYear + " (" + t.allMonths + ")" : MONTHS[selectedMonth] + " " + selectedYear}
-          </h3>
-          <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 14 }}>
-            <input placeholder={t.expenseLabel} value={expLabel} onChange={e => setExpLabel(e.target.value)} style={{ flex: "1 1 140px", padding: "9px 12px", borderRadius: 8, border: "1px solid var(--border)", background: "var(--bg3)", color: "var(--text)", fontSize: 13 }} />
-            <select value={expCategory} onChange={e => setExpCategory(e.target.value)} style={{ flex: "1 1 120px", padding: "9px 12px", borderRadius: 8, border: "1px solid var(--border)", background: "var(--bg3)", color: "var(--text)", fontSize: 13 }}>
-              {expCatNames.map(c => <option key={c} value={c}>{xCat[c] || c}</option>)}
-            </select>
-            <input type="number" placeholder={t.amountDollar} value={expAmount} onChange={e => setExpAmount(e.target.value)} style={{ flex: "1 1 120px", padding: "9px 12px", borderRadius: 8, border: "1px solid var(--border)", background: "var(--bg3)", color: "var(--text)", fontSize: 13, fontFamily: "'Space Mono', monospace" }} />
-            <input type="date" value={expDate} max={todayStr} onChange={e => setExpDate(e.target.value)} style={{ flex: "1 1 130px", padding: "9px 12px", borderRadius: 8, border: "1px solid var(--border)", background: "var(--bg3)", color: "var(--text)", fontSize: 13, fontFamily: "'Space Mono', monospace" }} />
-            <button onClick={addExpense} style={{ padding: "9px 18px", borderRadius: 8, border: "none", cursor: "pointer", background: "var(--gradSpend)", color: "var(--btnText)", fontSize: 13, fontWeight: 700, whiteSpace: "nowrap" }}>+ Add</button>
-          </div>
-          <div style={{ overflowX: "auto", WebkitOverflowScrolling: "touch" }}>
-            <table style={{ width: "100%", minWidth: 480, borderCollapse: "collapse", fontSize: 13 }}>
-              <thead><tr style={{ borderBottom: "2px solid var(--border)" }}>
-                {[t.date, t.item, t.category, t.amountDollar, ""].map((h, idx) => (
-                  <th key={idx} style={{ padding: "8px 10px", textAlign: "left", color: "var(--textMuted)", fontSize: 11, textTransform: "uppercase", letterSpacing: 1, whiteSpace: "nowrap" }}>{h}</th>
-                ))}
-              </tr></thead>
-              <tbody>
-                {currentTableData.expenses.length === 0 ? (
-                  <tr><td colSpan={5} style={{ padding: 20, textAlign: "center", color: "var(--textDark)", fontStyle: "italic" }}>{t.noExpenses}</td></tr>
-                ) : currentTableData.expenses.map((e, i) => (
-                  <tr key={e.id} style={{ borderBottom: "1px solid var(--border2)", background: i % 2 === 0 ? "transparent" : "var(--bgAlt)" }}>
-                    <td style={{ padding: "8px 10px", fontFamily: "'Space Mono', monospace", fontSize: 12, color: "var(--textSub)", verticalAlign: "middle", whiteSpace: "nowrap" }}>{e.date || "—"}</td>
-                    <td style={{ padding: "8px 10px", fontWeight: 500, verticalAlign: "middle" }}>{e.label}</td>
-                    <td style={{ padding: "8px 10px" }}><span style={{ padding: "2px 8px", borderRadius: 4, fontSize: 11, fontWeight: 600, background: "rgba(107,90,180,0.15)", color: "#a8a0cc" }}>{expCatEmoji[e.category] || earnCatEmoji[e.category] || ""} {xCat[e.category] || eCat[e.category] || e.category}</span></td>
-                    <td style={{ padding: "8px 10px", fontFamily: "'Space Mono', monospace", color: "var(--err)", whiteSpace: "nowrap" }}>-${fmt(e.amount)}</td>
-                    <td style={{ padding: "8px 10px" }}><button onClick={() => removeExpense(e.id)} style={{ background: "none", border: "none", color: "var(--textMuted)", cursor: "pointer", fontSize: 16 }}>×</button></td>
-                  </tr>
-                ))}
-                {currentTableData.expenses.length > 0 && (
-                  <tr style={{ borderTop: "2px solid var(--border)", fontWeight: 700 }}>
-                    <td></td><td style={{ padding: "10px 10px" }}>{t.total}</td><td></td>
-                    <td style={{ padding: "10px 10px", fontFamily: "'Space Mono', monospace", color: "var(--err)", whiteSpace: "nowrap" }}>-${fmt(totals.expenses)}</td><td></td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        </div>
-        )}
-        </div>
-        )}
 
         <div style={{ textAlign: "center", fontSize: 10, color: "var(--textDark)", paddingTop: 12, paddingBottom: 20, letterSpacing: 1 }}>
           © 2026 1XD233 · Sakuhin · 作品 · MIT License
         </div>
 
-        {/* Undo toast */}
-        {undoMessage && (
-          <div style={{
-            position: "sticky", bottom: 16,
-            margin: "0 auto", width: "fit-content",
-            padding: "10px 20px", borderRadius: 10,
-            background: "var(--border)", color: "var(--text)", fontSize: 13, fontWeight: 600,
-            boxShadow: "0 4px 20px rgba(0,0,0,0.4)",
-            animation: "fadeInUp 0.3s ease",
-          }}>
-            ✓ {undoMessage}
-          </div>
-        )}
       </div>
+      )}
+      {undoMessage && (
+        <div className="record-toast">
+          <span role="status" aria-live="polite" aria-atomic="true">{undoMessage}</span>
+          {undoStack.length > 0 && <button type="button" className="record-button" onClick={undo}>↩ {t.undo}</button>}
+        </div>
       )}
     </div>
   );
