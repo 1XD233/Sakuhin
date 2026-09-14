@@ -24,7 +24,7 @@ test("onboarding and all tabs render in both languages and themes with saved rec
           const html = renderToStaticMarkup(React.createElement(App));
           assert.ok(html.includes("Lunch"), [lang, mode, activeTab].join("/"));
           assert.ok(html.includes(lang === "zh" ? "记一笔" : "Add a record"));
-          assert.ok(html.includes('inputmode="decimal"'));
+          assert.match(html, /inputmode="decimal"/i);
           assert.ok(html.includes("12.50"));
         }
       }
